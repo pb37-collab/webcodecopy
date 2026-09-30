@@ -8,19 +8,17 @@
 - [ ] **Frosty Hemp Co / Chunky Academy / bud.com creative.** Say which pieces can be shown. Until then only the program sizes are listed, with no images.
 - [ ] **Custom domain** (optional, later). Update `site.url` in `src/lib/site.ts` when it's set.
 
-## Needs files (the build container couldn't reach cannaconnect.agency, Drive downloads or Higgsfield)
-1. `node scripts/fetch-site-assets.mjs` downloads the v1 images (headshot, portal screen, OG image, feed posts) into `public/images/`.
-2. Export these from Drive or Higgsfield into a folder laid out like below, then run `node scripts/optimize-content.mjs <folder>`:
-   - `nom/`: NOM_S1_hotel, NOM_S2_parents, NOM_S5_car, NOM_S6_couch, NOM_S7_torturetest
-   - `ngm/`: NGM_S1_beforeafter, NGM_S2_HOA, NGM_S3_gardener, NGM_S4_testimonial, NGM_S5_burnnever, NGM_S6_value, NGM_S7_veghero, NGM_S9_value, NGM_S10_absorb, NGM_S11_freegift, NGM_S12_results
-   - `video/`: NO_UGC_SOFIA_smoke.mp4, NO_UGC_RYAN_skeptic.mp4 (Drive files `UGC_Sofia_smoke.mp4`, `UGC_Ryan_skeptic_clean.mp4`)
-   - `before-after/before.png`: the original "Canna Bust" label version of the "parents downstairs" ad (pairs with NOM_S2_parents)
-3. Screenshots, saved as WebP in `public/images/work/`:
-   - `ccos-admin.webp`: admin view with **demo client Highland Harvest Co. only**. Check the portal screen from v1 shows demo data too.
-   - `lander-nano-nutrient.webp`, `lander-feed-and-bloom.webp`, `lander-nano-odor-max.webp`, `lander-deep-clean.webp` (mobile, 9:19.5; pages at nanogrowmax.com/pages/<slug>)
-   - `midterms-map.webp` (16:10)
-4. `public/resume/Parker_J_Beck_Resume_2026.pdf`: approved as a **cleaned copy** (phone number removed, hemp smokables client anonymized). The "Download PDF" button appears automatically once the file is there.
-5. Optional: WebVTT subtitle files for the UGC videos (no captions were burned in).
+## Files (done 2026-09-30)
+- [x] v1 images pulled into `public/images/` (headshot, portal screen, OG image, 9 feed posts). The portal screen shows only the demo client, Highland Harvest Co.
+- [x] Creative exported to `public/content/`: 17 stills (NOM S1, S2, S5, S6, S7; NGM S1–S7 and Round 4 S9–S12), the Canna Bust "parents downstairs" before image, and 2 UGC videos (about 4 MB each, with poster frames).
+  - Round 4 stills are the four NGM ad units generated together in Higgsfield on 2026-09-01 (value, absorb, free gift, results).
+  - The UGC videos have captions burned in, so they need no WebVTT track.
+- [x] Screenshots in `public/images/work/`: `ccos-admin.webp` (Highland Harvest Co., Campaign 3, demo data only), four mobile landers, `midterms-map.webp`.
+- [x] `public/resume/Parker_J_Beck_Resume_2026.pdf`: exported from a cleaned Drive copy of the resume (phone number removed, hemp smokables client anonymized).
+
+## Needs a decision
+- [ ] **Gamified landers.** `feed-and-bloom` is the BLOOMSHIP variant (tap-to-feed game). `deep-clean` is also gamified (a spray-down game), but its codes are DEEPCLEAN25/DCSHIP. Which lander is FLIPSHIP?
+- [ ] **Production branch.** `parker-beck-portfolio.vercel.app` still serves `master` (the empty template). Set the production branch to this branch, or merge PR #1.
 
 ## Needs numbers (left off the site until they're on record)
 - Checkout-leak specifics for Odor Max: what broke, and ATC → purchase rate before and after the fix.

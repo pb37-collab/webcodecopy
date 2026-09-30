@@ -1,6 +1,6 @@
 import { CaseLayout, projectMetadata } from "@/components/case-layout";
 import { BrowserFrame } from "@/components/media";
-import { Flow, PendingNote, Prose, Section } from "@/components/primitives";
+import { Flow, Prose, Section } from "@/components/primitives";
 import { SchemaDiagram } from "@/components/schema-diagram";
 import { getProject } from "@/data/projects";
 
@@ -130,13 +130,6 @@ create policy "portal reads own rows"
             { title: "Onboarding", body: "Question templates and portal uploads. Clients can only write to their own open onboarding." },
           ]}
         />
-      </Section>
-
-      <Section>
-        <PendingNote>
-          Pending from Parker: fresh admin and portal screenshots of the demo client (Highland
-          Harvest Co.), exported to /public/images/proof/ and /public/images/work/.
-        </PendingNote>
       </Section>
     </CaseLayout>
   );
