@@ -14,7 +14,7 @@
    - `nom/`: NOM_S1_hotel, NOM_S2_parents, NOM_S5_car, NOM_S6_couch, NOM_S7_torturetest
    - `ngm/`: NGM_S1_beforeafter, NGM_S2_HOA, NGM_S3_gardener, NGM_S4_testimonial, NGM_S5_burnnever, NGM_S6_value, NGM_S7_veghero, NGM_S9_value, NGM_S10_absorb, NGM_S11_freegift, NGM_S12_results
    - `video/`: NO_UGC_SOFIA_smoke.mp4, NO_UGC_RYAN_skeptic.mp4 (Drive files `UGC_Sofia_smoke.mp4`, `UGC_Ryan_skeptic_clean.mp4`)
-   - `before-after/before.png`: one original "Canna Bust" label static, to show the compliance rework
+   - `before-after/before.png`: the original "Canna Bust" label version of the "parents downstairs" ad (pairs with NOM_S2_parents)
 3. Screenshots, saved as WebP in `public/images/work/`:
    - `ccos-admin.webp`: admin view with **demo client Highland Harvest Co. only**. Check the portal screen from v1 shows demo data too.
    - `lander-nano-nutrient.webp`, `lander-nano-odor-max.webp`, `lander-bloomship.webp`, `lander-flipship.webp` (mobile, 9:19.5)

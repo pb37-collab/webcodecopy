@@ -102,12 +102,12 @@ export default function Page() {
       <Section eyebrow="Before → after" title="Same product, reworked for the platform.">
         <div className="grid grid-cols-2 gap-3 md:max-w-2xl">
           <figure className="overflow-hidden rounded-2xl border border-line bg-card">
-            <Media src="/content/before-after/before.webp" alt="Before: original label, not allowed on Meta" aspect="4 / 5" />
+            <Media src="/content/before-after/before.webp" alt="Before: original Canna Bust label, blocked on Meta" aspect="4 / 5" />
             <figcaption className="p-3 text-[12.5px] text-ink-3">Before · original label, blocked on Meta</figcaption>
           </figure>
           <figure className="overflow-hidden rounded-2xl border border-line bg-card">
-            <Media src="/content/nom/NOM_S6_couch.webp" alt="After: clean Nano Odor Max label" aspect="4 / 5" />
-            <figcaption className="p-3 text-[12.5px] text-ink-3">After · clean label, mechanism hook · AI-produced</figcaption>
+            <Media src="/content/nom/NOM_S2_parents.webp" alt="After: clean Nano Odor Max label" aspect="4 / 5" />
+            <figcaption className="p-3 text-[12.5px] text-ink-3">After · same concept, clean label · AI-produced</figcaption>
           </figure>
         </div>
       </Section>
