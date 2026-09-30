@@ -183,9 +183,7 @@ function Full({ item }: { item: GalleryItem }) {
         autoPlay
         playsInline
         className="max-h-[70vh] w-auto md:max-h-[92vh]"
-      >
-        {/* No burned-in captions were used; add a WebVTT track here once transcribed. */}
-      </video>
+      />
     );
   }
   return (

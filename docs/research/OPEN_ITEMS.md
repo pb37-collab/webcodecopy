@@ -22,7 +22,7 @@
 
 ## Needs numbers (left off the site until they're on record)
 - Checkout-leak specifics for Odor Max: what broke, and ATC → purchase rate before and after the fix.
-- BLOOMSHIP / FLIPSHIP A/B results.
+- BLOOMSHIP (`feed-and-bloom`) and the `deep-clean` game variant: A/B results. Which page is FLIPSHIP?
 - Insights: top articles and any traffic figures.
 
 ## v1 content

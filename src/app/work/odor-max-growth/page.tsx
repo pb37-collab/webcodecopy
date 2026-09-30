@@ -21,9 +21,9 @@ const landers = [
   },
   {
     src: "/images/work/lander-feed-and-bloom.webp",
-    name: "NanoGrow Max · B",
+    name: "NanoGrow Max · B (BLOOMSHIP)",
     path: "/pages/feed-and-bloom",
-    why: "A second NanoGrow Max landing page, run as a variant of A.",
+    why: "The gamified variant: a tap-the-bottle feeding game in place of a static offer. Results go here once they're on record.",
   },
   {
     src: "/images/work/lander-nano-odor-max.webp",
@@ -35,7 +35,7 @@ const landers = [
     src: "/images/work/lander-deep-clean.webp",
     name: "Nano Odor Max · B",
     path: "/pages/deep-clean",
-    why: "A second Nano Odor Max landing page, run as a variant of A.",
+    why: "A gamified variant: a room-by-room spray-down game in place of a static offer.",
   },
 ];
 
@@ -127,8 +127,9 @@ export default function Page() {
         </div>
         <p className="mt-6 text-[13px] leading-relaxed text-ink-3">
           Paid-traffic landers skip the global nav (every exit costs a sale) and are noindexed so ad
-          variants don&rsquo;t compete with the store in search. The A/B set includes gamified
-          variants (BLOOMSHIP, FLIPSHIP); results go here once they&rsquo;re on record.
+          variants don&rsquo;t compete with the store in search. Each product&rsquo;s B page is
+          a gamified variant, tested against its standard page. Results go here once they&rsquo;re on
+          record.
         </p>
       </Section>
 
