@@ -10,30 +10,32 @@ export const metadata = projectMetadata(project);
 const UTM =
   "utm_source=facebook&utm_medium=paid_social&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&utm_term={{adset.name}}&utm_id={{campaign.id}}";
 
+const STORE = "https://nanogrowmax.com";
+
 const landers = [
   {
     src: "/images/work/lander-nano-nutrient.webp",
-    name: "NanoGrow Max lander",
+    name: "NanoGrow Max · A",
     path: "/pages/nano-nutrient",
     why: "Plain plant-nutrient copy with no cannabis language, so Meta approves it. One offer and one CTA.",
   },
   {
+    src: "/images/work/lander-feed-and-bloom.webp",
+    name: "NanoGrow Max · B",
+    path: "/pages/feed-and-bloom",
+    why: "A second NanoGrow Max landing page, run as a variant of A.",
+  },
+  {
     src: "/images/work/lander-nano-odor-max.webp",
-    name: "Nano Odor Max lander",
+    name: "Nano Odor Max · A",
     path: "/pages/nano-odor-max",
     why: "Framed around smoke, pet, food and car odors. With no reviews yet, the proof is a 30-day money-back guarantee.",
   },
   {
-    src: "/images/work/lander-bloomship.webp",
-    name: "BLOOMSHIP (gamified)",
-    path: "A/B variant",
-    why: "A gamified lander, A/B-tested against the standard page. Results to be added once they're on record.",
-  },
-  {
-    src: "/images/work/lander-flipship.webp",
-    name: "FLIPSHIP (gamified)",
-    path: "A/B variant",
-    why: "A second gamified variant in the same A/B test. Results to be added once they're on record.",
+    src: "/images/work/lander-deep-clean.webp",
+    name: "Nano Odor Max · B",
+    path: "/pages/deep-clean",
+    why: "A second Nano Odor Max landing page, run as a variant of A.",
   },
 ];
 
@@ -105,20 +107,28 @@ export default function Page() {
         />
       </Section>
 
-      <Section eyebrow="Landing pages" title="One offer per product. No nav. Noindex.">
+      <Section eyebrow="Landing pages" title="Two landers per product, one offer each. No nav. Noindex.">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {landers.map((l) => (
             <div key={l.name}>
               <PhoneFrame src={l.src} alt={l.name} />
               <p className="mt-4 font-medium text-ink">{l.name}</p>
-              <p className="font-mono text-[11px] text-ink-3">{l.path}</p>
+              <a
+                href={STORE + l.path}
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-[11px] text-ink-3 hover:text-accent"
+              >
+                nanogrowmax.com{l.path} ↗
+              </a>
               <p className="mt-2 text-sm leading-relaxed text-ink-2">{l.why}</p>
             </div>
           ))}
         </div>
         <p className="mt-6 text-[13px] leading-relaxed text-ink-3">
           Paid-traffic landers skip the global nav (every exit costs a sale) and are noindexed so ad
-          variants don&rsquo;t compete with the store in search.
+          variants don&rsquo;t compete with the store in search. The A/B set includes gamified
+          variants (BLOOMSHIP, FLIPSHIP); results go here once they&rsquo;re on record.
         </p>
       </Section>
 
@@ -189,8 +199,7 @@ export default function Page() {
 
       <Section>
         <PendingNote>
-          Pending from Parker: lander screenshots (NanoGrow, Nano Odor Max, BLOOMSHIP, FLIPSHIP) and
-          the before/after checkout funnel numbers. The leak gets described in specifics only once
+          Pending from Parker: the before/after checkout funnel numbers and the A/B results. The leak gets described in specifics only once
           those numbers are on record.
         </PendingNote>
       </Section>

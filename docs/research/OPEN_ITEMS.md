@@ -1,10 +1,10 @@
 # Open items for Parker
 
 ## Needs a decision or sign-off
-- [ ] **Contact email.** Currently `parker@cannaconnect.agency` (`src/lib/site.ts`). Confirm it, or swap in a personal address.
-- [ ] **LinkedIn.** Currently set to the URL on the 2026 resume (`linkedin.com/in/parker-beck-3bb939102`). Confirm it's right.
+- [x] **Contact email.** Keep `parker@cannaconnect.agency` (confirmed).
+- [x] **LinkedIn.** `linkedin.com/in/parker-beck-3bb939102` (confirmed).
 - [ ] **Client names.** The three clients named in the brief are anonymized (hemp smokables DTC brand, cannabis lifestyle brand, cannabis software company). Send written OK before any of them is named.
-- [ ] **ZenCo** is named (it's on the resume). Confirm that's fine.
+- [x] **ZenCo** can be named (confirmed).
 - [ ] **Frosty Hemp Co / Chunky Academy / bud.com creative.** Say which pieces can be shown. Until then only the program sizes are listed, with no images.
 - [ ] **Custom domain** (optional, later). Update `site.url` in `src/lib/site.ts` when it's set.
 
@@ -17,9 +17,9 @@
    - `before-after/before.png`: the original "Canna Bust" label version of the "parents downstairs" ad (pairs with NOM_S2_parents)
 3. Screenshots, saved as WebP in `public/images/work/`:
    - `ccos-admin.webp`: admin view with **demo client Highland Harvest Co. only**. Check the portal screen from v1 shows demo data too.
-   - `lander-nano-nutrient.webp`, `lander-nano-odor-max.webp`, `lander-bloomship.webp`, `lander-flipship.webp` (mobile, 9:19.5)
+   - `lander-nano-nutrient.webp`, `lander-feed-and-bloom.webp`, `lander-nano-odor-max.webp`, `lander-deep-clean.webp` (mobile, 9:19.5; pages at nanogrowmax.com/pages/<slug>)
    - `midterms-map.webp` (16:10)
-4. `public/resume/Parker_J_Beck_Resume_2026.pdf`. The "Download PDF" button appears automatically once the file is there.
+4. `public/resume/Parker_J_Beck_Resume_2026.pdf`: approved as a **cleaned copy** (phone number removed, hemp smokables client anonymized). The "Download PDF" button appears automatically once the file is there.
 5. Optional: WebVTT subtitle files for the UGC videos (no captions were burned in).
 
 ## Needs numbers (left off the site until they're on record)

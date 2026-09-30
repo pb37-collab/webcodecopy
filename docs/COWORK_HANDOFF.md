@@ -114,19 +114,19 @@ Save every screenshot as **WebP** in `public/images/work/`, unless another folde
 | `../proof/portal-screen.webp` | Only if the v1 image failed the Step 2 check: client portal logged in as the demo client | 1600×1000 |
 | `lander-nano-nutrient.webp` | nanogrowmax.com/pages/nano-nutrient, mobile | 390×845 (9:19.5) |
 | `lander-nano-odor-max.webp` | nanogrowmax.com/pages/nano-odor-max, mobile | 390×845 |
-| `lander-bloomship.webp` | BLOOMSHIP lander, mobile (ask Parker for the URL) | 390×845 |
-| `lander-flipship.webp` | FLIPSHIP lander, mobile (ask Parker for the URL) | 390×845 |
+| `lander-feed-and-bloom.webp` | nanogrowmax.com/pages/feed-and-bloom, mobile | 390×845 |
+| `lander-deep-clean.webp` | nanogrowmax.com/pages/deep-clean, mobile | 390×845 |
 | `midterms-map.webp` | midterms2026-cannabis-map.vercel.app, desktop | 1600×1000 |
 
 Before saving the lander screenshots, dismiss any popups and cookie banners. Make sure no discount code shows that Parker wouldn't want public.
 
-## Step 6: Resume PDF (ask Parker first)
+## Step 6: Resume PDF (approved by Parker as a cleaned copy)
 
-Parker's Google Doc `Parker_J_Beck_Resume_2026` **includes his phone number** and **names the hemp smokables client**. The website version leaves both out. Ask Parker whether to:
-- (a) export a copy with the phone number removed and that client anonymized as "a hemp smokables DTC brand", or
-- (b) skip the PDF for now.
+Make a **copy** of the Google Doc `Parker_J_Beck_Resume_2026`; don't edit the original. In the copy:
+- delete the phone number
+- replace the hemp smokables client's name with "a hemp smokables DTC brand"
 
-If (a), save it as `public/resume/Parker_J_Beck_Resume_2026.pdf`. The "Download PDF" button appears automatically.
+Export the copy as PDF to `public/resume/Parker_J_Beck_Resume_2026.pdf`. Before committing, open the PDF and confirm neither detail is in it. The "Download PDF" button appears automatically.
 
 ## Step 7: Verify, commit, push
 
@@ -153,10 +153,9 @@ Send one short message with:
 
 ## Only Parker can answer these (ask; don't guess)
 
-- **Contact:** keep `parker@cannaconnect.agency`, or switch to a personal email? Is the LinkedIn URL from the resume right?
-- **Client sign-off:** written OK from the three anonymized clients before naming them. Is naming ZenCo OK?
+- **Client sign-off:** written OK from the three anonymized clients before naming them. (ZenCo, the email and the LinkedIn URL are already confirmed.)
 - **Client creative:** which Frosty Hemp Co / Chunky Academy / bud.com pieces can be shown?
-- **URLs** for the BLOOMSHIP and FLIPSHIP landers.
+- Which of the landers are the gamified BLOOMSHIP and FLIPSHIP variants (if not the B pages).
 - **Numbers still missing** (the site stays general until these are on record): checkout-leak before/after (ATC → purchase rate), BLOOMSHIP vs FLIPSHIP A/B results, and Insights article traffic.
 - **v1 `index.html`:** if Parker has it, commit it to `docs/design-references/` so any copy worth keeping can be merged in.
 - **Custom domain** (optional, later).
