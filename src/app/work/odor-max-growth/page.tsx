@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CaseLayout, projectMetadata } from "@/components/case-layout";
 import { Media, PhoneFrame } from "@/components/media";
-import { Flow, PendingNote, Prose, Section } from "@/components/primitives";
+import { Flow, Prose, Section } from "@/components/primitives";
 import { getProject } from "@/data/projects";
 
 const project = getProject("odor-max-growth");
@@ -198,12 +198,6 @@ export default function Page() {
         </p>
       </Section>
 
-      <Section>
-        <PendingNote>
-          Pending from Parker: the before/after checkout funnel numbers and the A/B results. The leak gets described in specifics only once
-          those numbers are on record.
-        </PendingNote>
-      </Section>
     </CaseLayout>
   );
 }

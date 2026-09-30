@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CaseLayout, projectMetadata } from "@/components/case-layout";
 import { Media } from "@/components/media";
-import { Flow, PendingNote, Prose, Section } from "@/components/primitives";
+import { Flow, Prose, Section } from "@/components/primitives";
 import { getProject } from "@/data/projects";
 
 const project = getProject("content-production");
@@ -129,16 +129,14 @@ export default function Page() {
             </ul>
           </div>
         </div>
-        <div className="mt-5">
-          <PendingNote>
-            Sample stills from these programs are added only after each client approves. Until
-            then, see Parker&rsquo;s own brands in the{" "}
-            <Link href="/content/" className="text-accent">
-              content gallery
-            </Link>
-            .
-          </PendingNote>
-        </div>
+        <p className="mt-5 text-sm text-ink-3">
+          Client creative is shown only with the client&rsquo;s approval. For work from
+          Parker&rsquo;s own brands, see the{" "}
+          <Link href="/content/" className="text-accent hover:underline">
+            content gallery
+          </Link>
+          .
+        </p>
       </Section>
     </CaseLayout>
   );

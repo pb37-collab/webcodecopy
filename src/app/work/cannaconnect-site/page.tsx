@@ -1,6 +1,6 @@
 import { CaseLayout, projectMetadata } from "@/components/case-layout";
 import { BrowserFrame } from "@/components/media";
-import { PendingNote, Prose, Section } from "@/components/primitives";
+import { Prose, Section } from "@/components/primitives";
 import { getProject } from "@/data/projects";
 
 const project = getProject("cannaconnect-site");
@@ -49,12 +49,6 @@ export default function Page() {
             then let press and prospects find it.
           </p>
         </Prose>
-        <div className="mt-6">
-          <PendingNote>
-            Pending from Parker: Insights screenshots and a list of the top articles, with any
-            traffic numbers on record.
-          </PendingNote>
-        </div>
       </Section>
     </CaseLayout>
   );
