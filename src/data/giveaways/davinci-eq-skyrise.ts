@@ -1,6 +1,7 @@
 /**
  * DaVinci EQ Skyrise (Limited Edition: Quartz) giveaway — every number, date
- * and line of legal copy the page renders lives here.
+ * and line of legal copy the page renders lives here. Specs, price and Smart
+ * Path ranges are from DaVinci's product listing.
  *
  * Media files are fetched into /public by `node scripts/fetch-davinci-eq-assets.mjs`.
  * Anything missing at build time falls back to the page's own motion graphics.
@@ -15,11 +16,18 @@ export type Colorway = {
   accent: string;
   /** Deep background tint behind the product. */
   deep: string;
-  /** Product shot for this finish, inside /public. */
-  image: string;
+  /** Transparent cut-out of this finish (hero stage), inside /public. */
+  cutout: string;
+  /** Studio shot of this finish (colorway showcase), inside /public. */
+  studio: string;
 };
 
 const MEDIA = "/giveaway/davinci-eq-skyrise";
+
+const shots = (finish: ColorwayId) => ({
+  cutout: `${MEDIA}/cutout-${finish}.webp`,
+  studio: `${MEDIA}/studio-${finish}.webp`,
+});
 
 export const eqGiveaway = {
   slug: "davinci-eq-skyrise",
@@ -29,7 +37,7 @@ export const eqGiveaway = {
   productShort: "EQ Skyrise",
   productUrl: "https://davincivaporizer.com/products/eq-skyrise-limited-edition-quartz",
   brandUrl: "https://davincivaporizer.com",
-  retailPrice: 399,
+  retailPrice: 349,
   winners: 5,
   /** ISO with offset. The countdown and form close at `endsAt`. */
   startsAt: "2026-10-05T09:00:00-04:00",
@@ -40,31 +48,46 @@ export const eqGiveaway = {
   eligibility: "legal residents of the 50 United States and D.C.",
 
   colorways: [
-    { id: "amethyst", name: "Amethyst", accent: "#a98bff", deep: "#1a1230", image: `${MEDIA}/colorway-amethyst.webp` },
-    { id: "sapphire", name: "Sapphire", accent: "#5b8cff", deep: "#0d1733", image: `${MEDIA}/colorway-sapphire.webp` },
-    { id: "gunmetal", name: "Gunmetal", accent: "#a7b1bf", deep: "#14171c", image: `${MEDIA}/colorway-gunmetal.webp` },
-    { id: "onyx", name: "Onyx", accent: "#e9e1cf", deep: "#121110", image: `${MEDIA}/colorway-onyx.webp` },
+    { id: "amethyst", name: "Amethyst", accent: "#a98bff", deep: "#1a1230", ...shots("amethyst") },
+    { id: "sapphire", name: "Sapphire", accent: "#4fb3ff", deep: "#0b1a30", ...shots("sapphire") },
+    { id: "gunmetal", name: "Gunmetal", accent: "#a7b1bf", deep: "#14171c", ...shots("gunmetal") },
+    { id: "onyx", name: "Onyx", accent: "#e9e1cf", deep: "#121110", ...shots("onyx") },
   ] satisfies readonly Colorway[],
 
   media: {
-    heroVideo: `${MEDIA}/hero.mp4`,
-    heroPoster: `${MEDIA}/hero-poster.webp`,
-    gallery: [1, 2, 3, 4, 5, 6].map((n) => `${MEDIA}/gallery-${n}.webp`),
-    /** Optional YouTube ID for the "see it run" embed. Leave null to hide. */
+    /** Overhead macro of the quartz crucible (DaVinci homepage hero clip). */
+    quartzMacro: { src: `${MEDIA}/quartz-macro.mp4`, poster: `${MEDIA}/quartz-macro.webp` },
+    films: [
+      { src: `${MEDIA}/film-ecosystem.mp4`, poster: `${MEDIA}/film-ecosystem.webp`, label: "The EQ ecosystem" },
+      { src: `${MEDIA}/film-build.mp4`, poster: `${MEDIA}/film-build.webp`, label: "Borosilicate glass, up close" },
+    ],
+    closeup: `${MEDIA}/closeup-wide.webp`,
+    /** `contain` for transparent cut-outs, `cover` for full-bleed photos. */
+    gallery: [
+      { src: `${MEDIA}/gallery-1.webp`, fit: "cover" },
+      { src: `${MEDIA}/gallery-3.webp`, fit: "contain" },
+      { src: `${MEDIA}/gallery-2.webp`, fit: "cover" },
+      { src: `${MEDIA}/gallery-5.webp`, fit: "contain" },
+      { src: `${MEDIA}/gallery-4.webp`, fit: "cover" },
+      { src: `${MEDIA}/gallery-6.webp`, fit: "contain" },
+    ] as const,
+    /** PNG cut-out for the share card (the OG renderer can't read WebP). */
+    ogProduct: `${MEDIA}/og-product.png`,
+    /** Optional YouTube ID for an embedded video. Leave null to hide. */
     youtubeId: null as string | null,
   },
 
   specs: [
     { value: "25s", label: "Heat-up time" },
-    { value: "450–650°F", label: "Precision temp range" },
+    { value: "450–650°F", label: "Precision temperature" },
     { value: "30 ml", label: "Water in the Skyrise bubbler" },
-    { value: "2×", label: "High-capacity batteries" },
+    { value: "~50", label: "Sessions per charge, dual 3000 mAh" },
   ],
 
   features: [
     {
       title: "Touchscreen control",
-      body: "Set temperature and run the whole session from the screen on the base. No app, no guesswork.",
+      body: "Set an exact temperature or run one of four customizable Smart Paths from the screen on the base. No app, no pairing.",
     },
     {
       title: "Replaceable quartz",
@@ -72,43 +95,29 @@ export const eqGiveaway = {
     },
     {
       title: "Skyrise glass",
-      body: "A tall glass bubbler holds 30 ml of water to cool every pull before it reaches you.",
+      body: "A dual-tower borosilicate bubbler cools every draw through 30 ml of water while keeping the flavor clear.",
     },
     {
       title: "Limited edition",
-      body: "A finite release of the EQ electric quartz system. When this run is gone, it's gone.",
+      body: "A finite release of the EQ electric quartz system, with an aluminum body and a 2-year warranty.",
     },
   ],
 
   inTheBox: [
-    "EQ base",
+    "EQ electric quartz base with touchscreen",
     "Quartz atomizer",
     "Quartz crucible",
-    "Skyrise glass bubbler",
+    "Skyrise glass bubbler, 30 ml borosilicate",
     "Silicone mouthpiece",
     "Silicone carb cap",
   ],
 
-  /** Descriptive temperature zones for the interactive dial. */
-  tempZones: [
-    {
-      min: 450,
-      max: 519,
-      name: "Flavor-forward",
-      body: "The low end keeps terpenes front and center. Smooth, tasty pulls.",
-    },
-    {
-      min: 520,
-      max: 589,
-      name: "Balanced",
-      body: "Fuller vapor without giving up the flavor. The everyday setting.",
-    },
-    {
-      min: 590,
-      max: 650,
-      name: "Cloud-chaser",
-      body: "Top of the range for the densest, biggest pulls the EQ makes.",
-    },
+  /** The EQ's four Smart Path presets (ranges from DaVinci's listing). */
+  smartPaths: [
+    { name: "Terpene", min: 480, max: 500, body: "The low end keeps terpenes front and center. Smooth, flavor-first pulls." },
+    { name: "Flavor", min: 520, max: 540, body: "A touch warmer for fuller vapor without giving up taste. The everyday path." },
+    { name: "Clouds", min: 560, max: 580, body: "More heat, denser vapor. For when you want to see it." },
+    { name: "Atomic", min: 600, max: 620, body: "Near the top of the range for the biggest pulls the EQ makes." },
   ],
 
   faq: [

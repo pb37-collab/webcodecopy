@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Flame, RotateCcw } from "lucide-react";
 import { eqGiveaway } from "@/data/giveaways/davinci-eq-skyrise";
 import { cn } from "@/lib/utils";
+import { AutoVideo } from "./auto-video";
 
 const ROOM = 72;
 const MIN = 450;
@@ -44,8 +45,8 @@ function heatColor(temp: number) {
  * Interactive "quartz lab": pick a temperature on the dial, then watch the
  * crucible run the EQ's 25-second heat-up. Auto-runs once on first view.
  */
-export function QuartzLab() {
-  const [setpoint, setSetpoint] = useState(520);
+export function QuartzLab({ macro }: { macro?: { src: string; poster: string } | null }) {
+  const [setpoint, setSetpoint] = useState(530);
   const [temp, setTemp] = useState(ROOM);
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
@@ -53,7 +54,13 @@ export function QuartzLab() {
   const root = useRef<HTMLDivElement>(null);
   const autoRan = useRef(false);
 
-  const zone = eqGiveaway.tempZones.find((z) => setpoint >= z.min && setpoint <= z.max) ?? eqGiveaway.tempZones[0];
+  const path = eqGiveaway.smartPaths.find((p) => setpoint >= p.min && setpoint <= p.max) ?? null;
+  const readout = path
+    ? { name: `Smart Path: ${path.name}`, body: `${path.min}–${path.max}°F. ${path.body}` }
+    : {
+        name: "Precision mode",
+        body: `Holds exactly ${setpoint}°F for the whole session. Any temperature from ${MIN} to ${MAX}°F, set on the touchscreen.`,
+      };
 
   const run = useCallback((target: number) => {
     if (raf.current) cancelAnimationFrame(raf.current);
@@ -84,7 +91,7 @@ export function QuartzLab() {
       ([e]) => {
         if (e.isIntersecting && !autoRan.current) {
           autoRan.current = true;
-          run(520);
+          run(530);
         }
       },
       { threshold: 0.45 },
@@ -218,17 +225,37 @@ export function QuartzLab() {
             onKeyUp={(e) => (e.key.startsWith("Arrow") || e.key === "Home" || e.key === "End") && run(setpoint)}
             className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-[linear-gradient(90deg,var(--eq),#ff8a2b_75%,#fff3dc)] accent-[var(--eq)] [&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-[#07070a] [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-[#07070a] [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-[0_0_0_2px_var(--eq)]"
           />
-          <div className="mt-2 grid grid-cols-3 font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-3">
-            {eqGiveaway.tempZones.map((z, i) => (
-              <span key={z.name} className={cn(i === 1 && "text-center", i === 2 && "text-right", z === zone && "text-eq")}>
-                {z.name}
-              </span>
-            ))}
+          <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">Or tap a Smart Path</p>
+          <div className="mt-2 grid grid-cols-4 gap-1.5">
+            {eqGiveaway.smartPaths.map((p) => {
+              const active = p === path;
+              return (
+                <button
+                  key={p.name}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => {
+                    const mid = Math.round((p.min + p.max) / 2);
+                    setSetpoint(mid);
+                    run(mid);
+                  }}
+                  className={cn(
+                    "rounded-xl border px-1 py-2 text-center transition-colors",
+                    active ? "border-eq/70 bg-eq/15 text-ink" : "border-white/10 bg-white/[0.02] text-ink-2 hover:border-white/25",
+                  )}
+                >
+                  <span className="block text-[13px] font-semibold">{p.name}</span>
+                  <span className="block font-mono text-[9.5px] text-ink-3">
+                    {p.min}–{p.max}°
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
-          <div key={zone.name} className="mt-5 animate-[eq-tick_400ms_ease-out] border-t border-white/10 pt-4">
-            <p className="text-lg font-semibold">{zone.name}</p>
-            <p className="mt-1 text-[14px] leading-relaxed text-ink-2">{zone.body}</p>
+          <div key={readout.name} className="mt-5 animate-[eq-tick_400ms_ease-out] border-t border-white/10 pt-4">
+            <p className="text-lg font-semibold">{readout.name}</p>
+            <p className="mt-1 text-[14px] leading-relaxed text-ink-2">{readout.body}</p>
           </div>
 
           <div className="mt-5 flex items-center gap-3">
@@ -251,6 +278,19 @@ export function QuartzLab() {
             </div>
           </div>
         </div>
+
+        {macro && (
+          <figure className="mt-3 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <div className="relative size-24 shrink-0 overflow-hidden rounded-xl sm:size-28">
+              <AutoVideo src={macro.src} poster={macro.poster} label="Concentrate melting in the EQ quartz crucible" />
+              <span aria-hidden className="absolute inset-0 rounded-xl ring-1 ring-inset ring-eq/40" />
+            </div>
+            <figcaption className="text-[13px] leading-relaxed text-ink-2">
+              <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.18em] text-eq">Real footage</span>
+              The quartz crucible at work: nothing but quartz touches your concentrate.
+            </figcaption>
+          </figure>
+        )}
       </div>
     </div>
   );

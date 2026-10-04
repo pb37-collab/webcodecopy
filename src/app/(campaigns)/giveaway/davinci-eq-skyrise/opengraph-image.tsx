@@ -12,7 +12,7 @@ const accent = g.colorways[0].accent;
 
 /** Product photo if it has been fetched into /public, else a quartz crystal. */
 function heroArt(): string {
-  const file = path.join(process.cwd(), "public", g.colorways[0].image.replace(/\.webp$/, ".png"));
+  const file = path.join(process.cwd(), "public", g.media.ogProduct);
   if (fs.existsSync(file)) return `data:image/png;base64,${fs.readFileSync(file).toString("base64")}`;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 340"><defs><linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".45" stop-color="${accent}" stop-opacity=".75"/><stop offset="1" stop-color="#1a1230"/></linearGradient></defs><g fill="url(#f)" stroke="#fff" stroke-opacity=".6" stroke-width=".8"><path d="M40 100 L80 112 L80 320 L40 300 Z" fill-opacity=".55"/><path d="M80 112 L120 112 L120 320 L80 320 Z" fill-opacity=".3"/><path d="M120 112 L160 100 L160 300 L120 320 Z" fill-opacity=".7"/><path d="M40 100 L100 18 L80 112 Z" fill-opacity=".8"/><path d="M80 112 L100 18 L120 112 Z" fill-opacity=".5"/><path d="M120 112 L100 18 L160 100 Z" fill-opacity=".95"/></g></svg>`;
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;

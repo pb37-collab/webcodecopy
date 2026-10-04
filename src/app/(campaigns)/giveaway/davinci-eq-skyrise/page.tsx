@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Sora } from "next/font/google";
 import { ArrowDown, Check } from "lucide-react";
+import { AutoVideo } from "@/components/giveaway/eq/auto-video";
 import { ColorwayPicker } from "@/components/giveaway/eq/colorway-picker";
 import { Countdown, CountdownInline } from "@/components/giveaway/eq/countdown";
 import { EntryForm } from "@/components/giveaway/eq/entry-form";
@@ -43,12 +44,14 @@ const fmt = (iso: string) =>
   }).format(new Date(iso));
 
 export default function EqSkyriseGiveaway() {
-  const video = hasPublicFile(g.media.heroVideo) ? g.media.heroVideo : null;
-  const poster = hasPublicFile(g.media.heroPoster) ? g.media.heroPoster : null;
-  const images: Partial<Record<ColorwayId, string>> = Object.fromEntries(
-    g.colorways.filter((c) => hasPublicFile(c.image)).map((c) => [c.id, c.image]),
-  );
-  const gallery = g.media.gallery.filter(hasPublicFile);
+  const pick = (key: "cutout" | "studio"): Partial<Record<ColorwayId, string>> =>
+    Object.fromEntries(g.colorways.filter((c) => hasPublicFile(c[key])).map((c) => [c.id, c[key]]));
+  const cutouts = pick("cutout");
+  const studios = pick("studio");
+  const gallery = g.media.gallery.filter((item) => hasPublicFile(item.src));
+  const films = g.media.films.filter((f) => hasPublicFile(f.src));
+  const macro = hasPublicFile(g.media.quartzMacro.src) ? g.media.quartzMacro : null;
+  const closeup = hasPublicFile(g.media.closeup) ? g.media.closeup : null;
 
   return (
     <EqExperience>
@@ -89,7 +92,7 @@ export default function EqSkyriseGiveaway() {
             </div>
 
             <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
-              <ProductStage video={video} poster={poster} images={images} />
+              <ProductStage images={cutouts} />
             </div>
 
             <div className="lg:col-start-1 lg:row-start-2">
@@ -119,6 +122,8 @@ export default function EqSkyriseGiveaway() {
           </dl>
         </section>
 
+        {films.length > 0 && <FilmBand films={films} />}
+
         {/* COLORWAYS */}
         <section className="relative overflow-hidden">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 lg:grid-cols-[1fr_1.1fr] lg:py-28">
@@ -131,14 +136,14 @@ export default function EqSkyriseGiveaway() {
               </p>
               <ColorwayPicker size="lg" className="mt-7" />
             </div>
-            <ColorwayShowcase images={images} />
+            <ColorwayShowcase images={studios} />
           </div>
         </section>
 
         {/* QUARTZ LAB */}
         <section className="relative border-t border-white/10 bg-[radial-gradient(60%_50%_at_30%_40%,color-mix(in_oklab,var(--eq-deep)_90%,transparent),transparent)]">
           <div className="mx-auto max-w-6xl px-5 py-20 lg:py-28">
-            <QuartzLab />
+            <QuartzLab macro={macro} />
           </div>
         </section>
 
@@ -317,7 +322,13 @@ export default function EqSkyriseGiveaway() {
 
         {/* FINAL CTA */}
         <section className="relative overflow-hidden border-t border-white/10">
-          <Caustics />
+          {closeup && (
+            <>
+              <Image src={closeup} alt="" fill sizes="100vw" className="object-cover opacity-45" />
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-[#07070a] via-[#07070a]/55 to-[#07070a]" />
+            </>
+          )}
+          <Caustics className="opacity-70" />
           <div className="relative mx-auto max-w-3xl px-5 py-24 text-center">
             <h2 className="text-4xl font-semibold tracking-tight sm:text-6xl">
               The clock&rsquo;s <span className="text-eq">running.</span>
@@ -416,7 +427,7 @@ function ShowcaseImages({ images }: { images: Partial<Record<ColorwayId, string>
             fill
             sizes="(min-width: 1024px) 520px, 90vw"
             data-colorway={c.id}
-            className="eq-showcase object-contain p-10 opacity-0 transition-opacity duration-700"
+            className="eq-showcase scale-110 object-cover opacity-0 transition-opacity duration-700"
           />
         ) : null,
       )}
@@ -424,17 +435,61 @@ function ShowcaseImages({ images }: { images: Partial<Record<ColorwayId, string>
   );
 }
 
-function Gallery({ images }: { images: string[] }) {
-  const row = images.map((src, i) => (
-    <div key={`${src}-${i}`} className="relative aspect-[4/5] w-56 shrink-0 overflow-hidden rounded-2xl border border-white/10 sm:w-72">
-      <Image src={src} alt={`${g.product}, photo ${i + 1}`} fill sizes="288px" className="object-cover" />
+function Gallery({ images }: { images: readonly { src: string; fit: "cover" | "contain" }[] }) {
+  const row = images.map((img, i) => (
+    <div
+      key={`${img.src}-${i}`}
+      className="relative aspect-[4/5] w-56 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(80%_60%_at_50%_70%,color-mix(in_oklab,var(--eq)_22%,#0d0d12),#0a0a0e)] sm:w-72"
+    >
+      <Image
+        src={img.src}
+        alt={`${g.product}, photo ${i + 1}`}
+        fill
+        sizes="288px"
+        className={img.fit === "cover" ? "object-cover" : "object-contain p-4"}
+      />
     </div>
   ));
   return (
     <section className="overflow-hidden border-t border-white/10 py-16" aria-label="Product photos">
-      <div className="flex w-max animate-[eq-marquee_50s_linear_infinite] gap-4 pr-4 hover:[animation-play-state:paused]">
+      <div className="flex w-max animate-[eq-marquee_60s_linear_infinite] gap-4 pr-4 hover:[animation-play-state:paused]">
         {row}
         {row}
+      </div>
+    </section>
+  );
+}
+
+/** DaVinci's own EQ films, playing only while on screen. */
+function FilmBand({ films }: { films: readonly { src: string; poster: string; label: string }[] }) {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="mx-auto max-w-6xl px-5 pt-20 lg:pt-28">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-eq">See it in motion</p>
+            <h2 className="mt-3 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
+              Glass, quartz and a screen that runs the show.
+            </h2>
+          </div>
+        </div>
+        <div className={`mt-10 grid gap-3 ${films.length > 1 ? "lg:grid-cols-[1.25fr_1fr]" : ""}`}>
+          {films.map((f, i) => (
+            <figure
+              key={f.src}
+              className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b0b10] ${
+                i === 0 ? "aspect-[5/4] lg:aspect-auto lg:h-[480px]" : "aspect-video lg:aspect-auto lg:h-[480px]"
+              }`}
+            >
+              <AutoVideo src={f.src} poster={f.poster} label={f.label} />
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#07070a]/80 via-transparent to-transparent" />
+              <figcaption className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-white/15 bg-[#07070a]/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ink backdrop-blur-md">
+                <span className="size-1.5 animate-pulse rounded-full bg-eq" />
+                {f.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   );

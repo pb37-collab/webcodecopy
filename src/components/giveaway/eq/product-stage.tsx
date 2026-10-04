@@ -7,18 +7,17 @@ import { useEq } from "./experience";
 import { Bubbles, QuartzCrystal } from "./motion";
 
 type StageProps = {
-  /** Present only when the file exists in /public at build time. */
-  video: string | null;
-  poster: string | null;
+  /** Cut-out per finish, present only when the file exists in /public at build time. */
   images: Partial<Record<ColorwayId, string>>;
 };
 
 /**
- * Hero product stage. Prefers the brand's product video, then the photo for
- * the selected colorway, then a faceted-quartz motion graphic. Spec chips
- * orbit it in every case.
+ * Hero product stage: DaVinci's transparent cut-out of the selected finish
+ * floating over a colorway glow, crossfading when the finish changes. Falls
+ * back to a faceted-quartz motion graphic without product photos. Spec chips
+ * orbit it in both cases.
  */
-export function ProductStage({ video, poster, images }: StageProps) {
+export function ProductStage({ images }: StageProps) {
   const { colorway } = useEq();
   const hasImages = Object.keys(images).length > 0;
 
@@ -31,46 +30,41 @@ export function ProductStage({ video, poster, images }: StageProps) {
         <div className="absolute inset-[11%] rounded-full border border-white/[0.06]" />
       </div>
 
-      <div className="absolute inset-[8%] overflow-hidden rounded-[2.5rem]">
-        {video ? (
-          <>
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src={video}
-              poster={poster ?? undefined}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
-            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#07070a]/70 via-transparent to-transparent" />
-            <div aria-hidden className="absolute inset-0 bg-eq/10 mix-blend-color" />
-          </>
-        ) : hasImages ? (
-          eqGiveaway.colorways.map((c) =>
-            images[c.id] ? (
-              <Image
-                key={c.id}
-                src={images[c.id] as string}
-                alt={`${eqGiveaway.product} in ${c.name}`}
-                fill
-                priority={c.id === colorway.id}
-                sizes="(min-width: 1024px) 520px, 90vw"
-                className={cn(
-                  "animate-[eq-float_7s_ease-in-out_infinite] object-contain p-6 drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)] transition-opacity duration-700",
-                  c.id === colorway.id ? "opacity-100" : "opacity-0",
-                )}
-              />
-            ) : null,
-          )
-        ) : (
-          <div className="absolute inset-0 grid place-items-center">
-            <QuartzCrystal className="h-[78%] animate-[eq-float_7s_ease-in-out_infinite] drop-shadow-[0_0_40px_var(--eq)]" />
-          </div>
-        )}
+      <div className="absolute inset-[4%] overflow-hidden rounded-[2.5rem]">
         <Bubbles count={14} rise={600} />
       </div>
+
+      {hasImages ? (
+        <div className="absolute -inset-x-[8%] -top-[6%] bottom-0">
+          {/* Light pool under the base */}
+          <div
+            aria-hidden
+            className="absolute bottom-[12%] left-1/2 h-[9%] w-[58%] -translate-x-1/2 rounded-[50%] bg-eq/45 blur-2xl transition-colors duration-700"
+          />
+          <div className="absolute inset-0 animate-[eq-float_7s_ease-in-out_infinite]">
+            {eqGiveaway.colorways.map((c) =>
+              images[c.id] ? (
+                <Image
+                  key={c.id}
+                  src={images[c.id] as string}
+                  alt={c.id === colorway.id ? `${eqGiveaway.product} in ${c.name}` : ""}
+                  fill
+                  priority={c.id === eqGiveaway.colorways[0].id}
+                  sizes="(min-width: 1024px) 520px, 90vw"
+                  className={cn(
+                    "object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.65)] transition-[opacity,transform] duration-700",
+                    c.id === colorway.id ? "scale-100 opacity-100" : "scale-[0.97] opacity-0",
+                  )}
+                />
+              ) : null,
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="absolute inset-[8%] grid place-items-center">
+          <QuartzCrystal className="h-[78%] animate-[eq-float_7s_ease-in-out_infinite] drop-shadow-[0_0_40px_var(--eq)]" />
+        </div>
+      )}
 
       <SpecChip className="top-[14%] -left-1 sm:left-0" label="Heat-up" value="25s" />
       <SpecChip className="top-[44%] -right-1 sm:right-0 [animation-delay:-2s]" label="Temp" value="450–650°F" />
