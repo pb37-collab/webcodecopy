@@ -6,13 +6,15 @@ import { eqGiveaway } from "@/data/giveaways/davinci-eq-skyrise";
 import {
   EMAIL_PATTERN,
   captureConfigured,
-  makeRefCode,
+  refCodeFor,
   readAttribution,
   submitEntry,
 } from "@/lib/giveaway";
+import { bumpOwnEntry } from "@/lib/giveaway-stats";
 import { cn } from "@/lib/utils";
 import { ColorwayPicker } from "./colorway-picker";
 import { useEnded, useEq } from "./experience";
+import { ShareOdds } from "./odds";
 
 type Status = { kind: "idle" } | { kind: "submitting" } | { kind: "error"; message: string };
 
@@ -37,7 +39,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
     if (!optIn) return setStatus({ kind: "error", message: "Opt in to emails to enter. Unsubscribe anytime." });
 
     setStatus({ kind: "submitting" });
-    const refCode = makeRefCode();
+    const refCode = await refCodeFor(clean, eqGiveaway.slug);
     // Bots fill the hidden field; give them a success screen and save nothing.
     if (trap) {
       setEntry({ refCode, email: clean, demo: true });
@@ -56,6 +58,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
       ageConfirmed: true,
     });
     if (!result.ok) return setStatus({ kind: "error", message: result.error });
+    bumpOwnEntry();
     setEntry({ refCode, email: clean, demo: result.demo });
   }
 
@@ -262,6 +265,8 @@ function SharePanel({ id }: { id: string }) {
           Want better odds? Every friend who enters with your link adds{" "}
           <strong className="text-ink">+{eqGiveaway.referralBonus} bonus entries</strong> to yours.
         </p>
+
+        <ShareOdds />
 
         <div className="mt-4 flex gap-2">
           <input

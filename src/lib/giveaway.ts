@@ -5,7 +5,9 @@
  *   NEXT_PUBLIC_KLAVIYO_COMPANY_ID + NEXT_PUBLIC_KLAVIYO_LIST_ID
  *     → Klaviyo client subscription (public key, safe in the browser)
  *   NEXT_PUBLIC_GIVEAWAY_ENDPOINT
- *     → plain JSON POST to a webhook (Zapier, Make, Apps Script, …)
+ *     → plain JSON POST to a webhook (Zapier, Make, Apps Script, …).
+ *     scripts/giveaway-sheet-backend.gs is a ready-made Google Sheet backend
+ *     that also serves the live entry count (see giveaway-stats.ts).
  *
  * With neither set the page runs in demo mode and shows a visible banner, so
  * an unconfigured page can't quietly drop real entries.
@@ -98,12 +100,17 @@ function prefixKeys(obj: Record<string, string>, prefix: string) {
   return Object.fromEntries(Object.entries(obj).map(([k, v]) => [`${prefix}${k}`, v]));
 }
 
-/** Short, unambiguous referral code (no 0/O, 1/I/L). */
-export function makeRefCode(length = 6): string {
-  const alphabet = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
-  const bytes = new Uint8Array(length);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+const REF_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+
+/**
+ * Referral code for an email: short, unambiguous (no 0/O, 1/I/L) and the same
+ * every time that email enters, so a returning entrant keeps their link and
+ * the referrals already credited to it.
+ */
+export async function refCodeFor(email: string, salt: string, length = 6): Promise<string> {
+  const data = new TextEncoder().encode(`${salt}:${email.trim().toLowerCase()}`);
+  const bytes = new Uint8Array(await crypto.subtle.digest("SHA-256", data)).slice(0, length);
+  return Array.from(bytes, (b) => REF_ALPHABET[b % REF_ALPHABET.length]).join("");
 }
 
 /** utm_* params and the ?ref= code from the current URL. */
