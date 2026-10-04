@@ -44,6 +44,8 @@ export const eqGiveaway = {
   endsAt: "2026-10-25T23:59:00-04:00",
   drawDate: "October 28, 2026",
   referralBonus: 3,
+  /** The live entry count and odds stay hidden until this many people have entered. */
+  showCountFrom: 100,
   minAge: 21,
   eligibility: "legal residents of the 50 United States and D.C.",
 

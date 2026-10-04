@@ -17,6 +17,10 @@ import {
 import { cn } from "@/lib/utils";
 import { useEq } from "./experience";
 
+/** Real counts only, and only once there are enough entrants to be worth showing. */
+const countShown = (s: GiveawayStats | null): s is GiveawayStats =>
+  statsAvailable && s !== null && s.entrants >= g.showCountFrom;
+
 function useStats(): GiveawayStats | null {
   const { entry } = useEq();
   useEffect(() => setStatsRef(entry?.refCode ?? null), [entry?.refCode]);
@@ -85,7 +89,7 @@ function DemoTag() {
 export function EntryStatsBar({ className }: { className?: string }) {
   const stats = useStats();
   const odds = useOdds(stats);
-  if (!statsAvailable) return null;
+  if (!countShown(stats)) return null;
 
   return (
     <div
@@ -95,7 +99,7 @@ export function EntryStatsBar({ className }: { className?: string }) {
       )}
       aria-live="polite"
     >
-      {stats && odds ? (
+      {odds ? (
         <>
           <span className="flex items-center gap-2 text-ink">
             <LiveDot live={stats.live} />
@@ -117,56 +121,66 @@ export function EntryStatsBar({ className }: { className?: string }) {
 /** Full odds section: live count, the visitor's odds, and what each friend adds. */
 export function OddsCalculator() {
   const stats = useStats();
+  const { entry } = useEq();
   const [friends, setFriends] = useState(3);
   const now = useOdds(stats);
   const withFriends = useOdds(stats, friends);
-  if (!statsAvailable) return null;
+  const showNumbers = countShown(stats);
 
   const better = now && withFriends && now.chance > 0 ? withFriends.chance / now.chance : 1;
 
   return (
     <section className="relative border-t border-white/10">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 lg:grid-cols-[1fr_1.15fr] lg:items-center lg:py-28">
-        <div>
-          <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-eq">
-            <LiveDot live={Boolean(stats?.live)} /> Live entry count {stats && !stats.live && <DemoTag />}
-          </p>
-          <p className="mt-4 text-[clamp(3.5rem,12vw,7rem)] leading-none font-semibold tracking-[-0.04em]">
-            {stats ? <AnimatedNumber value={stats.entrants} /> : "—"}
-          </p>
-          <p className="mt-2 text-lg text-ink-2">
-            people entered for {g.winners} rigs
-            {stats && stats.tickets > stats.entrants && (
-              <span className="text-ink-3"> · {stats.tickets.toLocaleString("en-US")} entries with bonuses</span>
-            )}
-          </p>
+      <div
+        className={cn(
+          "mx-auto grid gap-10 px-5 py-20 lg:items-center lg:py-28",
+          showNumbers ? "max-w-6xl lg:grid-cols-[1fr_1.15fr]" : "max-w-2xl",
+        )}
+      >
+        {showNumbers && (
+          <div>
+            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-eq">
+              <LiveDot live={Boolean(stats?.live)} /> Live entry count {stats && !stats.live && <DemoTag />}
+            </p>
+            <p className="mt-4 text-[clamp(3.5rem,12vw,7rem)] leading-none font-semibold tracking-[-0.04em]">
+              {stats ? <AnimatedNumber value={stats.entrants} /> : "—"}
+            </p>
+            <p className="mt-2 text-lg text-ink-2">
+              people entered for {g.winners} rigs
+              {stats && stats.tickets > stats.entrants && (
+                <span className="text-ink-3"> · {stats.tickets.toLocaleString("en-US")} entries with bonuses</span>
+              )}
+            </p>
 
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
-                {now?.entered ? "Your odds now" : "Your odds if you enter"}
-              </p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight">{now ? formatOdds(now.chance) : "—"}</p>
-              <p className="mt-1 text-[13px] text-ink-3">
-                {now ? `${formatPercent(now.chance)} · ${now.mine} ${now.mine === 1 ? "entry" : "entries"}` : ""}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-eq/40 bg-eq/[0.08] p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-eq">
-                +{friends} {friends === 1 ? "friend" : "friends"}
-              </p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight">
-                {withFriends ? formatOdds(withFriends.chance) : "—"}
-              </p>
-              <p className="mt-1 text-[13px] text-ink-2">
-                {withFriends ? `${formatPercent(withFriends.chance)} · ${better.toFixed(1)}× better` : ""}
-              </p>
+            <div className="mt-8 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
+                  {now?.entered ? "Your odds now" : "Your odds if you enter"}
+                </p>
+                <p className="mt-2 text-3xl font-semibold tracking-tight">{now ? formatOdds(now.chance) : "—"}</p>
+                <p className="mt-1 text-[13px] text-ink-3">
+                  {now ? `${formatPercent(now.chance)} · ${now.mine} ${now.mine === 1 ? "entry" : "entries"}` : ""}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-eq/40 bg-eq/[0.08] p-5">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-eq">
+                  +{friends} {friends === 1 ? "friend" : "friends"}
+                </p>
+                <p className="mt-2 text-3xl font-semibold tracking-tight">
+                  {withFriends ? formatOdds(withFriends.chance) : "—"}
+                </p>
+                <p className="mt-1 text-[13px] text-ink-2">
+                  {withFriends ? `${formatPercent(withFriends.chance)} · ${better.toFixed(1)}× better` : ""}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="rounded-3xl border border-white/10 bg-[#0d0d12]/80 p-6 sm:p-8">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Stack the odds.</h2>
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            {showNumbers ? "Stack the odds." : "Stack your entries."}
+          </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-2">
             Everyone starts with one entry. Each friend who enters with your link adds{" "}
             <strong className="text-ink">+{g.referralBonus}</strong> to yours. Slide to see what bringing friends does.
@@ -212,11 +226,13 @@ export function OddsCalculator() {
             href="#enter"
             className="mt-7 flex h-12 items-center justify-center rounded-xl bg-eq text-[15px] font-semibold text-[#08080b] hover:brightness-110"
           >
-            {now?.entered ? "Get your share link" : "Enter and get your link"}
+            {entry ? "Get your share link" : "Enter and get your link"}
           </a>
           <p className="mt-3 text-[11.5px] leading-snug text-ink-3">
-            Odds are estimates from the live entry count and change as more people enter. {g.winners} winners
-            drawn at random from all eligible entries.
+            {showNumbers
+              ? "Odds are estimates from the live entry count and change as more people enter. "
+              : "More entries, better odds. "}
+            {g.winners} winners drawn at random from all eligible entries.
           </p>
         </div>
       </div>
@@ -229,7 +245,7 @@ export function ShareOdds() {
   const stats = useStats();
   const now = useOdds(stats);
   const next = useOdds(stats, 1);
-  if (!statsAvailable || !stats || !now || !next) return null;
+  if (!countShown(stats) || !now || !next) return null;
   return (
     <div className="mt-4 grid grid-cols-2 gap-2 text-center">
       <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5">
