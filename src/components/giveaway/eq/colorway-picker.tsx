@@ -1,6 +1,6 @@
 "use client";
 
-import { eqGiveaway } from "@/data/giveaways/davinci-eq-skyrise";
+import { eqGiveaway } from "@/data/giveaways/davinci-eq-jacuzzi";
 import { cn } from "@/lib/utils";
 import { useEq } from "./experience";
 

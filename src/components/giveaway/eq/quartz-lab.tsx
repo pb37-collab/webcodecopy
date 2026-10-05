@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Flame, RotateCcw } from "lucide-react";
-import { eqGiveaway } from "@/data/giveaways/davinci-eq-skyrise";
+import { eqGiveaway } from "@/data/giveaways/davinci-eq-jacuzzi";
 import { cn } from "@/lib/utils";
 import { AutoVideo } from "./auto-video";
 

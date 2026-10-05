@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Rising bubbles, like the Skyrise bubbler's 30 ml of water. Positions come
+ * Rising bubbles, like the Jacuzzi bubbler's 60 ml of water. Positions come
  * from a fixed formula (not Math.random) so server and client markup match.
  */
 export function Bubbles({ count = 18, rise = 520, className }: { count?: number; rise?: number; className?: string }) {

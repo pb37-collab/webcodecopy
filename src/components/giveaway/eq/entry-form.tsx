@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { ArrowRight, Check, Copy, Loader2, Share2 } from "lucide-react";
-import { eqGiveaway } from "@/data/giveaways/davinci-eq-skyrise";
+import { eqGiveaway } from "@/data/giveaways/davinci-eq-jacuzzi";
 import {
   EMAIL_PATTERN,
   captureConfigured,
@@ -234,7 +234,7 @@ function SharePanel({ id }: { id: string }) {
   }, [entry]);
 
   if (!entry) return null;
-  const text = `I just entered to win a limited-edition ${eqGiveaway.brand} ${eqGiveaway.productShort} (Quartz). ${eqGiveaway.winners} winners. Enter here:`;
+  const text = `I just entered to win a ${eqGiveaway.brand} ${eqGiveaway.product} kit. ${eqGiveaway.winners} winners. Enter here:`;
 
   async function copy() {
     try {

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { eqGiveaway, type ColorwayId } from "@/data/giveaways/davinci-eq-skyrise";
+import { eqGiveaway, type ColorwayId } from "@/data/giveaways/davinci-eq-jacuzzi";
 import { cn } from "@/lib/utils";
 import { useEq } from "./experience";
 import { Bubbles, QuartzCrystal } from "./motion";
@@ -59,7 +59,7 @@ export function ProductStage({ images }: StageProps) {
       </div>
 
       {hasImages ? (
-        <div className="absolute inset-x-0 -inset-y-[7%] lg:-inset-x-[8%] lg:-top-[6%] lg:bottom-0">
+        <div className="absolute inset-x-0 -inset-y-[7%] lg:inset-x-[7%] lg:top-[8%] lg:bottom-[6%]">
           {/* Light pool under the base */}
           <div
             aria-hidden
@@ -92,7 +92,7 @@ export function ProductStage({ images }: StageProps) {
 
       <SpecChip className="top-[10%] left-0 lg:top-[14%]" label="Heat-up" value="25s" />
       <SpecChip className="top-[46%] right-0 [animation-delay:-2s] lg:top-[44%]" label="Temp" value="450–650°F" />
-      <SpecChip className="bottom-[6%] left-[3%] [animation-delay:-4s] lg:bottom-[12%] lg:left-[4%]" label="Bubbler" value="30 ml" />
+      <SpecChip className="bottom-[6%] left-[3%] [animation-delay:-4s] lg:bottom-[12%] lg:left-[4%]" label="Bubbler" value="60 ml" />
 
       <div className="absolute top-0 right-[2%] grid size-16 place-items-center rounded-full bg-eq text-center text-[#08080b] shadow-[0_10px_40px_-8px_var(--eq)] sm:size-24 lg:top-[4%] lg:right-[6%]">
         <span className="leading-none">

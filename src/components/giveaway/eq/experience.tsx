@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { eqGiveaway, type Colorway, type ColorwayId } from "@/data/giveaways/davinci-eq-skyrise";
+import { eqGiveaway, type Colorway, type ColorwayId } from "@/data/giveaways/davinci-eq-jacuzzi";
 
 type EntryState = { refCode: string; email: string; demo: boolean } | null;
 

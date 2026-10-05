@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ImageResponse } from "next/og";
-import { eqGiveaway as g } from "@/data/giveaways/davinci-eq-skyrise";
+import { eqGiveaway as g } from "@/data/giveaways/davinci-eq-jacuzzi";
 
-export const alt = `Win the ${g.brand} ${g.productShort} (Limited Edition: Quartz). ${g.winners} winners.`;
+export const alt = `Win the ${g.brand} ${g.product}. ${g.winners} winners.`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const dynamic = "force-static";
@@ -50,8 +50,9 @@ export default function OpenGraphImage() {
             </span>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 88, fontWeight: 700, lineHeight: 0.95, letterSpacing: -3 }}>Win the EQ Skyrise</div>
+            <div style={{ fontSize: 88, fontWeight: 700, lineHeight: 0.95, letterSpacing: -3 }}>Win the EQ Electric</div>
             <div style={{ fontSize: 88, fontWeight: 300, lineHeight: 1.05, color: accent, fontStyle: "italic" }}>Quartz.</div>
+            <div style={{ fontSize: 30, marginTop: 14, color: "#b9b6ab", letterSpacing: 1 }}>Jacuzzi Collection</div>
           </div>
           <div style={{ display: "flex", gap: 14, fontSize: 26 }}>
             <span style={{ background: accent, color: "#08080b", padding: "10px 20px", borderRadius: 14, fontWeight: 700 }}>

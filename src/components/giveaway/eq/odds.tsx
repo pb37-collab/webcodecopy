@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Users } from "lucide-react";
-import { eqGiveaway as g } from "@/data/giveaways/davinci-eq-skyrise";
+import { eqGiveaway as g } from "@/data/giveaways/davinci-eq-jacuzzi";
 import {
   formatOdds,
   formatPercent,
