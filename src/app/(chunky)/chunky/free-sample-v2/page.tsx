@@ -9,7 +9,6 @@ import {
   LanderHeader,
   LegalFooter,
   SectionHeading,
-  SpotsLeft,
   StatsBand,
   TrustMarquee,
   TrustTiles,
@@ -21,6 +20,9 @@ import { claimConfig } from "@/lib/chunky/config";
 export const metadata: Metadata = {
   title: "Free Flower: The Choice Is in Your Hands | Chunky Academy",
 };
+
+const stock = claimConfig.stock.total;
+const runTotal = stock.runtz + stock.snowcaps;
 
 const steps = [
   {
@@ -57,7 +59,13 @@ export default function FreeSampleV2() {
   return (
     <>
       <ReturningNotice />
-      <UrgencyBar>Limited time: one free sample per customer</UrgencyBar>
+      <UrgencyBar>
+        Limited run: only {runTotal} free samples
+        <span className="hidden sm:inline">
+          {" "}
+          · {stock.runtz} in the red hand, {stock.snowcaps} in the blue
+        </span>
+      </UrgencyBar>
       <div className="relative isolate overflow-hidden bg-black">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <CodeRain />
@@ -77,7 +85,9 @@ export default function FreeSampleV2() {
               <span className="ml-0.5 inline-block w-2 animate-ca-pulse bg-ca-neon">&nbsp;</span>
             </p>
             <h1 className="mt-2 animate-ca-rise font-ca-display font-black tracking-[-0.02em] uppercase [animation-delay:60ms] sm:mt-4">
-              <span className="ca-text-green block text-[2.8rem] leading-[0.9] whitespace-nowrap sm:text-7xl">Free flower.</span>
+              <span className="ca-text-green block text-[2.8rem] leading-[0.9] whitespace-nowrap sm:text-7xl">
+                Free flower.
+              </span>
               <span className="mt-1.5 block text-[1.6rem] leading-[1] text-balance sm:mt-2 sm:text-4xl">
                 The choice is in your hands.
               </span>
@@ -86,7 +96,6 @@ export default function FreeSampleV2() {
               Take the <span className="font-bold text-runtz-hi">Runtz</span> and the story stays sweet. Take
               the <span className="font-bold text-snow-hi">Snowcaps</span> and see how deep the frost goes.
             </p>
-            <SpotsLeft className="mt-3" />
           </div>
           <div className="mt-4 animate-ca-rise [animation-delay:180ms] sm:mt-10">
             <HandChoice />

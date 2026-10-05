@@ -11,18 +11,21 @@ import {
   Pill,
   ProductArt,
   SectionHeading,
-  SpotsLeft,
   StatsBand,
   TrustMarquee,
   TrustTiles,
   UrgencyBar,
 } from "@/components/chunky/shared";
+import { StockMeter } from "@/components/chunky/inventory";
 import { ReturningNotice } from "@/components/chunky/use-claim";
 import { claimConfig } from "@/lib/chunky/config";
 
 export const metadata: Metadata = {
   title: "Free Flower, Your Choice | Chunky Academy",
 };
+
+const stock = claimConfig.stock.total;
+const runTotal = stock.runtz + stock.snowcaps;
 
 const steps = [
   {
@@ -43,7 +46,13 @@ export default function FreeSampleV1() {
   return (
     <>
       <ReturningNotice />
-      <UrgencyBar />
+      <UrgencyBar>
+        Limited run: only {runTotal} free samples
+        <span className="hidden sm:inline">
+          {" "}
+          · {stock.runtz} Runtz, {stock.snowcaps} Snowcaps
+        </span>
+      </UrgencyBar>
       <div className="relative isolate overflow-hidden">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-32 -left-32 size-[30rem] rounded-full bg-runtz/20 blur-[110px]" />
@@ -58,7 +67,8 @@ export default function FreeSampleV1() {
         <section className="px-4 pt-4 pb-10 sm:px-6 sm:pt-10 sm:pb-16">
           <div className="mx-auto max-w-3xl text-center">
             <Pill className="animate-ca-rise">
-              <Gift className="size-3.5" /> Free sample drop<span className="hidden sm:inline"> · While supplies last</span>
+              <Gift className="size-3.5" /> Free sample drop
+              <span className="hidden sm:inline"> · {runTotal} samples only</span>
             </Pill>
             <h1 className="mt-3 animate-ca-rise font-ca-display text-[2.55rem] leading-[0.92] font-black tracking-[-0.02em] text-balance uppercase [animation-delay:60ms] sm:mt-5 sm:text-7xl">
               <span className="ca-text-green text-[1.22em]">Free flower.</span>
@@ -69,10 +79,11 @@ export default function FreeSampleV1() {
               7g of Jolly Rancher Runtz or 3.5g of Cotton Candy Toast Snowcaps. Both are free; which one you
               take is up to you. <span className="font-semibold text-white">{claimConfig.offerNote}</span>
             </p>
-            <SpotsLeft className="mt-3" />
           </div>
 
-          <div className="mt-5 animate-ca-rise [animation-delay:180ms] sm:mt-10">
+          <StockMeter className="mt-3.5 animate-ca-rise [animation-delay:150ms] sm:mt-8" />
+
+          <div className="mt-3 animate-ca-rise [animation-delay:180ms] sm:mt-5">
             <SampleChooser />
           </div>
 
@@ -142,7 +153,7 @@ export default function FreeSampleV1() {
         <h2 className="mx-auto mt-4 max-w-xl font-ca-display text-4xl leading-[0.95] font-black uppercase sm:text-6xl">
           Your sample is <span className="ca-text-green">waiting.</span>
         </h2>
-        <p className="mt-3 text-ca-ink-2">One per customer, while supplies last.</p>
+        <p className="mt-3 text-ca-ink-2">One per customer. Only {runTotal} in the run.</p>
         <a
           href="#claim"
           className="mt-8 inline-flex h-14 items-center gap-2 rounded-xl bg-gradient-to-b from-ca-green-2 to-ca-green px-8 font-ca-display font-black tracking-wide text-white uppercase shadow-[0_10px_30px_-6px_rgb(34_197_94/0.7)]"

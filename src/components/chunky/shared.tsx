@@ -344,6 +344,10 @@ export function HowItWorks({ steps }: { steps: { title: string; body: string }[]
 
 export const faqItems = [
   {
+    q: "How many free samples are there?",
+    a: `It's a limited run: ${claimConfig.stock.total.runtz + claimConfig.stock.total.snowcaps} samples total, ${claimConfig.stock.total.runtz} Jolly Rancher Runtz and ${claimConfig.stock.total.snowcaps} Cotton Candy Toast Snowcaps. The counter at the top shows what's left. When a strain hits zero, it's gone.`,
+  },
+  {
     q: "Is the sample really free?",
     a: `Yes. The flower is on us. ${claimConfig.offerNote} Your sample goes into your cart with the free-sample discount already applied, and you check out like any other order.`,
   },
@@ -497,20 +501,6 @@ export function ConsentNote({ className }: { className?: string }) {
     <p className={cn("text-[0.7rem] leading-relaxed text-ca-ink-3", className)}>
       By claiming, you confirm you&apos;re 21+ and agree to get emails from Chunky Academy (unsubscribe
       anytime). One per customer. Duplicate sample orders are automatically canceled.
-    </p>
-  );
-}
-
-/** "Available for the next ~~1000~~ 450 people", shown only when both numbers are configured. */
-export function SpotsLeft({ className }: { className?: string }) {
-  if (!claimConfig.spotsTotal || !claimConfig.spotsLeft) return null;
-  return (
-    <p className={cn("font-ca-display text-lg font-extrabold uppercase", className)}>
-      Available for the next{" "}
-      <span className="text-ca-ink-3 line-through decoration-ca-red decoration-[3px]">
-        {claimConfig.spotsTotal}
-      </span>{" "}
-      <span className="text-ca-red">{claimConfig.spotsLeft} people</span>
     </p>
   );
 }

@@ -98,12 +98,36 @@ export const claimConfig = {
   offerNote: read(process.env.NEXT_PUBLIC_SAMPLE_OFFER_NOTE, "Just cover shipping."),
 
   /**
-   * Optional scarcity line, the way the current page does it ("Available for
-   * the next ~~1000~~ 450 people"). Set both to show it; leave empty to hide.
+   * The limited run: how many samples of each exist, and how many are left.
+   * `left` is the fallback shown until (or unless) the live inventory
+   * endpoint answers; keep it in step by hand if there's no endpoint.
    */
-  spotsTotal: read(process.env.NEXT_PUBLIC_SAMPLE_SPOTS_TOTAL),
-  spotsLeft: read(process.env.NEXT_PUBLIC_SAMPLE_SPOTS_LEFT),
+  stock: {
+    total: {
+      runtz: readInt(process.env.NEXT_PUBLIC_RUNTZ_STOCK_TOTAL, 150),
+      snowcaps: readInt(process.env.NEXT_PUBLIC_SNOWCAPS_STOCK_TOTAL, 150),
+    } satisfies Record<SampleId, number>,
+    left: {
+      runtz: readInt(process.env.NEXT_PUBLIC_RUNTZ_STOCK_LEFT, 150),
+      snowcaps: readInt(process.env.NEXT_PUBLIC_SNOWCAPS_STOCK_LEFT, 150),
+    } satisfies Record<SampleId, number>,
+    /**
+     * Live counts: a URL returning {"runtz": n, "snowcaps": n}. Empty means
+     * `${apiBase}/api/free-sample/inventory` when the page is live on the
+     * Chunky site (route code in docs/chunky/INTEGRATION.md); "off" disables it.
+     */
+    url: read(process.env.NEXT_PUBLIC_SAMPLE_INVENTORY_URL),
+    /** How often to refresh live counts while the page is open. */
+    refreshMs: 45_000,
+    /** At or below this, a sample's count turns red: "Only 12 left". */
+    lowAt: 25,
+  },
 } as const;
+
+function readInt(value: string | undefined, fallback: number): number {
+  const n = Number.parseInt(value ?? "", 10);
+  return Number.isFinite(n) && n >= 0 ? n : fallback;
+}
 
 /** True when a claim would really reach the store rather than preview mode. */
 export function isLive(): boolean {

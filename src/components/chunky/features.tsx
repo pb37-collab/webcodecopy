@@ -2,6 +2,7 @@ import { ExternalLink } from "lucide-react";
 import type { SampleId } from "@/lib/chunky/config";
 import { samples, sampleOrder } from "@/lib/chunky/products";
 import { cn } from "@/lib/utils";
+import { StockBadge } from "./inventory";
 import { ProductArt, theme } from "./shared";
 
 /** Product panel in the chunkyacademy.com card style: art, name, price, notes, CTA. */
@@ -45,6 +46,7 @@ export function ProductFeature({
           <span className="font-ca-display text-2xl font-black text-ca-neon">FREE</span>
           <span className="text-sm text-ca-ink-3 line-through">{p.retail} USD</span>
           <span className="text-sm text-ca-ink-3">· {p.weightLong}</span>
+          <StockBadge sample={sample} className="ml-auto self-center" />
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           {[p.type, p.finish].map((chip) => (

@@ -7,6 +7,7 @@ import { ClaimError, isValidEmail, submitEmail } from "@/lib/chunky/claim";
 import { samples } from "@/lib/chunky/products";
 import { cn } from "@/lib/utils";
 import { Hand } from "./hand";
+import { AllClaimed, SoldOutStamp, StockBadge, StockMeter, useInventory } from "./inventory";
 import { ConsentNote, FreeSticker, ProductArt } from "./shared";
 import { PreviewSheet, useClaim } from "./use-claim";
 
@@ -68,6 +69,7 @@ export function HandChoice() {
   const formRef = useRef<HTMLDivElement>(null);
   const handsRef = useRef<HTMLDivElement>(null);
   const { status, claim, preview, error: claimError, reset } = useClaim("free-sample-v2");
+  const { left, allGone } = useInventory();
   const unlocked = step === "choose";
 
   function bump() {
@@ -113,7 +115,7 @@ export function HandChoice() {
   }
 
   async function pick(sample: SampleId) {
-    if (chosen) return;
+    if (chosen || left[sample] === 0) return;
     if (!unlocked) {
       // Email first. Point them at the form.
       setNudge(true);
@@ -142,22 +144,26 @@ export function HandChoice() {
             const p = samples[h.sample];
             const isChosen = chosen === h.sample;
             const isOther = chosen !== null && !isChosen;
+            const soldOut = left[h.sample] === 0;
             return (
               <button
                 key={h.sample}
                 type="button"
                 onClick={() => void pick(h.sample)}
-                aria-disabled={chosen !== null}
+                aria-disabled={chosen !== null || soldOut}
                 aria-label={
-                  unlocked
-                    ? `Choose ${p.name}, ${p.weightLong}, free`
-                    : `${p.name}, locked. Enter your email first.`
+                  soldOut
+                    ? `${p.name}, sold out`
+                    : unlocked
+                      ? `Choose ${p.name}, ${p.weightLong}, free`
+                      : `${p.name}, locked. Enter your email first.`
                 }
                 className={cn(
                   "group relative flex flex-col items-center text-center transition-all duration-700 ease-out",
                   unlocked && !chosen && "hover:-translate-y-1.5",
                   isChosen && "z-10 -translate-y-2 scale-[1.06]",
                   isOther && "scale-95 opacity-15 blur-[2px] grayscale",
+                  soldOut && !isOther && "cursor-not-allowed",
                 )}
               >
                 <div className="relative aspect-[290/340] w-full max-w-[300px]">
@@ -180,17 +186,18 @@ export function HandChoice() {
                     className={cn(
                       "absolute top-[38%] w-[48%] transition-all duration-700",
                       h.side === "left" ? "left-[27%]" : "left-[25%]",
-                      !unlocked && "opacity-55 grayscale-[0.7]",
+                      (!unlocked || soldOut) && "opacity-55 grayscale-[0.7]",
                     )}
                   >
                     <ProductArt sample={h.sample} priority glow={false} float={unlocked && !chosen} />
                   </div>
-                  {!unlocked && (
+                  {soldOut && <SoldOutStamp className="top-[55%]" />}
+                  {!unlocked && !soldOut && (
                     <span className="absolute top-[64%] left-1/2 grid size-8 -translate-x-1/2 place-items-center rounded-full border border-white/15 bg-black/75 text-ca-ink-2 backdrop-blur">
                       <Lock className="size-3.5" />
                     </span>
                   )}
-                  {unlocked && !chosen && (
+                  {unlocked && !chosen && !soldOut && (
                     <FreeSticker
                       sample={h.sample}
                       className="absolute top-[30%] right-[6%] scale-90 sm:scale-100"
@@ -223,6 +230,7 @@ export function HandChoice() {
                 <p className="mt-1 text-[0.7rem] font-semibold text-ca-ink-2 sm:text-sm">
                   {p.weight} · {p.type}
                 </p>
+                <StockBadge sample={h.sample} className="mt-1.5" />
               </button>
             );
           })}
@@ -238,7 +246,9 @@ export function HandChoice() {
           {chosenProduct
             ? `> loading ${chosenProduct.shortName.toLowerCase()} into your cart_`
             : unlocked
-              ? "> unlocked. tap the hand you want_"
+              ? allGone
+                ? "> the run is over. every sample is claimed_"
+                : "> unlocked. tap the hand you want_"
               : nudge
                 ? "> email first. then the choice is yours_"
                 : "> locked. enter your email below to choose_"}
@@ -250,9 +260,13 @@ export function HandChoice() {
         )}
       </div>
 
+      <StockMeter tone="terminal" className="mt-5" />
+
       {/* Step 1: email gate. Collapses to a pill once it's done. */}
-      <div ref={formRef} className={cn("mt-5 scroll-mt-24", shake && "animate-ca-shake")}>
-        {unlocked ? (
+      <div ref={formRef} className={cn("mt-4 scroll-mt-24", shake && "animate-ca-shake")}>
+        {allGone ? (
+          <AllClaimed />
+        ) : unlocked ? (
           <div className="mx-auto flex max-w-md items-center justify-between gap-3 rounded-full border border-ca-green/50 bg-ca-green/10 py-2 pr-2 pl-4 text-sm">
             <span className="flex min-w-0 items-center gap-2 text-ca-ink-2">
               <span className="grid size-5 shrink-0 place-items-center rounded-full bg-ca-green-2 text-black">
