@@ -237,7 +237,7 @@ export function HandChoice() {
                   Claim your {chosen.name}
                 </p>
                 <p className="text-xs text-ca-ink-2">
-                  Enter your email to lock it in. Changed your mind? Tap the other hand.
+                  The flower is free, you just pay shipping. Changed your mind? Tap the other hand.
                 </p>
               </div>
             </div>

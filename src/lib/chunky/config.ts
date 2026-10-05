@@ -95,7 +95,7 @@ export const claimConfig = {
   leadTimeoutMs: 2500,
 
   /** Offer terms line shown on both pages. */
-  offerNote: read(process.env.NEXT_PUBLIC_SAMPLE_OFFER_NOTE, "Just cover shipping."),
+  offerNote: read(process.env.NEXT_PUBLIC_SAMPLE_OFFER_NOTE, "The flower is free. You just pay shipping."),
 
   /**
    * The limited run: how many samples of each exist, and how many are left.

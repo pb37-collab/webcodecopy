@@ -348,8 +348,8 @@ export const faqItems = [
     a: `It's a limited run: ${claimConfig.stock.total.runtz + claimConfig.stock.total.snowcaps} samples total, ${claimConfig.stock.total.runtz} Jolly Rancher Runtz and ${claimConfig.stock.total.snowcaps} Cotton Candy Toast Snowcaps. The counter at the top shows what's left. When a strain hits zero, it's gone.`,
   },
   {
-    q: "Is the sample really free?",
-    a: `Yes. The flower is on us. ${claimConfig.offerNote} Your sample goes into your cart with the free-sample discount already applied, and you check out like any other order.`,
+    q: "Is the sample really free? Do I pay anything?",
+    a: `The flower is free; you just pay shipping. Your sample goes into your cart with the free-sample discount already applied, and you check out like any other order.`,
   },
   {
     q: "Can I get both samples?",
@@ -498,9 +498,18 @@ export function LegalFooter() {
 
 export function ConsentNote({ className }: { className?: string }) {
   return (
-    <p className={cn("text-[0.7rem] leading-relaxed text-ca-ink-3", className)}>
-      By claiming, you confirm you&apos;re 21+ and agree to get emails from Chunky Academy (unsubscribe
-      anytime). One per customer. Duplicate sample orders are automatically canceled.
-    </p>
+    <div className={cn("space-y-1", className)}>
+      <p className="text-[0.82rem] font-bold text-white">
+        Free flower. Just pay shipping{" "}
+        <span className="text-ca-ink-3" aria-hidden>
+          |
+        </span>{" "}
+        Limit one per customer. Must be 21+.
+      </p>
+      <p className="text-[0.7rem] leading-relaxed text-ca-ink-3">
+        Duplicate sample orders will be automatically canceled. By claiming, you agree to get emails from
+        Chunky Academy (unsubscribe anytime).
+      </p>
+    </div>
   );
 }

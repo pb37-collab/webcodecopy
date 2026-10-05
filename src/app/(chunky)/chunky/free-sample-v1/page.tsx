@@ -76,8 +76,8 @@ export default function FreeSampleV1() {
               Your choice.
             </h1>
             <p className="mx-auto mt-3 max-w-md animate-ca-rise text-[0.98rem] leading-snug text-ca-ink-2 [animation-delay:120ms] sm:mt-5 sm:text-lg">
-              7g of Jolly Rancher Runtz or 3.5g of Cotton Candy Toast Snowcaps. Both are free; which one you
-              take is up to you. <span className="font-semibold text-white">{claimConfig.offerNote}</span>
+              7g of Jolly Rancher Runtz or 3.5g of Cotton Candy Toast Snowcaps. Which one you take is up to
+              you. <span className="font-semibold text-white">{claimConfig.offerNote}</span>
             </p>
           </div>
 

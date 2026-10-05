@@ -143,7 +143,7 @@ Every option is listed with comments in [`.env.example`](../../.env.example). `N
 | `NEXT_PUBLIC_RUNTZ_STOCK_TOTAL` / `NEXT_PUBLIC_SNOWCAPS_STOCK_TOTAL` | 150 / 150 | Size of the limited run. |
 | `NEXT_PUBLIC_RUNTZ_STOCK_LEFT` / `NEXT_PUBLIC_SNOWCAPS_STOCK_LEFT` | 150 / 150 | Fallback "left" counts until live inventory answers. |
 | `NEXT_PUBLIC_SAMPLE_INVENTORY_URL` | the site's `/api/free-sample/inventory` | Live counts; `off` disables. |
-| `NEXT_PUBLIC_SAMPLE_OFFER_NOTE` | "Just cover shipping." | The offer line on both pages. |
+| `NEXT_PUBLIC_SAMPLE_OFFER_NOTE` | "The flower is free. You just pay shipping." | The offer line on both pages (hero, how-it-works, FAQ). |
 
 **Permalink mode** links to `https://chunkyacademy.myshopify.com/cart/VARIANT:1?discount=free-sample&checkout[email]=…` with the sample name, page and UTMs written onto the order as attributes. It needs the myshopify Online Store to accept cart links. Test one in a browser first.
 

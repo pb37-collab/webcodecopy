@@ -92,6 +92,9 @@ export default function FreeSampleV2() {
                 The choice is in your hands.
               </span>
             </h1>
+            <p className="mx-auto mt-3 max-w-md animate-ca-rise text-[0.95rem] leading-snug text-ca-ink-2 [animation-delay:120ms] sm:mt-4 sm:text-lg">
+              <span className="font-semibold text-white">{claimConfig.offerNote}</span>
+            </p>
           </div>
           <div className="mt-4 animate-ca-rise [animation-delay:180ms] sm:mt-10">
             <HandChoice />
