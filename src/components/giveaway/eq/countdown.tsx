@@ -42,12 +42,12 @@ export function Countdown({ className }: { className?: string }) {
         {units.map((u) => (
           <div
             key={u.label}
-            className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] px-1 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+            className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] px-1 py-2 text-center sm:py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
           >
             <span className="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-black/40" aria-hidden />
             <span
               key={u.value ?? "x"}
-              className="block animate-[eq-tick_350ms_ease-out] font-eq text-3xl font-semibold tabular-nums tracking-tight sm:text-4xl"
+              className="block animate-[eq-tick_350ms_ease-out] font-eq text-[1.7rem] font-semibold tabular-nums tracking-tight sm:text-4xl"
             >
               {u.value === undefined ? "--" : pad(u.value)}
             </span>

@@ -11,7 +11,7 @@ import { EntryStatsBar, OddsCalculator } from "@/components/giveaway/eq/odds";
 import { Bubbles, Caustics, QuartzCrystal } from "@/components/giveaway/eq/motion";
 import { ProductStage } from "@/components/giveaway/eq/product-stage";
 import { QuartzLab } from "@/components/giveaway/eq/quartz-lab";
-import { StickyCta } from "@/components/giveaway/eq/sticky-cta";
+import { HeroCta, StickyCta } from "@/components/giveaway/eq/sticky-cta";
 import { eqGiveaway as g, type ColorwayId } from "@/data/giveaways/davinci-eq-skyrise";
 import { hasPublicFile } from "@/lib/media";
 import "./eq.css";
@@ -59,7 +59,7 @@ export default function EqSkyriseGiveaway() {
       <div className={`${sora.variable} font-eq`}>
         <Ticker />
 
-        <header className="relative z-20 mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+        <header className="relative z-20 mx-auto flex max-w-6xl items-center justify-between px-5 py-3 lg:py-4">
           <a href={g.brandUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
             <span className="text-[15px] font-semibold tracking-[0.42em]">DAVINCI</span>
             <span className="rounded-full border border-eq/40 bg-eq/10 px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-eq">
@@ -74,18 +74,21 @@ export default function EqSkyriseGiveaway() {
         {/* HERO */}
         <section className="relative">
           <Caustics />
-          <div className="relative mx-auto grid max-w-6xl gap-8 px-5 pt-4 pb-16 lg:grid-cols-[1fr_1fr] lg:gap-x-14 lg:pt-10 lg:pb-24">
+          <div className="relative mx-auto grid max-w-6xl gap-y-4 px-5 pt-2 pb-16 lg:grid-cols-[1fr_1fr] lg:gap-8 lg:gap-x-14 lg:pt-10 lg:pb-24">
             <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
-              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-eq">
+              <p className="hidden font-mono text-[11px] uppercase tracking-[0.22em] text-eq lg:block">
                 Limited-edition giveaway · {g.winners} winners
               </p>
-              <h1 className="mt-4 text-[2.9rem] leading-[0.95] font-semibold tracking-[-0.03em] sm:text-7xl">
-                Win the EQ Skyrise
-                <span className="block bg-gradient-to-r from-white via-eq to-white bg-clip-text font-light text-transparent italic">
+              <h1 className="text-[2.6rem] leading-[0.95] font-semibold tracking-[-0.03em] sm:text-7xl lg:mt-4">
+                Win the EQ Skyrise{" "}
+                <span className="bg-gradient-to-r from-white via-eq to-white bg-clip-text font-light text-transparent italic lg:block">
                   Quartz.
                 </span>
               </h1>
-              <p className="mt-5 max-w-lg text-[17px] leading-relaxed text-ink-2">
+              <p className="mt-2 text-[15px] text-ink-2 lg:hidden">
+                <span className="text-eq">{g.winners} limited-edition rigs</span> · ${totalValue} in prizes
+              </p>
+              <p className="mt-5 hidden max-w-lg text-[17px] leading-relaxed text-ink-2 lg:block">
                 {g.brand}&rsquo;s limited-edition electric quartz rig: a tall Skyrise glass bubbler, on-device
                 touchscreen and a 25-second heat-up. We&rsquo;re giving away {g.winners}. Entering takes ten
                 seconds.
@@ -94,10 +97,12 @@ export default function EqSkyriseGiveaway() {
 
             <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
               <ProductStage images={cutouts} />
+              <ColorwayPicker size="stage" className="mt-2 lg:hidden" />
             </div>
 
             <div className="lg:col-start-1 lg:row-start-2">
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-3">Entries close in</p>
+              <HeroCta className="mb-5" />
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-3 lg:mb-3">Entries close in</p>
               <Countdown />
               <EntryStatsBar className="mt-3" />
               <div className="mt-5">
