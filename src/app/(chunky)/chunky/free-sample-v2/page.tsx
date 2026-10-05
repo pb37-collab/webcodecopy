@@ -26,12 +26,12 @@ const runTotal = stock.runtz + stock.snowcaps;
 
 const steps = [
   {
-    title: "Unlock the choice",
-    body: "Drop your first name and email. That's what opens the hands.",
-  },
-  {
     title: "Pick a hand",
     body: "Red for 7g of Jolly Rancher Runtz. Blue for 3.5g of Cotton Candy Toast Snowcaps.",
+  },
+  {
+    title: "Claim it with your email",
+    body: "First name and email lock in your pick. Change your mind first? Tap the other hand.",
   },
   {
     title: "Land in checkout",
@@ -92,10 +92,6 @@ export default function FreeSampleV2() {
                 The choice is in your hands.
               </span>
             </h1>
-            <p className="mx-auto mt-3 max-w-sm animate-ca-rise text-[0.95rem] leading-snug text-ca-ink-2 [animation-delay:120ms] sm:mt-4 sm:max-w-md sm:text-lg">
-              Take the <span className="font-bold text-runtz-hi">Runtz</span> and the story stays sweet. Take
-              the <span className="font-bold text-snow-hi">Snowcaps</span> and see how deep the frost goes.
-            </p>
           </div>
           <div className="mt-4 animate-ca-rise [animation-delay:180ms] sm:mt-10">
             <HandChoice />
@@ -141,7 +137,7 @@ export default function FreeSampleV2() {
           eyebrow="How it works"
           title={
             <>
-              Unlock. Choose. <span className="ca-text-green">Done.</span>
+              Choose. Claim. <span className="ca-text-green">Done.</span>
             </>
           }
         />

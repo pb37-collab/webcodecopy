@@ -28,13 +28,13 @@ export function useClaim(source: ClaimSource) {
   const claim = useCallback(
     async (
       input: { firstName: string; email: string; sample: SampleId },
-      { delayMs = 0, emailAlreadySubmitted = false } = {},
+      { delayMs = 0 } = {},
     ): Promise<boolean> => {
       setStatus("submitting");
       setError(null);
       const started = Date.now();
       try {
-        const result = await claimSample({ ...input, source }, emailAlreadySubmitted);
+        const result = await claimSample({ ...input, source });
         const wait = Math.max(0, delayMs - (Date.now() - started));
         if (wait) await new Promise((r) => setTimeout(r, wait));
         if (result.live) {

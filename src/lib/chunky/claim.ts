@@ -11,7 +11,7 @@ export interface Lead {
   source: ClaimSource;
 }
 
-/** A lead before a product is picked (v2 captures the email first). */
+/** A lead whose sample may not be known yet. */
 export type EmailLead = Omit<Lead, "sample"> & { sample?: SampleId };
 
 export type ClaimResult =
@@ -167,8 +167,7 @@ function profile(lead: EmailLead) {
  * chosen) and/or a JSON webhook. Never throws, never waits longer than
  * leadTimeoutMs.
  *
- * `stage` is "email" when only the email is known (v2's unlock step) and
- * "claimed" once the sample is picked.
+ * `stage` is reported to the webhook; claims send "claimed".
  */
 export async function captureExtras(lead: EmailLead, stage: "email" | "claimed"): Promise<void> {
   const { klaviyo, webhookUrl, leadTimeoutMs, klaviyoListId, mode } = claimConfig;
@@ -248,18 +247,6 @@ export function track(event: string, params: Record<string, unknown> = {}): void
 
 /* The flows the pages call. */
 
-/**
- * v2's unlock step: save the email before a sample is picked. In chunky-api
- * mode this subscribes through the site and throws ClaimError if that fails;
- * the extras run in the background.
- */
-export async function submitEmail(input: EmailLead): Promise<void> {
-  const lead = normalizeLead(input);
-  track("free_sample_email", { page: lead.source });
-  void captureExtras(lead, "email");
-  if (claimConfig.mode === "chunky-api" && isLive()) await chunkySubscribe(lead);
-}
-
 export interface StoredClaim {
   sample: SampleId;
   url: string;
@@ -304,10 +291,8 @@ function previewOf(lead: Lead): string {
  * The whole claim: subscribe, build the cart, record analytics. The caller
  * decides when to navigate (pages animate first). Throws ClaimError when the
  * Chunky API refuses, with a message fit to show.
- *
- * `emailAlreadySubmitted` skips the subscribe call when v2 already made it.
  */
-export async function claimSample(input: Lead, emailAlreadySubmitted = false): Promise<ClaimResult> {
+export async function claimSample(input: Lead): Promise<ClaimResult> {
   const lead = normalizeLead(input);
   const product = samples[lead.sample];
 
@@ -321,7 +306,7 @@ export async function claimSample(input: Lead, emailAlreadySubmitted = false): P
 
   let url: string;
   if (claimConfig.mode === "chunky-api") {
-    if (!emailAlreadySubmitted) await chunkySubscribe(lead);
+    await chunkySubscribe(lead);
     url = await chunkyCreateCart(lead.sample);
   } else {
     url = buildCartUrl(lead);

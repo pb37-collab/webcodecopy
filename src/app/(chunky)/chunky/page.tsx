@@ -16,7 +16,7 @@ const versions = [
   {
     href: "/chunky/free-sample-v2/",
     name: "Version 2: Free flower. The choice is in your hands.",
-    body: "Red hand or blue hand. The email unlocks the hands; the hand you tap goes straight to checkout.",
+    body: "Red hand or blue hand. Tap one to pick it (the other dims), then claim it with your email and go straight to checkout.",
   },
 ];
 

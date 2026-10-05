@@ -5,7 +5,7 @@ Two landing pages, same offer, different hero. Pick one or A/B test them.
 | Page | URL path | Hero |
 | --- | --- | --- |
 | Version 1 | `/chunky/free-sample-v1/` | "Free flower. Your choice." Product cards side by side, form directly under them, sticky claim bar on phones. |
-| Version 2 | `/chunky/free-sample-v2/` | "Free flower. The choice is in your hands." Red hand (Runtz) or blue hand (Snowcaps). The email unlocks the hands; the tapped hand goes to checkout. |
+| Version 2 | `/chunky/free-sample-v2/` | "Free flower. The choice is in your hands." Red hand (Runtz) or blue hand (Snowcaps). Tapping a hand picks it and dims the other; the claim form then appears, and submitting it goes to checkout. |
 | Index | `/chunky/` | Internal links to both. |
 
 Both pages are `noindex`, use Chunky's own logo, fonts (Outfit + DM Sans), colors, trust badges, stats and footer disclaimer, and share one config.
@@ -22,7 +22,7 @@ Visitor picks a sample + enters first name & email
   3. Redirect to the checkoutUrl it returns
 ```
 
-Version 2 makes call 1 when the email unlocks the hands, so the lead is saved even if they leave before choosing, then calls 2 and 3 when they tap a hand.
+Both versions make all three calls when the claim form is submitted. In Version 2 that form only appears after a hand is picked.
 
 If either call fails, the page shows a short error and lets them try again. It never leaves them stuck.
 
@@ -150,8 +150,8 @@ Every option is listed with comments in [`.env.example`](../../.env.example). `N
 ### 5. Optional extras
 
 - **Klaviyo event with the sample choice.** The site's subscribe route doesn't record which sample they picked. Set `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY` (the 6-character Site ID) and each claim also fires a **Claimed Free Sample** event with `Sample`, `Weight`, `Page` and any `utm_*`. Use it to trigger a follow-up flow, or to recover people who claimed but didn't check out.
-- **Webhook.** `NEXT_PUBLIC_LEAD_WEBHOOK_URL` gets every lead as JSON (`stage`, `firstName`, `email`, `sample`, `sampleId`, `weight`, `page`, UTMs, `pageUrl`, `at`). `stage` is `"email"` at Version 2's unlock step and `"claimed"` once a sample is picked.
-- **Analytics.** Both pages push `free_sample_claim` (with `sample`, `sample_id`, `page`) to `window.dataLayer`. Version 2 also pushes `free_sample_email`. If a Meta or TikTok pixel is on the page, claims also fire `Lead` / `SubmitForm`.
+- **Webhook.** `NEXT_PUBLIC_LEAD_WEBHOOK_URL` gets every lead as JSON (`stage`, `firstName`, `email`, `sample`, `sampleId`, `weight`, `page`, UTMs, `pageUrl`, `at`). `stage` is `"claimed"`.
+- **Analytics.** Both pages push `free_sample_claim` (with `sample`, `sample_id`, `page`) to `window.dataLayer`. If a Meta or TikTok pixel is on the page, claims also fire `Lead` / `SubmitForm`.
 - **Preselect from an ad.** `?sample=runtz` or `?sample=snowcaps` on Version 1 starts with that card selected.
 - **Returning visitors** who already claimed in that browser see a "Finish checkout →" strip.
 
@@ -162,7 +162,7 @@ Every option is listed with comments in [`.env.example`](../../.env.example). `N
 - [ ] Setting one sample variant's inventory to 0 shows "Sold out" on that strain within a minute.
 - [ ] The email shows up on the `V2Si39` list (and the Klaviyo event, if enabled).
 - [ ] A second claim with the same email is blocked or canceled.
-- [ ] Version 2: entering the email, closing the tab, and coming back still leaves the email on the list.
+- [ ] Version 2: tapping one hand then the other switches the pick, and the claim form names the right sample.
 
 ## Images
 
