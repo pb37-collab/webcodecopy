@@ -3,12 +3,12 @@
 import { useRef, useState } from "react";
 import { ArrowRight, Check, Loader2, Lock, LockOpen } from "lucide-react";
 import type { SampleId } from "@/lib/chunky/config";
-import { captureLead, isValidEmail, normalizeLead, track } from "@/lib/chunky/claim";
+import { ClaimError, isValidEmail, submitEmail } from "@/lib/chunky/claim";
 import { samples } from "@/lib/chunky/products";
 import { cn } from "@/lib/utils";
 import { Hand } from "./hand";
-import { ConsentNote, ProductArt } from "./shared";
-import { DemoSheet, useClaim } from "./use-claim";
+import { ConsentNote, FreeSticker, ProductArt } from "./shared";
+import { PreviewSheet, useClaim } from "./use-claim";
 
 type Step = "email" | "choose";
 
@@ -24,22 +24,25 @@ const hands: {
   {
     sample: "runtz",
     side: "left",
-    color: "#ff2e4d",
+    color: "#f43f5e",
     label: "The red hand",
-    text: "text-[#ff2e4d]",
-    fill: "bg-[#ff2e4d]",
-    glow: "bg-[radial-gradient(closest-side,rgb(255_46_77/0.45),transparent)]",
+    glow: "bg-[radial-gradient(closest-side,rgb(244_63_94/0.45),transparent)]",
+    text: "text-runtz-hi",
+    fill: "bg-runtz",
   },
   {
     sample: "snowcaps",
     side: "right",
-    color: "#4db8ff",
+    color: "#22d3ee",
     label: "The blue hand",
-    text: "text-[#4db8ff]",
-    fill: "bg-[#4db8ff]",
-    glow: "bg-[radial-gradient(closest-side,rgb(77_184_255/0.42),transparent)]",
+    glow: "bg-[radial-gradient(closest-side,rgb(34_211_238/0.42),transparent)]",
+    text: "text-snow-hi",
+    fill: "bg-snow",
   },
 ];
+
+const inputClass =
+  "h-[3.25rem] w-full rounded-xl border-2 border-transparent bg-white px-4 font-medium text-gray-900 placeholder:text-gray-500 focus:border-ca-green-2 focus:outline-none";
 
 function maskEmail(email: string) {
   const [user, domain] = email.split("@");
@@ -48,14 +51,15 @@ function maskEmail(email: string) {
 }
 
 /**
- * v2 hero: two hands, one nug in each. The email comes first: until it's in,
- * the hands are locked. Picking a hand claims that sample and opens the cart.
+ * v2 hero: two hands, one sample in each. The email comes first: until it's
+ * in, the hands are locked. Picking a hand claims that sample and opens checkout.
  */
 export function HandChoice() {
   const [step, setStep] = useState<Step>("email");
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const [shake, setShake] = useState(false);
   const [nudge, setNudge] = useState(false);
   const [chosen, setChosen] = useState<SampleId | null>(null);
@@ -63,7 +67,7 @@ export function HandChoice() {
   const emailRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const handsRef = useRef<HTMLDivElement>(null);
-  const { status, claim, demoUrl, reset } = useClaim("free-sample-v2");
+  const { status, claim, preview, error: claimError, reset } = useClaim("free-sample-v2");
   const unlocked = step === "choose";
 
   function bump() {
@@ -71,26 +75,35 @@ export function HandChoice() {
     setTimeout(() => setShake(false), 500);
   }
 
-  function unlock(e: React.FormEvent) {
+  async function unlock(e: React.FormEvent) {
     e.preventDefault();
+    if (saving) return;
     if (!firstName.trim()) {
-      setError("Add your first name.");
+      setFormError("Add your first name.");
       nameRef.current?.focus();
       bump();
       return;
     }
     if (!isValidEmail(email)) {
-      setError("Enter a valid email to unlock the choice.");
+      setFormError("Enter a valid email to unlock the choice.");
       emailRef.current?.focus();
       bump();
       return;
     }
-    setError(null);
+    setSaving(true);
+    try {
+      // Saves the lead now, so it isn't lost if they leave before choosing.
+      await submitEmail({ firstName, email, source: "free-sample-v2" });
+    } catch (err) {
+      setFormError(err instanceof ClaimError ? err.message : "Something went wrong. Please try again.");
+      setSaving(false);
+      bump();
+      return;
+    }
+    setSaving(false);
+    setFormError(null);
     setNudge(false);
     setStep("choose");
-    track("free_sample_email", { page: "free-sample-v2" });
-    // Save the lead now, so it isn't lost if they leave before choosing.
-    void captureLead(normalizeLead({ firstName, email, source: "free-sample-v2" }), "email");
     requestAnimationFrame(() => {
       const rect = handsRef.current?.getBoundingClientRect();
       if (rect && (rect.top < 0 || rect.bottom > window.innerHeight)) {
@@ -99,7 +112,7 @@ export function HandChoice() {
     });
   }
 
-  function pick(sample: SampleId) {
+  async function pick(sample: SampleId) {
     if (chosen) return;
     if (!unlocked) {
       // Email first. Point them at the form.
@@ -110,10 +123,11 @@ export function HandChoice() {
       return;
     }
     setChosen(sample);
-    void claim({ firstName, email, sample }, 1400);
+    const ok = await claim({ firstName, email, sample }, { delayMs: 1400, emailAlreadySubmitted: true });
+    if (!ok) setChosen(null);
   }
 
-  function closeDemo() {
+  function closePreview() {
     reset();
     setChosen(null);
   }
@@ -122,7 +136,6 @@ export function HandChoice() {
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      {/* The hands. */}
       <div ref={handsRef} className="relative">
         <div className="grid grid-cols-2 gap-2 sm:gap-8">
           {hands.map((h) => {
@@ -133,7 +146,7 @@ export function HandChoice() {
               <button
                 key={h.sample}
                 type="button"
-                onClick={() => pick(h.sample)}
+                onClick={() => void pick(h.sample)}
                 aria-disabled={chosen !== null}
                 aria-label={
                   unlocked
@@ -165,8 +178,8 @@ export function HandChoice() {
                   />
                   <div
                     className={cn(
-                      "absolute top-[39%] w-[46%] transition-all duration-700",
-                      h.side === "left" ? "left-[28%]" : "left-[26%]",
+                      "absolute top-[38%] w-[48%] transition-all duration-700",
+                      h.side === "left" ? "left-[27%]" : "left-[25%]",
                       !unlocked && "opacity-55 grayscale-[0.7]",
                     )}
                   >
@@ -177,10 +190,16 @@ export function HandChoice() {
                       <Lock className="size-3.5" />
                     </span>
                   )}
+                  {unlocked && !chosen && (
+                    <FreeSticker
+                      sample={h.sample}
+                      className="absolute top-[30%] right-[6%] scale-90 sm:scale-100"
+                    />
+                  )}
                   {isChosen && (
                     <span
                       className={cn(
-                        "absolute top-[30%] left-1/2 grid size-9 -translate-x-1/2 animate-ca-rise place-items-center rounded-full text-ca-bg",
+                        "absolute top-[28%] left-1/2 grid size-9 -translate-x-1/2 animate-ca-rise place-items-center rounded-full text-black",
                         h.fill,
                       )}
                     >
@@ -190,19 +209,19 @@ export function HandChoice() {
                 </div>
                 <p
                   className={cn(
-                    "mt-1 font-ca-mono text-[0.6rem] tracking-[0.18em] uppercase sm:text-[0.7rem]",
+                    "mt-1 font-ca-mono text-[0.6rem] font-bold tracking-[0.14em] uppercase sm:text-[0.72rem]",
                     unlocked ? h.text : "text-ca-ink-3",
                   )}
                 >
                   {h.label}
                 </p>
-                <p className="mt-1 font-ca-display text-[1rem] leading-[1.1] font-medium sm:text-2xl">
+                <p className="mt-1 font-ca-display text-[0.98rem] leading-[1.02] font-black uppercase sm:text-2xl">
                   {p.nameLines[0]}
                   <br />
-                  <span className="italic">{p.nameLines[1]}</span>
+                  {p.nameLines[1]}
                 </p>
                 <p className="mt-1 text-[0.7rem] font-semibold text-ca-ink-2 sm:text-sm">
-                  {p.weight} · {p.type} · {p.hook}
+                  {p.weight} · {p.type}
                 </p>
               </button>
             );
@@ -212,8 +231,8 @@ export function HandChoice() {
         <p
           aria-live="polite"
           className={cn(
-            "mt-4 text-center font-ca-mono text-[0.72rem] tracking-[0.06em] sm:text-sm",
-            nudge && !unlocked ? "text-ruby-hi" : "text-ca-ink-3",
+            "mt-4 text-center font-ca-mono text-[0.72rem] tracking-[0.04em] sm:text-sm",
+            nudge && !unlocked ? "text-ca-red" : "text-ca-neon",
           )}
         >
           {chosenProduct
@@ -224,25 +243,30 @@ export function HandChoice() {
                 ? "> email first. then the choice is yours_"
                 : "> locked. enter your email below to choose_"}
         </p>
+        {claimError && (
+          <p role="alert" className="mt-2 text-center text-xs font-bold text-ca-red">
+            {claimError}
+          </p>
+        )}
       </div>
 
       {/* Step 1: email gate. Collapses to a pill once it's done. */}
       <div ref={formRef} className={cn("mt-5 scroll-mt-24", shake && "animate-ca-shake")}>
         {unlocked ? (
-          <div className="mx-auto flex max-w-md items-center justify-between gap-3 rounded-full border border-ca-line-2 bg-ca-card/80 py-2 pr-2 pl-4 text-sm backdrop-blur">
+          <div className="mx-auto flex max-w-md items-center justify-between gap-3 rounded-full border border-ca-green/50 bg-ca-green/10 py-2 pr-2 pl-4 text-sm">
             <span className="flex min-w-0 items-center gap-2 text-ca-ink-2">
-              <span className="grid size-5 shrink-0 place-items-center rounded-full bg-emerald-400/90 text-ca-bg">
+              <span className="grid size-5 shrink-0 place-items-center rounded-full bg-ca-green-2 text-black">
                 <Check className="size-3" strokeWidth={3} />
               </span>
               <span className="truncate">
-                Sending to <span className="font-semibold text-ca-ink">{maskEmail(email)}</span>
+                Sending to <span className="font-semibold text-white">{maskEmail(email)}</span>
               </span>
             </span>
             <button
               type="button"
               disabled={chosen !== null}
               onClick={() => setStep("email")}
-              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold text-ca-gold hover:bg-white/5"
+              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-ca-neon hover:bg-white/5"
             >
               Change
             </button>
@@ -252,11 +276,11 @@ export function HandChoice() {
             noValidate
             onSubmit={unlock}
             className={cn(
-              "rounded-[1.4rem] border bg-ca-card/85 p-3 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9)] backdrop-blur transition-colors sm:p-4",
-              nudge ? "border-ruby/60" : "border-ca-line-2",
+              "rounded-2xl border bg-ca-navy/90 p-3 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9)] backdrop-blur transition-colors sm:p-4",
+              nudge ? "border-ca-red/70" : "border-ca-line",
             )}
           >
-            <p className="mb-2.5 px-1 font-ca-mono text-[0.66rem] tracking-[0.14em] text-ca-ink-2 uppercase">
+            <p className="mb-2.5 px-1 font-ca-mono text-[0.68rem] font-bold tracking-[0.1em] text-ca-neon uppercase">
               Step 1 of 2 · Where do we send it?
             </p>
             <div className="grid gap-2.5 sm:grid-cols-[1fr_1.4fr_auto] sm:gap-3">
@@ -269,7 +293,7 @@ export function HandChoice() {
                   placeholder="First name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="h-[3.25rem] w-full rounded-xl border border-ca-line bg-ca-bg/80 px-4 text-ca-ink placeholder:text-ca-ink-3 focus:border-ca-gold focus:outline-none"
+                  className={inputClass}
                 />
               </label>
               <label className="block">
@@ -283,22 +307,30 @@ export function HandChoice() {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-[3.25rem] w-full rounded-xl border border-ca-line bg-ca-bg/80 px-4 text-ca-ink placeholder:text-ca-ink-3 focus:border-ca-gold focus:outline-none"
+                  className={inputClass}
                 />
               </label>
               <button
                 type="submit"
-                className="group relative flex h-14 items-center justify-center gap-2 overflow-hidden rounded-xl bg-ca-ink px-6 text-[0.95rem] font-extrabold text-ca-bg transition active:scale-[0.98] sm:h-[3.25rem]"
+                disabled={saving}
+                className="group relative flex h-14 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-b from-ca-green-2 to-ca-green px-6 font-ca-display text-base font-black tracking-wide text-white uppercase shadow-[0_10px_30px_-6px_rgb(34_197_94/0.7)] transition active:scale-[0.98] sm:h-[3.25rem]"
               >
                 <span aria-hidden className="ca-shimmer absolute inset-0 animate-ca-shimmer" />
-                <LockOpen className="relative size-4" />
+                {saving ? (
+                  <Loader2 className="relative size-4 animate-spin" />
+                ) : (
+                  <LockOpen className="relative size-4" />
+                )}
                 <span className="relative">Unlock the choice</span>
-                <ArrowRight className="relative size-4 transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight
+                  className="relative size-5 transition-transform group-hover:translate-x-0.5"
+                  strokeWidth={2.5}
+                />
               </button>
             </div>
-            {error && (
-              <p role="alert" className="mt-2 px-1 text-xs font-semibold text-ruby-hi">
-                {error}
+            {formError && (
+              <p role="alert" className="mt-2 px-1 text-xs font-bold text-ca-red">
+                {formError}
               </p>
             )}
             <ConsentNote className="mt-2.5 px-1 text-center sm:text-left" />
@@ -306,14 +338,14 @@ export function HandChoice() {
         )}
       </div>
 
-      {chosenProduct && status !== "demo" && (
+      {chosenProduct && status !== "demo" && !claimError && (
         <div className="mt-5 flex animate-ca-rise items-center justify-center gap-2 text-sm font-semibold text-ca-ink-2">
           <Loader2 className="size-4 animate-spin" />
-          Good choice{firstName.trim() ? `, ${firstName.trim()}` : ""}. Opening your cart…
+          Good choice{firstName.trim() ? `, ${firstName.trim()}` : ""}. Opening checkout…
         </div>
       )}
 
-      <DemoSheet url={demoUrl} onClose={closeDemo} />
+      <PreviewSheet preview={preview} onClose={closePreview} />
     </div>
   );
 }

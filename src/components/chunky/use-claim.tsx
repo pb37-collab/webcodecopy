@@ -3,45 +3,64 @@
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { SampleId } from "@/lib/chunky/config";
-import { claimSample, readStoredClaim, type ClaimSource, type StoredClaim } from "@/lib/chunky/claim";
+import { claimConfig } from "@/lib/chunky/config";
+import {
+  ClaimError,
+  claimSample,
+  readStoredClaim,
+  type ClaimSource,
+  type StoredClaim,
+} from "@/lib/chunky/claim";
 import { samples } from "@/lib/chunky/products";
 
 export type ClaimStatus = "idle" | "submitting" | "redirecting" | "demo";
 
 /**
  * Runs a claim and handles the hand-off: a real redirect when the store is
- * connected, the demo sheet when it isn't. `delayMs` lets a page finish its
- * "chosen" animation before leaving.
+ * connected, the preview sheet when it isn't, an error message when the
+ * Chunky API refuses. `delayMs` lets a page finish its "chosen" animation.
  */
 export function useClaim(source: ClaimSource) {
   const [status, setStatus] = useState<ClaimStatus>("idle");
-  const [demoUrl, setDemoUrl] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const claim = useCallback(
-    async (input: { firstName: string; email: string; sample: SampleId }, delayMs = 0) => {
+    async (
+      input: { firstName: string; email: string; sample: SampleId },
+      { delayMs = 0, emailAlreadySubmitted = false } = {},
+    ): Promise<boolean> => {
       setStatus("submitting");
+      setError(null);
       const started = Date.now();
-      const result = await claimSample({ ...input, source });
-      const wait = Math.max(0, delayMs - (Date.now() - started));
-      if (wait) await new Promise((r) => setTimeout(r, wait));
-      if (result.live) {
-        setStatus("redirecting");
-        window.location.assign(result.url);
-      } else {
-        console.info("[chunky] demo mode, cart URL:", result.url);
-        setDemoUrl(result.url);
-        setStatus("demo");
+      try {
+        const result = await claimSample({ ...input, source }, emailAlreadySubmitted);
+        const wait = Math.max(0, delayMs - (Date.now() - started));
+        if (wait) await new Promise((r) => setTimeout(r, wait));
+        if (result.live) {
+          setStatus("redirecting");
+          window.location.assign(result.url);
+        } else {
+          console.info("[chunky] preview mode:\n" + result.preview);
+          setPreview(result.preview);
+          setStatus("demo");
+        }
+        return true;
+      } catch (err) {
+        setError(err instanceof ClaimError ? err.message : "Something went wrong. Please try again.");
+        setStatus("idle");
+        return false;
       }
     },
     [source],
   );
 
   const reset = useCallback(() => {
-    setDemoUrl(null);
+    setPreview(null);
     setStatus("idle");
   }, []);
 
-  return { status, claim, demoUrl, reset };
+  return { status, claim, preview, error, reset };
 }
 
 /** A previous claim from this browser, read after mount (localStorage). */
@@ -79,50 +98,54 @@ export function BodyPortal({ children }: { children: React.ReactNode }) {
   return mounted ? createPortal(children, document.body) : null;
 }
 
-export function DemoSheet({ url, onClose }: { url: string | null; onClose: () => void }) {
+export function PreviewSheet({ preview, onClose }: { preview: string | null; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
-  if (!url) return null;
+  if (!preview) return null;
+  const api = claimConfig.mode === "chunky-api";
   return (
     <BodyPortal>
       <div
         role="dialog"
         aria-modal="true"
-        aria-labelledby="ca-demo-title"
-        className="fixed inset-0 z-[60] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center"
+        aria-labelledby="ca-preview-title"
+        className="fixed inset-0 z-[60] flex items-end justify-center bg-black/75 p-3 backdrop-blur-sm sm:items-center"
         onClick={onClose}
       >
         <div
-          className="w-full max-w-lg animate-ca-rise rounded-3xl border border-ca-line-2 bg-ca-card p-6 shadow-2xl"
+          className="w-full max-w-lg animate-ca-rise rounded-2xl border-2 border-ca-green/60 bg-ca-card p-6 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          <p className="text-[0.68rem] font-semibold tracking-[0.28em] text-ca-gold uppercase">
+          <p className="font-ca-display text-[0.7rem] font-bold tracking-[0.22em] text-ca-neon uppercase">
             Preview mode
           </p>
-          <h2 id="ca-demo-title" className="mt-2 font-ca-display text-2xl">
-            Claim captured. No store connected yet.
+          <h2 id="ca-preview-title" className="mt-2 font-ca-display text-2xl font-black uppercase">
+            Claim works. Store not connected here.
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-ca-ink-2">
-            Once the Shopify domain and variant IDs are set (see{" "}
-            <code className="text-ca-ink">docs/chunky/INTEGRATION.md</code>), the customer goes straight to
-            this cart link:
+            {api
+              ? "On chunkyacademy.com this page makes the same calls the current free-sample page makes, then sends the customer to checkout:"
+              : "Once connected, the customer goes straight to this cart link:"}
           </p>
-          <code className="mt-4 block max-h-36 overflow-auto rounded-xl border border-ca-line bg-ca-bg p-3 font-ca-mono text-[0.72rem] leading-relaxed break-all text-ca-ink-2">
-            {url}
-          </code>
+          <pre className="mt-4 max-h-48 overflow-auto rounded-xl border border-ca-line bg-black p-3 font-ca-mono text-[0.7rem] leading-relaxed break-all whitespace-pre-wrap text-ca-mint">
+            {preview}
+          </pre>
+          <p className="mt-2 text-xs text-ca-ink-3">
+            Setup: <code>docs/chunky/INTEGRATION.md</code>
+          </p>
           <div className="mt-5 flex gap-2">
             <button
               type="button"
               onClick={() => {
-                void navigator.clipboard?.writeText(url).then(() => setCopied(true));
+                void navigator.clipboard?.writeText(preview).then(() => setCopied(true));
               }}
-              className="flex-1 rounded-full border border-ca-line-2 px-4 py-3 text-sm font-semibold"
+              className="flex-1 rounded-xl border border-white/15 px-4 py-3 text-sm font-bold"
             >
-              {copied ? "Copied" : "Copy link"}
+              {copied ? "Copied" : "Copy"}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-full bg-ca-ink px-4 py-3 text-sm font-semibold text-ca-bg"
+              className="flex-1 rounded-xl bg-gradient-to-b from-ca-green-2 to-ca-green px-4 py-3 text-sm font-extrabold uppercase"
             >
               Back to page
             </button>
@@ -138,9 +161,9 @@ export function ReturningNotice() {
   const stored = useStoredClaim();
   if (!stored) return null;
   return (
-    <div className="relative z-30 border-b border-ca-line bg-ca-card/90 px-4 py-2.5 text-center text-[0.8rem] text-ca-ink-2 backdrop-blur">
-      You picked <span className="font-semibold text-ca-ink">{samples[stored.sample].name}</span>.{" "}
-      <a href={stored.url} className="font-semibold text-ca-gold underline underline-offset-4">
+    <div className="relative z-30 bg-ca-deep px-4 py-2.5 text-center text-[0.82rem] text-ca-ink-2">
+      You picked <span className="font-bold text-white">{samples[stored.sample].name}</span>.{" "}
+      <a href={stored.url} className="font-bold text-ca-neon underline underline-offset-4">
         Finish checkout →
       </a>
     </div>

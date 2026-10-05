@@ -4,151 +4,120 @@ Two landing pages, same offer, different hero. Pick one or A/B test them.
 
 | Page | URL path | Hero |
 | --- | --- | --- |
-| Version 1 | `/chunky/free-sample-v1/` | "Two strains. One is on us." Product cards side by side, form directly under them, sticky claim bar on phones. |
-| Version 2 | `/chunky/free-sample-v2/` | "Pick a hand." Red hand (Runtz) or blue hand (Snowcaps). The email unlocks the hands; the tapped hand goes to the cart. |
-| Index | `/chunky/` | Internal links to both, plus whether the store is connected. |
+| Version 1 | `/chunky/free-sample-v1/` | "Two strains. One's on us." Product cards side by side, form directly under them, sticky claim bar on phones. |
+| Version 2 | `/chunky/free-sample-v2/` | "Pick a hand." Red hand (Runtz) or blue hand (Snowcaps). The email unlocks the hands; the tapped hand goes to checkout. |
+| Index | `/chunky/` | Internal links to both. |
 
-Both pages are `noindex` and share one config, so connecting the store once connects both.
+Both pages are `noindex`, use Chunky's own logo, fonts (Outfit + DM Sans), colors, trust badges, stats and footer disclaimer, and share one config.
 
 ## How a claim works
 
+The default **`chunky-api`** mode makes exactly the calls the current `chunkyacademy.com/free-sample` page makes:
+
 ```
 Visitor picks a sample + enters first name & email
-        │
-        ├─► Klaviyo: subscribe to list + "Claimed Free Sample" event   (optional)
-        ├─► Webhook: JSON POST with the lead                          (optional)
-        ├─► dataLayer: free_sample_claim  (+ Meta "Lead" if the pixel is on the page)
-        │      (waits at most 2.5s on these, then moves on regardless)
-        ▼
-Redirect to a Shopify cart permalink:
-https://STORE/cart/VARIANT_ID:1?discount=CODE&checkout[email]=…&attributes[Free sample]=…&storefront=true
+  1. POST /api/klaviyo/subscribe         { email, name, listId: "V2Si39", redirectUrl: null }
+  2. POST /api/cart/create-with-product  { variantId: "gid://shopify/ProductVariant/…", quantity: 1,
+                                           discountCode: "free-sample" }
+  3. Redirect to the checkoutUrl it returns
 ```
 
-Version 2 also sends the lead to Klaviyo/webhook the moment the email unlocks the hands (`stage: "email"`), so nobody who bails before choosing is lost.
+Version 2 makes call 1 when the email unlocks the hands, so the lead is saved even if they leave before choosing, then calls 2 and 3 when they tap a hand.
 
-The cart permalink **replaces** whatever is in the cart with the one sample, pre-fills the checkout email and first name (reliably in `checkout` mode; Shopify may drop the pre-fill when the link stops at the cart page), applies the discount code if one is set, and writes the sample name, page and UTM tags onto the order (Order → Notes / Additional details). Reference: [Shopify cart permalinks](https://shopify.dev/docs/apps/build/checkout/create-cart-permalinks).
+If either call fails, the page shows a short error and lets them try again. It never leaves them stuck.
 
-## Go-live checklist (about 15 minutes)
+Those `/api/...` routes are same-site only: chunkyacademy.com doesn't allow cross-origin requests. So the pages go live **when they're served from chunkyacademy.com**. Anywhere else, like a Vercel preview, they run in **preview mode**: the whole flow works, but the final step shows the exact requests it would have sent instead of creating a cart.
 
-### 1. Shopify: make the samples free
+## Go-live checklist
 
-Pick one approach:
+### 1. Make sure the two samples come out free
 
-- **A. $0 sample variants (simplest).** On each product, add a variant such as "Free Sample" priced at $0.00 (7g on Jolly Rancher Runtz, 3.5g on Cotton Candy Toast Snowcaps). Set inventory to however many samples you're giving away; when it hits 0 the offer stops itself.
-- **B. Regular variants + discount code.** Use the normal 7g and 3.5g variants and create a 100%-off code (e.g. `FREESAMPLE`) that applies only to those two variants, is **limited to one use per customer**, and has a total usage cap. Put the code in `NEXT_PUBLIC_SAMPLE_DISCOUNT_CODE`.
+The defaults point at the live retail variants:
 
-B enforces "one per customer" at checkout; A relies on inventory and your fulfillment review. You can also combine them: $0 variants plus a code that's required to check out.
+| Sample | Variant | Retail |
+| --- | --- | --- |
+| Jolly Rancher Runtz, 7g | `42552332812362` | $25.99 |
+| Cotton Candy Toast Snow Cap, 3.5g | `43660890832970` | $19.99 |
 
-Shipping is whatever your normal shipping rates charge. If you want a flat sample-shipping price, create a shipping rate with a condition on the $0 order price.
+The current free-sample page uses dedicated sample variants with the `free-sample` code. Pick one:
 
-### 2. Get the variant IDs
+- **A. Dedicated sample variants (matches today's setup).** Create a $0 (or `free-sample`-eligible) sample variant for each product, and set `NEXT_PUBLIC_RUNTZ_VARIANT_ID` / `NEXT_PUBLIC_SNOWCAPS_VARIANT_ID` to the new IDs.
+- **B. Use the retail variants.** Add those two variants to the `free-sample` discount's eligible products.
 
-Shopify Admin → Products → open the product → click the variant. The number at the end of the URL is the variant ID:
+Either way, keep the code's **once per customer** limit on. The page tells people duplicate sample orders get canceled, same as now.
 
-```
-admin.shopify.com/store/…/products/8123456789/variants/45678901234567
-                                                      └──── variant ID
-```
+### 2. Put the page on chunkyacademy.com
 
-### 3. Check which domain to use
-
-Open `https://www.chunkyacademy.com/cart/VARIANT_ID:1` in a browser.
-
-- If it lands on the cart or checkout with the product in it, use `www.chunkyacademy.com`.
-- If it 404s (the storefront is custom or headless), use the `your-store.myshopify.com` domain instead, and set `NEXT_PUBLIC_SAMPLE_DESTINATION=checkout` if that domain's Online Store cart page isn't set up.
-
-### 4. Add the environment variables
-
-In Vercel → Project → Settings → Environment Variables (or `.env.local` for local testing), set at least:
+The storefront is a Next.js + Tailwind app, the same stack as these pages, so the cleanest route is to copy the files in:
 
 ```
-NEXT_PUBLIC_SHOPIFY_DOMAIN=www.chunkyacademy.com
-NEXT_PUBLIC_RUNTZ_VARIANT_ID=45678901234567
-NEXT_PUBLIC_SNOWCAPS_VARIANT_ID=45678901234568
+src/app/(chunky)/chunky/free-sample-v1/page.tsx   → app/free-sample/page.tsx (or app/free-sample-2/…)
+src/app/(chunky)/chunky/free-sample-v2/page.tsx
+src/components/chunky/*                            → components/chunky/*
+src/lib/chunky/*                                   → lib/chunky/*
+src/app/(chunky)/chunky.css                        → import it in that route's layout (theme tokens + keyframes)
+public/images/chunky/*                             → public/images/chunky/*
 ```
 
-Every option is listed with comments in [`.env.example`](../../.env.example). Redeploy after changing them: `NEXT_PUBLIC_*` values are baked in at build time.
+Dependencies: `lucide-react`, `clsx` + `tailwind-merge` (the `cn()` helper in `src/lib/utils.ts`), Tailwind v4, and the four Google fonts loaded in `src/app/(chunky)/layout.tsx` (Outfit, DM Sans, Permanent Marker, JetBrains Mono).
 
-Until the domain and both IDs are set, the pages run in **preview mode**: the whole flow works, but the final step shows the cart link it would have opened instead of redirecting. The `/chunky/` index shows which mode you're in.
+The pages have their own header and footer, so render them without the store's site chrome, as the current `/free-sample` page already is.
 
-### 5. Connect email capture (recommended)
+Once they're on chunkyacademy.com, no settings are needed: the defaults are the current API, list and discount code.
 
-**Klaviyo**
+**Alternative:** keep them on this Vercel project and set `NEXT_PUBLIC_SAMPLE_CART_MODE=permalink` (see below), or set `NEXT_PUBLIC_CHUNKY_API_BASE=https://www.chunkyacademy.com` and allow this domain in the store's CORS headers for those two routes.
 
-1. Settings → API keys → copy the **public API key / Site ID** (6 characters). It's designed to be used in the browser.
-2. Lists & Segments → create a list such as "Free Sample 2026" → copy its ID from the URL.
-3. Set `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY` and `NEXT_PUBLIC_KLAVIYO_LIST_ID`.
-4. Build a flow triggered by the metric **Claimed Free Sample** (rename it with `NEXT_PUBLIC_KLAVIYO_EVENT_NAME`). Event properties: `Sample`, `Weight`, `Page`, plus any `utm_*`. Profiles also get `Free sample choice` and `Free sample page`.
+### 3. Settings (all optional)
 
-Use the flow to recover people who claimed but didn't finish checkout: compare the Klaviyo event with Shopify "Placed Order".
+Every option is listed with comments in [`.env.example`](../../.env.example). `NEXT_PUBLIC_*` values are baked in at build time, so redeploy after changing them.
 
-Subscriptions go through Klaviyo's client subscription API, so the list's double opt-in setting applies. The form shows consent text ("agree to get emails… unsubscribe anytime").
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SAMPLE_CART_MODE` | `chunky-api` | `permalink` builds a Shopify cart link instead (works from any domain). |
+| `NEXT_PUBLIC_RUNTZ_VARIANT_ID` / `NEXT_PUBLIC_SNOWCAPS_VARIANT_ID` | retail 7g / 3.5g | The variants added to the cart. |
+| `NEXT_PUBLIC_SAMPLE_DISCOUNT_CODE` | `free-sample` | Discount applied to the cart. |
+| `NEXT_PUBLIC_KLAVIYO_LIST_ID` | `V2Si39` | List claimers join. |
+| `NEXT_PUBLIC_SAMPLE_SPOTS_TOTAL` / `_LEFT` | empty | Shows "Available for the next ~~1000~~ 450 people" like the current page. |
+| `NEXT_PUBLIC_SAMPLE_OFFER_NOTE` | "Just cover shipping." | The offer line on both pages. |
 
-**Webhook (Zapier, Make, Shopify Flow, Google Sheets, your own API)**
+**Permalink mode** links to `https://chunkyacademy.myshopify.com/cart/VARIANT:1?discount=free-sample&checkout[email]=…` with the sample name, page and UTMs written onto the order as attributes. It needs the myshopify Online Store to accept cart links. Test one in a browser first.
 
-Set `NEXT_PUBLIC_LEAD_WEBHOOK_URL`. Each lead is POSTed as JSON:
+### 4. Optional extras
 
-```json
-{
-  "stage": "claimed",
-  "firstName": "Jamie",
-  "email": "jamie@example.com",
-  "sample": "Cotton Candy Toast Snowcaps",
-  "sampleId": "snowcaps",
-  "weight": "3.5g",
-  "page": "free-sample-v2",
-  "utm_source": "ig",
-  "utm_campaign": "fall",
-  "pageUrl": "https://…/chunky/free-sample-v2/?utm_source=ig&utm_campaign=fall",
-  "at": "2026-10-05T15:04:05.000Z"
-}
+- **Klaviyo event with the sample choice.** The site's subscribe route doesn't record which sample they picked. Set `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY` (the 6-character Site ID) and each claim also fires a **Claimed Free Sample** event with `Sample`, `Weight`, `Page` and any `utm_*`. Use it to trigger a follow-up flow, or to recover people who claimed but didn't check out.
+- **Webhook.** `NEXT_PUBLIC_LEAD_WEBHOOK_URL` gets every lead as JSON (`stage`, `firstName`, `email`, `sample`, `sampleId`, `weight`, `page`, UTMs, `pageUrl`, `at`). `stage` is `"email"` at Version 2's unlock step and `"claimed"` once a sample is picked.
+- **Analytics.** Both pages push `free_sample_claim` (with `sample`, `sample_id`, `page`) to `window.dataLayer`. Version 2 also pushes `free_sample_email`. If a Meta or TikTok pixel is on the page, claims also fire `Lead` / `SubmitForm`.
+- **Preselect from an ad.** `?sample=runtz` or `?sample=snowcaps` on Version 1 starts with that card selected.
+- **Returning visitors** who already claimed in that browser see a "Finish checkout →" strip.
+
+### 5. Test before sending traffic
+
+- [ ] Claim each sample on a phone. Checkout opens with only that product, and it's free.
+- [ ] The email shows up on the `V2Si39` list (and the Klaviyo event, if enabled).
+- [ ] A second claim with the same email is blocked or canceled.
+- [ ] Version 2: entering the email, closing the tab, and coming back still leaves the email on the list.
+
+## Images
+
+The product art is Chunky's own product photography, cut out of the white backgrounds:
+
+```
+public/images/chunky/jolly-rancher-runtz.webp          ← cdn.shopify.com/…/files/B346-1.jpg
+public/images/chunky/cotton-candy-toast-snowcaps.webp  ← cdn.shopify.com/…/files/ChatGPT_Image_Jun_3_2026_04_15_13_PM_1.png
+public/images/chunky/chunky-academy-logo.png           ← chunkyacademy.com/assets/CHUNKY_ACADEMY.png
+public/images/chunky/icon-*.svg                        ← chunkyacademy.com/assets/free-sample/*.svg
 ```
 
-`stage` is `"email"` for Version 2's unlock step (sample fields are `null`) and `"claimed"` once a sample is picked. The receiving endpoint must allow cross-origin POSTs (Zapier and Make catch hooks do).
+To redo the cutouts (for example after swapping a photo URL in the script): `node scripts/chunky-cutouts.mjs`. Better photos make better cutouts. A transparent PNG straight from the photographer can be dropped in under the same file name.
 
-### 6. Swap in the real product photos
+## Copy and facts
 
-The bud art on the pages is a generated stand-in. Replace these two files, keeping the names:
-
-```
-public/images/chunky/jolly-rancher-runtz.webp
-public/images/chunky/cotton-candy-toast-snowcaps.webp
-```
-
-- **Transparent background** cutouts. Both pages float the bud over colored light, and Version 2 sets it in the palm of the hand.
-- Square, about 800×800, bud centered with a little padding. WebP keeps it under ~80 KB.
-- Different names or formats: change `image` in `src/lib/chunky/products.ts`.
-
-To regenerate the stand-ins: `node scripts/chunky-placeholder-nugs.mjs`.
-
-### 7. Test before sending traffic
-
-- [ ] `/chunky/` shows **live**.
-- [ ] Claim each sample on a phone. The cart opens with only that product, at $0 (or with the code applied).
-- [ ] Checkout shows the email you typed.
-- [ ] Place a test order: the order shows `Free sample`, `Sample page` and UTM attributes.
-- [ ] The Klaviyo profile and event (or webhook row) appear.
-- [ ] A second claim with the same email is blocked at checkout (if you're using a once-per-customer code).
-
-## Useful extras
-
-- **Preselect a product from an ad:** append `?sample=runtz` or `?sample=snowcaps` to the Version 1 URL. The matching card starts selected.
-- **UTMs** are read from the page URL and passed to the order, Klaviyo and the webhook automatically.
-- **Analytics:** both pages push `free_sample_claim` (with `sample`, `sample_id`, `page`) to `window.dataLayer`; Version 2 also pushes `free_sample_email` at the unlock step. If a Meta or TikTok pixel is on the page, claims also fire `Lead` / `SubmitForm`. Add your GTM/pixel snippet in `src/app/(chunky)/layout.tsx`.
-- **Returning visitors** who already claimed in that browser see a "Finish checkout →" strip linking back to their cart. This is a convenience, not enforcement: enforce one per customer in Shopify (step 1B).
-- **Copy changes:** product names, tasting notes and descriptions live in `src/lib/chunky/products.ts`; the FAQ and legal footer are in `src/components/chunky/shared.tsx`; the offer line ("Just cover shipping.") is `NEXT_PUBLIC_SAMPLE_OFFER_NOTE`.
-- **Not using cart permalinks?** `NEXT_PUBLIC_SAMPLE_CART_URL_TEMPLATE` replaces the link entirely. For example, to add the sample to an existing Online Store cart instead of replacing it:
-  `https://www.chunkyacademy.com/cart/add?id={variantId}&quantity=1&return_to=/cart`
-
-## Hosting
-
-- **As-is:** the pages ship with this Vercel project at `/chunky/free-sample-v1/` and `/chunky/free-sample-v2/`.
-- **On chunkyacademy.com:** point `chunkyacademy.com/free-sample` at the chosen page with a redirect or reverse-proxy rewrite.
-- **Anywhere else:** `npm run build` writes a static export to `out/`. Upload `out/chunky/free-sample-v1/` (or `-v2/`) together with `out/_next/` and `out/images/chunky/`.
+- Product names, types, prices, tasting notes and descriptions are in `src/lib/chunky/products.ts`. They come from the live product pages (October 2026). Jolly Rancher Runtz is listed there as a **Sativa Hybrid**; Cotton Candy Toast Snow Cap as a **Hybrid**.
+- The FAQ, trust tiles, stats band and footer are in `src/components/chunky/shared.tsx`. The stats (4.9/5, 10,000+, 98%, 2,500+) and the footer disclaimer and no-ship states are copied from the homepage. Update both places if those change.
+- The Jolly Rancher Runtz product photo on the store (`B346-1.jpg`) carries the alt text "Cherry Bombay", so it may be a shared photo. Swap in a Runtz-specific shot if there is one.
 
 ## Brand and compliance notes
 
-- The themes stay adult on purpose: jewel tones, frost and editorial type rather than cartoon candy, bright primaries or characters. "21+" sits in the header, the consent line and the footer.
-- **"Jolly Rancher" is a Hershey trademark.** The pages use the strain name as given. Confirm you're comfortable using it in paid traffic and marketing email before launch.
-- The legal footer covers the Farm Bill (<0.3% Δ9-THC dry weight), THCa converting when heated, drug testing, keep out of reach of children, and the FDA statement. Have your compliance contact review it alongside the shipping states you serve.
-- Strain facts on the pages (Indica for Runtz, Hybrid for Snowcaps, tasting notes) came from public listings. Check them against the current COAs.
+- The themes stay adult: Chunky's street look (bold uppercase type, neon green, stickers, halftone) with no cartoon candy or characters. "21+ ONLY" sits in the header, the consent line and the footer.
+- **"Jolly Rancher" is a Hershey trademark.** The pages use the strain name as the store lists it. Confirm you're comfortable using it in paid traffic and marketing email.
+- The footer carries the store's disclaimer verbatim plus the free-sample terms. Have your compliance contact review it alongside your ad platforms' rules.

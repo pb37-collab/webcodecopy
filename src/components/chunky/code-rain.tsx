@@ -9,21 +9,21 @@ function seeded(n: number) {
 }
 
 /**
- * Faint falling-glyph columns behind the v2 hero: the film nod, kept quiet.
- * Columns on the left run red, on the right blue, matching the hands.
+ * Faint falling-glyph columns behind the v2 hero: the film nod, in Chunky green.
  */
 export function CodeRain({ className }: { className?: string }) {
   const columns = Array.from({ length: 16 }, (_, i) => {
-    const text = Array.from({ length: 14 }, (_, j) => WORDS[Math.floor(seeded(i * 31 + j) * WORDS.length)]).join(
-      " ",
-    );
+    const text = Array.from(
+      { length: 14 },
+      (_, j) => WORDS[Math.floor(seeded(i * 31 + j) * WORDS.length)],
+    ).join(" ");
     return {
       left: `${(i / 16) * 100 + seeded(i) * 3}%`,
       text,
       duration: 10 + seeded(i + 7) * 14,
       delay: -seeded(i + 3) * 20,
       opacity: 0.12 + seeded(i + 11) * 0.22,
-      red: i < 8,
+      bright: i % 3 === 0,
     };
   });
 
@@ -40,7 +40,7 @@ export function CodeRain({ className }: { className?: string }) {
           key={i}
           className={cn(
             "absolute top-0 animate-ca-rain font-ca-mono text-[11px] leading-[1.45] tracking-[0.3em] whitespace-nowrap [writing-mode:vertical-rl]",
-            c.red ? "text-ruby" : "text-frost",
+            c.bright ? "text-ca-neon" : "text-ca-green",
             i % 2 === 1 && "hidden sm:block",
           )}
           // Position and timing are generated per column, so they have to be inline.

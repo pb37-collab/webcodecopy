@@ -6,29 +6,14 @@ import type { SampleId } from "@/lib/chunky/config";
 import { isValidEmail } from "@/lib/chunky/claim";
 import { sampleOrder, samples } from "@/lib/chunky/products";
 import { cn } from "@/lib/utils";
-import { ConsentNote, ProductArt } from "./shared";
-import { BodyPortal, DemoSheet, useClaim, useSampleParam } from "./use-claim";
+import { ConsentNote, FreeSticker, ProductArt, theme } from "./shared";
+import { BodyPortal, PreviewSheet, useClaim, useSampleParam } from "./use-claim";
 
 /** Fired by "Choose this one" buttons elsewhere on the page. */
 export const SELECT_EVENT = "ca:select-sample";
 
-const cardTheme: Record<SampleId, { idle: string; active: string; check: string; hook: string; bg: string }> =
-  {
-    runtz: {
-      bg: "bg-[radial-gradient(120%_90%_at_50%_0%,#4a0a1c_0%,#1c0a10_55%,#120a0e_100%)]",
-      idle: "border-ruby/25",
-      active: "border-ruby shadow-[0_0_0_1px_var(--color-ruby),0_18px_50px_-12px_rgb(224_41_79/0.65)]",
-      check: "bg-ruby text-white",
-      hook: "ca-text-ruby",
-    },
-    snowcaps: {
-      bg: "bg-[radial-gradient(120%_90%_at_50%_0%,#1d2547_0%,#141428_55%,#0e0e18_100%)]",
-      idle: "border-frost/25",
-      active: "border-frost shadow-[0_0_0_1px_var(--color-frost),0_18px_50px_-12px_rgb(159_214_255/0.6)]",
-      check: "bg-frost text-ca-bg",
-      hook: "ca-text-frost",
-    },
-  };
+const inputClass =
+  "h-[3.25rem] w-full rounded-xl border-2 bg-white px-4 font-medium text-gray-900 placeholder:text-gray-500 focus:border-ca-green-2 focus:outline-none";
 
 function OptionCard({
   id,
@@ -42,7 +27,7 @@ function OptionCard({
   onSelect: (id: SampleId) => void;
 }) {
   const p = samples[id];
-  const t = cardTheme[id];
+  const t = theme[id];
   return (
     <button
       type="button"
@@ -51,50 +36,51 @@ function OptionCard({
       aria-label={`${p.name}, ${p.weightLong}, free`}
       onClick={() => onSelect(id)}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-[1.4rem] border text-left transition-all duration-300 active:scale-[0.98]",
-        t.bg,
-        selected ? t.active : t.idle,
-        dimmed && "opacity-60 saturate-[0.6]",
-        !selected && "hover:-translate-y-0.5 hover:border-ca-line-2",
+        "group relative flex flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300 active:scale-[0.98]",
+        t.panel,
+        selected ? t.ring : "border-white/10",
+        dimmed && "opacity-55 saturate-50",
+        !selected && "hover:-translate-y-0.5 hover:border-white/25",
       )}
     >
       <div
         aria-hidden
-        className={cn("absolute inset-0 opacity-70", id === "runtz" ? "ca-facets" : "ca-frost")}
+        className={cn("absolute inset-0", id === "runtz" ? "ca-halftone text-runtz/15" : "ca-frost")}
       />
       <div className="relative flex items-start justify-between p-3 pb-0 sm:p-5 sm:pb-0">
         <div>
-          <p className="font-ca-display text-[2rem] leading-none font-semibold tracking-[-0.03em] sm:text-5xl">
+          <p className="font-ca-display text-[2.1rem] leading-none font-black tracking-tight sm:text-5xl">
             {p.weight}
           </p>
-          <p className="mt-1 text-[0.6rem] font-bold tracking-[0.2em] text-ca-ink-2 uppercase sm:text-[0.68rem]">
-            Free · {p.type}
+          <p className="mt-1 text-[0.6rem] font-bold tracking-[0.16em] text-ca-ink-2 uppercase sm:text-[0.7rem]">
+            {p.type}
           </p>
         </div>
         <span
           aria-hidden
           className={cn(
-            "grid size-6 place-items-center rounded-full border transition-all sm:size-7",
-            selected ? cn(t.check, "border-transparent") : "border-ca-line-2 bg-black/20",
+            "grid size-6 place-items-center rounded-full border-2 transition-all sm:size-7",
+            selected ? cn(t.solid, "border-transparent") : "border-white/30 bg-black/30",
           )}
         >
-          {selected && <Check className="size-3.5 sm:size-4" strokeWidth={3} />}
+          {selected && <Check className="size-3.5 sm:size-4" strokeWidth={3.5} />}
         </span>
       </div>
-      <ProductArt
-        sample={id}
-        priority
-        className="relative mx-auto -my-2 w-[70%] transition-transform duration-500 group-hover:scale-[1.04] sm:my-0 sm:w-[54%]"
-      />
-      <div className="relative mt-auto p-3 pt-0 sm:p-5 sm:pt-0">
-        <p className="font-ca-display text-[1.05rem] leading-[1.08] font-medium tracking-[-0.01em] sm:text-2xl">
+      <div className="relative">
+        <ProductArt
+          sample={id}
+          priority
+          className="mx-auto mt-1 w-[70%] transition-transform duration-500 group-hover:scale-[1.04] sm:mt-0 sm:w-[46%]"
+        />
+        <FreeSticker sample={id} className="absolute right-2 bottom-1 sm:right-5 sm:bottom-3" />
+      </div>
+      <div className="relative mt-auto p-3 pt-1.5 sm:p-5 sm:pt-2">
+        <p className="font-ca-display text-[0.98rem] leading-[1.02] font-black uppercase sm:text-2xl">
           {p.nameLines[0]}
           <br />
-          <span className="italic">{p.nameLines[1]}</span>
+          <span className={t.text}>{p.nameLines[1]}</span>
         </p>
-        <p className={cn("mt-1.5 text-[0.68rem] font-bold tracking-[0.18em] uppercase sm:text-xs", t.hook)}>
-          {p.hook}
-        </p>
+        <p className="mt-1.5 font-ca-tag text-[0.8rem] text-ca-ink-2 sm:text-base">{p.hook}</p>
       </div>
     </button>
   );
@@ -110,7 +96,7 @@ export function SampleChooser() {
   const submitRef = useRef<HTMLButtonElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const { status, claim, demoUrl, reset } = useClaim("free-sample-v1");
+  const { status, claim, preview, error, reset } = useClaim("free-sample-v1");
   const fromParam = useSampleParam();
   const busy = status === "submitting" || status === "redirecting";
 
@@ -122,8 +108,7 @@ export function SampleChooser() {
 
   useEffect(() => {
     const onSelect = (e: Event) => {
-      const id = (e as CustomEvent<SampleId>).detail;
-      setSelected(id);
+      setSelected((e as CustomEvent<SampleId>).detail);
       setErrors((prev) => ({ ...prev, sample: undefined }));
     };
     window.addEventListener(SELECT_EVENT, onSelect);
@@ -179,9 +164,8 @@ export function SampleChooser() {
   }
 
   const chosen = selected ? samples[selected] : null;
-  const ctaLabel = chosen
-    ? `Claim my free ${chosen.weight} of ${chosen.shortName}`
-    : "Choose your free sample";
+  const ctaLabel = chosen ? `Claim my free ${chosen.weight}` : "Pick your free sample";
+  const message = errors.firstName ?? errors.email ?? error;
 
   return (
     <>
@@ -202,7 +186,7 @@ export function SampleChooser() {
           ))}
         </div>
         {errors.sample && (
-          <p role="alert" className="mt-2 text-center text-xs font-semibold text-ruby-hi">
+          <p role="alert" className="mt-2 text-center text-xs font-bold text-ca-red">
             {errors.sample}
           </p>
         )}
@@ -211,7 +195,7 @@ export function SampleChooser() {
           noValidate
           onSubmit={onSubmit}
           className={cn(
-            "relative mt-4 rounded-[1.4rem] border border-ca-line-2 bg-ca-card/80 p-3 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9)] backdrop-blur sm:mt-5 sm:p-4",
+            "relative mt-4 rounded-2xl border border-ca-line bg-ca-navy/90 p-3 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9)] backdrop-blur sm:mt-5 sm:p-4",
             shake && !errors.sample && "animate-ca-shake",
           )}
         >
@@ -226,10 +210,7 @@ export function SampleChooser() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 aria-invalid={Boolean(errors.firstName)}
-                className={cn(
-                  "h-[3.25rem] w-full rounded-xl border bg-ca-bg/80 px-4 text-ca-ink placeholder:text-ca-ink-3 focus:border-ca-gold focus:outline-none",
-                  errors.firstName ? "border-ruby" : "border-ca-line",
-                )}
+                className={cn(inputClass, errors.firstName ? "border-ca-red" : "border-transparent")}
               />
             </label>
             <label className="block">
@@ -244,37 +225,37 @@ export function SampleChooser() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={Boolean(errors.email)}
-                className={cn(
-                  "h-[3.25rem] w-full rounded-xl border bg-ca-bg/80 px-4 text-ca-ink placeholder:text-ca-ink-3 focus:border-ca-gold focus:outline-none",
-                  errors.email ? "border-ruby" : "border-ca-line",
-                )}
+                className={cn(inputClass, errors.email ? "border-ca-red" : "border-transparent")}
               />
             </label>
             <button
               ref={submitRef}
               type="submit"
               disabled={busy}
-              className="group relative flex h-14 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-b from-ca-gold-2 to-ca-gold px-6 text-[0.95rem] font-extrabold text-ca-bg shadow-[0_10px_30px_-8px_rgb(220_189_133/0.6)] transition active:scale-[0.98] disabled:opacity-80 sm:h-[3.25rem]"
+              className="group relative flex h-14 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-b from-ca-green-2 to-ca-green px-6 font-ca-display text-base font-black tracking-wide text-white uppercase shadow-[0_10px_30px_-6px_rgb(34_197_94/0.7)] transition active:scale-[0.98] disabled:opacity-80 sm:h-[3.25rem]"
             >
               <span aria-hidden className="ca-shimmer absolute inset-0 animate-ca-shimmer" />
               {busy ? (
                 <>
                   <Loader2 className="relative size-4 animate-spin" />
                   <span className="relative">
-                    {status === "redirecting" ? "Opening your cart…" : "Reserving your sample…"}
+                    {status === "redirecting" ? "Opening checkout…" : "Locking it in…"}
                   </span>
                 </>
               ) : (
                 <>
                   <span className="relative">{ctaLabel}</span>
-                  <ArrowRight className="relative size-4 transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight
+                    className="relative size-5 transition-transform group-hover:translate-x-0.5"
+                    strokeWidth={2.5}
+                  />
                 </>
               )}
             </button>
           </div>
-          {(errors.firstName || errors.email) && (
-            <p role="alert" className="mt-2 px-1 text-xs font-semibold text-ruby-hi">
-              {errors.firstName ?? errors.email}
+          {message && (
+            <p role="alert" className="mt-2 px-1 text-xs font-bold text-ca-red">
+              {message}
             </p>
           )}
           <ConsentNote className="mt-2.5 px-1 text-center sm:text-left" />
@@ -285,31 +266,31 @@ export function SampleChooser() {
       <BodyPortal>
         <div
           className={cn(
-            "ca-safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-ca-line-2 bg-ca-bg/90 px-3 pt-3 backdrop-blur-xl transition-transform duration-300 sm:hidden",
+            "ca-safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-ca-line bg-black/90 px-3 pt-3 backdrop-blur-xl transition-transform duration-300 sm:hidden",
             ctaVisible || status === "demo" ? "translate-y-full" : "translate-y-0",
           )}
         >
           <button
             type="button"
             onClick={jumpToForm}
-            className="flex h-14 w-full items-center gap-3 rounded-2xl bg-gradient-to-b from-ca-gold-2 to-ca-gold pr-4 pl-2 text-left font-extrabold text-ca-bg"
+            className="flex h-14 w-full items-center gap-3 rounded-xl bg-gradient-to-b from-ca-green-2 to-ca-green pr-4 pl-2 text-left font-ca-display font-black text-white uppercase shadow-[0_10px_30px_-6px_rgb(34_197_94/0.7)]"
           >
             <span className="flex -space-x-3">
               {(selected ? [selected] : sampleOrder).map((id) => (
-                <span key={id} className="grid size-10 place-items-center rounded-xl bg-ca-bg/90">
+                <span key={id} className="grid size-10 place-items-center rounded-lg bg-black/80">
                   <ProductArt sample={id} float={false} glow={false} className="size-9" />
                 </span>
               ))}
             </span>
-            <span className="flex-1 text-[0.92rem] leading-tight">
+            <span className="flex-1 text-[0.95rem] leading-tight">
               {chosen ? `Claim free ${chosen.weight} ${chosen.shortName}` : "Pick your free sample"}
             </span>
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-5" strokeWidth={2.5} />
           </button>
         </div>
       </BodyPortal>
 
-      <DemoSheet url={demoUrl} onClose={reset} />
+      <PreviewSheet preview={preview} onClose={reset} />
     </>
   );
 }
@@ -324,15 +305,12 @@ export function ChooseButton({ sample, className }: { sample: SampleId; classNam
         document.getElementById("claim")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }}
       className={cn(
-        "inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-bold transition active:scale-[0.98]",
-        sample === "runtz"
-          ? "bg-ruby text-white shadow-[0_10px_30px_-10px_rgb(224_41_79/0.8)] hover:bg-ruby-hi"
-          : "bg-frost text-ca-bg shadow-[0_10px_30px_-10px_rgb(159_214_255/0.8)] hover:bg-frost-hi",
+        "inline-flex h-13 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-ca-green-2 to-ca-green px-6 font-ca-display text-sm font-black tracking-wide text-white uppercase shadow-[0_10px_30px_-8px_rgb(34_197_94/0.7)] transition active:scale-[0.98]",
         className,
       )}
     >
-      Choose the free {p.weight} {p.shortName}
-      <ArrowRight className="size-4" />
+      Claim the free {p.weight} {p.shortName}
+      <ArrowRight className="size-4" strokeWidth={2.5} />
     </button>
   );
 }

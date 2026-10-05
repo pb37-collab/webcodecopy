@@ -1,42 +1,56 @@
 @import "tailwindcss";
 
-/* Chunky Academy free-sample landers. Tokens are prefixed `ca-` so they never
-   collide with the portfolio's design system in (portfolio)/globals.css. */
+/* Chunky Academy free-sample landers. Palette, type and components follow
+   chunkyacademy.com (October 2026): black/deep-green ground, Chunky green
+   CTAs, Outfit display type, DM Sans body. Tokens are prefixed `ca-` so they
+   never collide with the portfolio's design system in (portfolio)/globals.css. */
 @theme inline {
-  --color-ca-bg: #0b0a0d;
-  --color-ca-bg-2: #121016;
-  --color-ca-card: #17141c;
-  --color-ca-line: rgb(255 255 255 / 0.09);
-  --color-ca-line-2: rgb(255 255 255 / 0.16);
-  --color-ca-ink: #f6f1ea;
-  --color-ca-ink-2: #c4bcb2;
-  --color-ca-ink-3: #8c857c;
-  --color-ca-gold: #dcbd85;
-  --color-ca-gold-2: #f1dcb2;
+  --color-ca-bg: #050807;
+  --color-ca-bg-2: #0a0f0d;
+  --color-ca-card: #0e1512;
+  --color-ca-navy: #111a26;
+  --color-ca-line: rgb(74 222 128 / 0.16);
+  --color-ca-line-2: rgb(255 255 255 / 0.14);
+  --color-ca-ink: #ffffff;
+  --color-ca-ink-2: #c9d3cd;
+  --color-ca-ink-3: #8b978f;
 
-  /* Jolly Rancher Runtz: polished-jewel ruby. */
-  --color-ruby: #e0294f;
-  --color-ruby-hi: #ff6b86;
-  --color-ruby-deep: #3d0715;
+  /* Chunky green, from the site's cart button, CTAs and promo bar. */
+  --color-ca-green: #16a34a;
+  --color-ca-green-2: #22c55e;
+  --color-ca-neon: #4ade80;
+  --color-ca-mint: #6ee7b7;
+  --color-ca-emerald: #15803d;
+  --color-ca-deep: #052e16;
 
-  /* Cotton Candy Toast Snowcaps: spun-sugar pink over ice blue. */
-  --color-frost: #9fd6ff;
-  --color-frost-hi: #dff1ff;
-  --color-sugar: #f5b9d6;
-  --color-frost-deep: #101830;
+  /* Accents the site uses for drops and community callouts. */
+  --color-ca-purple: #c084fc;
+  --color-ca-orange: #f59e0b;
+  --color-ca-red: #ff3131;
 
-  --font-ca-display: var(--font-fraunces), ui-serif, Georgia, serif;
-  --font-ca-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  /* Jolly Rancher Runtz: cherry. Cotton Candy Toast Snowcaps: ice (the site's Snow Caps cyan). */
+  --color-runtz: #f43f5e;
+  --color-runtz-hi: #fb7185;
+  --color-runtz-deep: #4c0519;
+  --color-snow: #22d3ee;
+  --color-snow-hi: #a5f3fc;
+  --color-snow-deep: #083344;
+
+  --font-ca-display: var(--font-outfit), "Outfit", system-ui, sans-serif;
+  --font-ca-sans: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  --font-ca-tag: var(--font-marker), "Permanent Marker", cursive;
   --font-ca-mono: var(--font-jbmono), ui-monospace, monospace;
 
-  --animate-ca-marquee: ca-marquee 38s linear infinite;
+  --animate-ca-marquee: ca-marquee 30s linear infinite;
   --animate-ca-float: ca-float 6s ease-in-out infinite;
   --animate-ca-float-late: ca-float 6s ease-in-out -3s infinite;
+  --animate-ca-drift: ca-drift 14s ease-in-out infinite;
   --animate-ca-shake: ca-shake 0.45s ease-in-out;
   --animate-ca-rise: ca-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-ca-pulse: ca-pulse 2.6s ease-in-out infinite;
   --animate-ca-shimmer: ca-shimmer 3.2s linear infinite;
   --animate-ca-rain: ca-rain 9s linear infinite;
+  --animate-ca-wiggle: ca-wiggle 3s ease-in-out infinite;
 }
 
 @keyframes ca-marquee {
@@ -52,6 +66,16 @@
   }
   50% {
     transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes ca-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10px, -18px) rotate(25deg);
   }
 }
 
@@ -109,6 +133,16 @@
   }
 }
 
+@keyframes ca-wiggle {
+  0%,
+  100% {
+    transform: rotate(-6deg) scale(1);
+  }
+  50% {
+    transform: rotate(-3deg) scale(1.05);
+  }
+}
+
 @layer base {
   html {
     background: var(--color-ca-bg);
@@ -119,11 +153,11 @@
     overflow-x: hidden;
   }
   ::selection {
-    background: var(--color-ca-gold);
-    color: var(--color-ca-bg);
+    background: var(--color-ca-green-2);
+    color: #000;
   }
   :focus-visible {
-    outline: 2px solid var(--color-ca-gold);
+    outline: 2px solid var(--color-ca-neon);
     outline-offset: 3px;
   }
   input {
@@ -138,54 +172,68 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* Faceted gem lines for the Runtz panels. */
-  .ca-facets {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='104' viewBox='0 0 120 104'%3E%3Cpath d='M0 52 30 0h60l30 52-30 52H30zM30 0l30 52L90 0M30 104l30-52 30 52M0 52h120' fill='none' stroke='%23ff6b86' stroke-opacity='.13' stroke-width='1'/%3E%3C/svg%3E");
-    background-size: 120px 104px;
+  /* Street-poster halftone. Color comes from the element's text color. */
+  .ca-halftone {
+    background-image: radial-gradient(currentColor 1px, transparent 1.6px);
+    background-size: 10px 10px;
   }
 
-  /* Frost crystals for the Snowcaps panels. */
+  /* Graph-paper grid like the site's promo art. */
+  .ca-grid {
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* Frost specks for the Snowcaps panels. */
   .ca-frost {
     background-image:
-      radial-gradient(circle at 20% 30%, rgb(255 255 255 / 0.5) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 20% 30%, rgb(255 255 255 / 0.55) 0 1px, transparent 1.5px),
       radial-gradient(circle at 70% 60%, rgb(255 255 255 / 0.35) 0 1px, transparent 1.5px),
-      radial-gradient(circle at 40% 80%, rgb(223 241 255 / 0.4) 0 0.8px, transparent 1.3px),
-      radial-gradient(circle at 85% 15%, rgb(245 185 214 / 0.45) 0 1px, transparent 1.5px);
+      radial-gradient(circle at 40% 80%, rgb(165 243 252 / 0.45) 0 0.8px, transparent 1.3px);
     background-size:
       38px 38px,
       54px 54px,
-      27px 27px,
-      61px 61px;
+      27px 27px;
   }
 
-  .ca-text-gold {
-    background: linear-gradient(100deg, #b8925a 0%, #f1dcb2 45%, #dcbd85 60%, #9f7a45 100%);
+  .ca-text-green {
+    background: linear-gradient(100deg, #4ade80 0%, #22c55e 50%, #6ee7b7 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  .ca-text-ruby {
-    background: linear-gradient(100deg, #ff8aa0 0%, #e0294f 55%, #a3122f 100%);
+  .ca-text-runtz {
+    background: linear-gradient(100deg, #fda4af 0%, #f43f5e 55%, #e11d48 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  .ca-text-frost {
-    background: linear-gradient(100deg, #f5b9d6 0%, #e9e4ff 45%, #9fd6ff 100%);
+  .ca-text-snow {
+    background: linear-gradient(100deg, #ecfeff 0%, #a5f3fc 40%, #22d3ee 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+
+  .ca-text-drop {
+    background: linear-gradient(180deg, #fde047 0%, #f59e0b 55%, #ea580c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Chunky sticker outline: thick dark stroke behind bold type. */
+  .ca-sticker-text {
+    paint-order: stroke fill;
+    -webkit-text-stroke: 6px #000;
   }
 
   .ca-shimmer {
-    background-image: linear-gradient(
-      100deg,
-      transparent 30%,
-      rgb(255 255 255 / 0.35) 50%,
-      transparent 70%
-    );
+    background-image: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
     background-size: 200% 100%;
   }
 

@@ -4,14 +4,25 @@
  * variable first (set them in Vercel, or in .env.local), so going live needs
  * no code change. Setup steps: docs/chunky/INTEGRATION.md.
  *
- * While the Shopify domain or a variant ID is missing the pages run in demo
- * mode: the full flow works, but instead of redirecting, the page shows the
- * cart URL it would have opened.
+ * Defaults match chunkyacademy.com's current free-sample setup (October 2026):
+ * its own /api/klaviyo/subscribe and /api/cart/create-with-product routes, the
+ * "free-sample" discount code and Klaviyo list V2Si39.
  */
 
 export type SampleId = "runtz" | "snowcaps";
 
-/** `cart` lands on the Online Store cart page; `checkout` skips straight to checkout. */
+/**
+ * `chunky-api`: the same calls chunkyacademy.com/free-sample makes today
+ * (Klaviyo subscribe, then create a Shopify cart and go to its checkout).
+ * Only works when the page is served from chunkyacademy.com, or when
+ * `apiBase` points at it and that site allows cross-origin requests.
+ *
+ * `permalink`: a Shopify cart permalink on the myshopify domain. Works from
+ * any host.
+ */
+export type CartMode = "chunky-api" | "permalink";
+
+/** Permalink mode only: `cart` lands on the cart page, `checkout` skips to checkout. */
 export type CartDestination = "cart" | "checkout";
 
 function read(value: string | undefined, fallback = ""): string {
@@ -22,58 +33,88 @@ function read(value: string | undefined, fallback = ""): string {
 // NEXT_PUBLIC_* values are inlined at build time, so each one has to be
 // referenced by its literal name.
 export const claimConfig = {
+  mode: (read(process.env.NEXT_PUBLIC_SAMPLE_CART_MODE, "chunky-api") === "permalink"
+    ? "permalink"
+    : "chunky-api") as CartMode,
+
   /**
-   * Domain that serves the Shopify cart: the primary storefront domain
-   * (www.chunkyacademy.com) when it runs on Shopify's Online Store, or the
-   * *.myshopify.com domain when the storefront is custom/headless.
+   * chunky-api mode: origin of the Chunky site's API. Empty means "same site",
+   * which is right once these pages live on chunkyacademy.com.
    */
-  shopDomain: read(process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN),
+  apiBase: read(process.env.NEXT_PUBLIC_CHUNKY_API_BASE).replace(/\/$/, ""),
 
-  destination: (read(process.env.NEXT_PUBLIC_SAMPLE_DESTINATION, "cart") === "checkout"
-    ? "checkout"
-    : "cart") as CartDestination,
+  /** Hostnames that count as "on the Chunky site" when apiBase is empty. */
+  siteHosts: ["chunkyacademy.com", "www.chunkyacademy.com"],
 
-  /** Numeric Shopify variant IDs (Admin → Products → variant → the number in the URL). */
+  /** Klaviyo list the Chunky API subscribes claimers to. */
+  klaviyoListId: read(process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID, "V2Si39"),
+
+  /** permalink mode: the Shopify domain that serves carts. */
+  shopDomain: read(process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN, "chunkyacademy.myshopify.com"),
+
+  destination: (read(process.env.NEXT_PUBLIC_SAMPLE_DESTINATION, "checkout") === "cart"
+    ? "cart"
+    : "checkout") as CartDestination,
+
+  /**
+   * Numeric Shopify variant IDs. Defaults are the live retail variants
+   * (Jolly Rancher Runtz 7g, Cotton Candy Toast Snow Cap 3.5g). Swap in
+   * dedicated $0 sample variants, or make sure the discount code below
+   * covers these, before sending traffic.
+   */
   variants: {
-    runtz: read(process.env.NEXT_PUBLIC_RUNTZ_VARIANT_ID),
-    snowcaps: read(process.env.NEXT_PUBLIC_SNOWCAPS_VARIANT_ID),
+    runtz: read(process.env.NEXT_PUBLIC_RUNTZ_VARIANT_ID, "42552332812362"),
+    snowcaps: read(process.env.NEXT_PUBLIC_SNOWCAPS_VARIANT_ID, "43660890832970"),
   } satisfies Record<SampleId, string>,
 
-  /** Optional discount code applied through the cart link (e.g. a 100%-off, once-per-customer code). */
-  discountCode: read(process.env.NEXT_PUBLIC_SAMPLE_DISCOUNT_CODE),
+  /** Discount code applied to the cart. "free-sample" is the code the current page uses. */
+  discountCode: read(process.env.NEXT_PUBLIC_SAMPLE_DISCOUNT_CODE, "free-sample"),
 
   /**
-   * Optional full override for stores that don't use Shopify cart links.
+   * Optional full override of the cart URL (permalink mode only).
    * Tokens: {variantId} {sample} {email} {firstName} {discount} {source}
-   * e.g. https://www.chunkyacademy.com/cart/add?id={variantId}&return_to=/cart
    */
   cartUrlTemplate: read(process.env.NEXT_PUBLIC_SAMPLE_CART_URL_TEMPLATE),
 
-  /** Pre-fill the checkout email so the customer doesn't type it twice. */
+  /** permalink mode: pre-fill the checkout email so the customer doesn't type it twice. */
   prefillCheckoutEmail: read(process.env.NEXT_PUBLIC_PREFILL_CHECKOUT_EMAIL, "true") !== "false",
 
+  /**
+   * Extra, optional lead destinations on top of the Chunky API (or instead of
+   * it in permalink mode): Klaviyo's client API and/or a JSON webhook.
+   */
   klaviyo: {
     /** Klaviyo public API key (6 characters, "Site ID"). Safe to expose in the browser. */
     publicKey: read(process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY),
-    /** List that claimers are subscribed to. */
-    listId: read(process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID),
     /** Metric name for the event fired on each claim; trigger flows from it. */
     eventName: read(process.env.NEXT_PUBLIC_KLAVIYO_EVENT_NAME, "Claimed Free Sample"),
   },
-
-  /** Optional webhook (Zapier, Make, Shopify Flow, your own API) that receives every lead as JSON. */
   webhookUrl: read(process.env.NEXT_PUBLIC_LEAD_WEBHOOK_URL),
 
-  /** Longest the page waits on lead capture before redirecting anyway. */
+  /** Longest the page waits on optional lead capture before moving on. */
   leadTimeoutMs: 2500,
 
-  /** Shown on both pages wherever the offer terms appear. */
+  /** Offer terms line shown on both pages. */
   offerNote: read(process.env.NEXT_PUBLIC_SAMPLE_OFFER_NOTE, "Just cover shipping."),
+
+  /**
+   * Optional scarcity line, the way the current page does it ("Available for
+   * the next ~~1000~~ 450 people"). Set both to show it; leave empty to hide.
+   */
+  spotsTotal: read(process.env.NEXT_PUBLIC_SAMPLE_SPOTS_TOTAL),
+  spotsLeft: read(process.env.NEXT_PUBLIC_SAMPLE_SPOTS_LEFT),
 } as const;
 
-export function isLive(sample: SampleId): boolean {
-  const variant = claimConfig.variants[sample];
-  if (claimConfig.cartUrlTemplate)
-    return Boolean(variant) || !claimConfig.cartUrlTemplate.includes("{variantId}");
-  return Boolean(claimConfig.shopDomain && variant);
+/** True when a claim would really reach the store rather than preview mode. */
+export function isLive(): boolean {
+  if (claimConfig.mode === "permalink") {
+    return Boolean(claimConfig.cartUrlTemplate || claimConfig.shopDomain);
+  }
+  if (claimConfig.apiBase) return true;
+  if (typeof window === "undefined") return false;
+  return (claimConfig.siteHosts as readonly string[]).includes(window.location.hostname);
+}
+
+export function toVariantGid(id: string): string {
+  return id.startsWith("gid://") ? id : `gid://shopify/ProductVariant/${id}`;
 }
