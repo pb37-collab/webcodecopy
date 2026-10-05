@@ -65,7 +65,6 @@ export const eqGiveaway = {
     quartzMacro: { src: `${MEDIA}/quartz-macro.mp4`, poster: `${MEDIA}/quartz-macro.webp` },
     films: [
       { src: `${MEDIA}/film-product.mp4`, poster: `${MEDIA}/film-product.webp`, label: "The EQ Jacuzzi Collection" },
-      { src: `${MEDIA}/film-ecosystem.mp4`, poster: `${MEDIA}/film-ecosystem.webp`, label: "Jacuzzi glass, up close" },
     ],
     closeup: `${MEDIA}/closeup-wide.webp`,
     /** `contain` for transparent cut-outs, `cover` for full-bleed photos. */

@@ -9,9 +9,9 @@
  * and ffmpeg on PATH for the videos (they're skipped without it).
  *
  * Photos come from the product listing, matched by file name so a reordered
- * gallery doesn't scramble them. Videos are the listing's product film plus
- * EQ clips from the homepage, re-encoded to small, silent, web-ready MP4s
- * with a poster frame each.
+ * gallery doesn't scramble them. Videos are the listing's product film and
+ * the quartz-crucible clip from the homepage, re-encoded to small, silent,
+ * web-ready MP4s with a poster frame each.
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs/promises";
@@ -58,9 +58,8 @@ const PHOTOS = [
 const HOMEPAGE_VIDEOS = `${ORIGIN}/cdn/shop/videos/c/vp`;
 const VIDEOS = [
   // The listing's own product film (feature callouts). Resolved from the product JSON.
-  { fromProduct: true, out: "film-product", vf: "scale=-2:720", crf: 27 },
-  // Homepage "The EQ Ecosystem" film (Jacuzzi glass, touchscreen).
-  { url: `${HOMEPAGE_VIDEOS}/1a94ec64c8ab46fcad5c5f37442794b3/1a94ec64c8ab46fcad5c5f37442794b3.HD-1080p-7.2Mbps-92043330.mp4?v=0`, out: "film-ecosystem", vf: "scale=-2:720", crf: 27 },
+  // Poster at 2.2s: the first callout has finished typing in.
+  { fromProduct: true, out: "film-product", vf: "scale=-2:720", crf: 27, posterAt: 2.2 },
   // Homepage hero clip: overhead macro of the quartz crucible.
   { url: `${HOMEPAGE_VIDEOS}/11d4b6adc7634270aa84ba5dc9a850c4/11d4b6adc7634270aa84ba5dc9a850c4.SD-480p-1.2Mbps-92053698.mp4?v=0`, out: "quartz-macro", vf: "scale=480:480", crf: 24 },
 ];
@@ -135,7 +134,7 @@ if (!hasFfmpeg()) {
       "-movflags", "+faststart", dest,
     ]);
     const poster = path.join(tmp, `${v.out}.png`);
-    execFileSync("ffmpeg", ["-v", "error", "-y", "-ss", "1.2", "-i", dest, "-frames:v", "1", poster]);
+    execFileSync("ffmpeg", ["-v", "error", "-y", "-ss", String(v.posterAt ?? 1.2), "-i", dest, "-frames:v", "1", poster]);
     await sharp(poster).webp({ quality: 80 }).toFile(path.join(OUT, `${v.out}.webp`));
     const { size } = await fs.stat(dest);
     console.log(`✓ ${v.out}.mp4 (${(size / 1e6).toFixed(1)} MB) + poster`);
