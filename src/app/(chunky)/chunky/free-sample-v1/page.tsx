@@ -21,7 +21,7 @@ import { ReturningNotice } from "@/components/chunky/use-claim";
 import { claimConfig } from "@/lib/chunky/config";
 
 export const metadata: Metadata = {
-  title: "Claim Your Free Sample | Chunky Academy",
+  title: "Free Flower, Your Choice | Chunky Academy",
 };
 
 const steps = [
@@ -61,13 +61,13 @@ export default function FreeSampleV1() {
               <Gift className="size-3.5" /> Free sample drop<span className="hidden sm:inline"> · While supplies last</span>
             </Pill>
             <h1 className="mt-3 animate-ca-rise font-ca-display text-[2.55rem] leading-[0.92] font-black tracking-[-0.02em] text-balance uppercase [animation-delay:60ms] sm:mt-5 sm:text-7xl">
-              Two strains.
+              <span className="ca-text-green text-[1.22em]">Free flower.</span>
               <br />
-              <span className="ca-text-green">One&apos;s on us.</span>
+              Your choice.
             </h1>
             <p className="mx-auto mt-3 max-w-md animate-ca-rise text-[0.98rem] leading-snug text-ca-ink-2 [animation-delay:120ms] sm:mt-5 sm:text-lg">
-              More flower or more frost? Pick your free sample.{" "}
-              <span className="font-semibold text-white">{claimConfig.offerNote}</span>
+              7g of Jolly Rancher Runtz or 3.5g of Cotton Candy Toast Snowcaps. Both are free; which one you
+              take is up to you. <span className="font-semibold text-white">{claimConfig.offerNote}</span>
             </p>
             <SpotsLeft className="mt-3" />
           </div>

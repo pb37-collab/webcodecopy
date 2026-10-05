@@ -4,8 +4,8 @@ Two landing pages, same offer, different hero. Pick one or A/B test them.
 
 | Page | URL path | Hero |
 | --- | --- | --- |
-| Version 1 | `/chunky/free-sample-v1/` | "Two strains. One's on us." Product cards side by side, form directly under them, sticky claim bar on phones. |
-| Version 2 | `/chunky/free-sample-v2/` | "Pick a hand." Red hand (Runtz) or blue hand (Snowcaps). The email unlocks the hands; the tapped hand goes to checkout. |
+| Version 1 | `/chunky/free-sample-v1/` | "Free flower. Your choice." Product cards side by side, form directly under them, sticky claim bar on phones. |
+| Version 2 | `/chunky/free-sample-v2/` | "Free flower. The choice is in your hands." Red hand (Runtz) or blue hand (Snowcaps). The email unlocks the hands; the tapped hand goes to checkout. |
 | Index | `/chunky/` | Internal links to both. |
 
 Both pages are `noindex`, use Chunky's own logo, fonts (Outfit + DM Sans), colors, trust badges, stats and footer disclaimer, and share one config.

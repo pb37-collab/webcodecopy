@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 const versions = [
   {
     href: "/chunky/free-sample-v1/",
-    name: "Version 1: Two strains. One's on us.",
+    name: "Version 1: Free flower. Your choice.",
     body: "Side-by-side product cards with the form right under them. Pick, type, claim. A sticky claim bar follows on phones.",
   },
   {
     href: "/chunky/free-sample-v2/",
-    name: "Version 2: Pick a hand",
+    name: "Version 2: Free flower. The choice is in your hands.",
     body: "Red hand or blue hand. The email unlocks the hands; the hand you tap goes straight to checkout.",
   },
 ];

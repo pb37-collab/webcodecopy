@@ -19,7 +19,7 @@ import { ReturningNotice } from "@/components/chunky/use-claim";
 import { claimConfig } from "@/lib/chunky/config";
 
 export const metadata: Metadata = {
-  title: "Pick a Hand | Free Sample | Chunky Academy",
+  title: "Free Flower: The Choice Is in Your Hands | Chunky Academy",
 };
 
 const steps = [
@@ -57,7 +57,7 @@ export default function FreeSampleV2() {
   return (
     <>
       <ReturningNotice />
-      <UrgencyBar>One free sample. Two hands. Choose wisely.</UrgencyBar>
+      <UrgencyBar>Limited time: one free sample per customer</UrgencyBar>
       <div className="relative isolate overflow-hidden bg-black">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <CodeRain />
@@ -76,8 +76,11 @@ export default function FreeSampleV2() {
               &gt; the academy is offering you a choice
               <span className="ml-0.5 inline-block w-2 animate-ca-pulse bg-ca-neon">&nbsp;</span>
             </p>
-            <h1 className="mt-2 animate-ca-rise font-ca-display text-[2.9rem] leading-[0.9] font-black tracking-[-0.02em] uppercase [animation-delay:60ms] sm:mt-4 sm:text-7xl">
-              Pick a <span className="ca-text-green">hand.</span>
+            <h1 className="mt-2 animate-ca-rise font-ca-display font-black tracking-[-0.02em] uppercase [animation-delay:60ms] sm:mt-4">
+              <span className="ca-text-green block text-[2.8rem] leading-[0.9] whitespace-nowrap sm:text-7xl">Free flower.</span>
+              <span className="mt-1.5 block text-[1.6rem] leading-[1] text-balance sm:mt-2 sm:text-4xl">
+                The choice is in your hands.
+              </span>
             </h1>
             <p className="mx-auto mt-3 max-w-sm animate-ca-rise text-[0.95rem] leading-snug text-ca-ink-2 [animation-delay:120ms] sm:mt-4 sm:max-w-md sm:text-lg">
               Take the <span className="font-bold text-runtz-hi">Runtz</span> and the story stays sweet. Take
