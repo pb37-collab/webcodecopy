@@ -104,3 +104,11 @@ html:has(.delft-page) {
     opacity: 1;
   }
 }
+@keyframes book-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}

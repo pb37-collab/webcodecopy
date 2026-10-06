@@ -1,5 +1,223 @@
 {
-  "pdf": "/cookbook/the-blue-and-white-table.pdf",
+  "pdf": "/cookbook/parker-beck-cookbook.pdf",
+  "contents": [
+    {
+      "title": "The birthday menus",
+      "page": 4
+    },
+    {
+      "title": "The Jorts and Forks menus",
+      "page": 5
+    },
+    {
+      "title": "Seasonal dinner menus",
+      "page": 6
+    },
+    {
+      "title": "More menus from the collection",
+      "page": 7
+    },
+    {
+      "title": "Fig and blue cheese tart",
+      "page": 8
+    },
+    {
+      "title": "Two savory tarts",
+      "page": 9
+    },
+    {
+      "title": "Crostini and burrata",
+      "page": 10
+    },
+    {
+      "title": "The caviar spread",
+      "page": 11
+    },
+    {
+      "title": "Four more caviar appetizers",
+      "page": 12
+    },
+    {
+      "title": "Potatoes pave",
+      "page": 13
+    },
+    {
+      "title": "Otoro crispy rice",
+      "page": 14
+    },
+    {
+      "title": "Salmon crudo and tuna tartare",
+      "page": 15
+    },
+    {
+      "title": "Lobster rolls and steak bites",
+      "page": 16
+    },
+    {
+      "title": "For the middle of the table",
+      "page": 17
+    },
+    {
+      "title": "Fondue three ways",
+      "page": 18
+    },
+    {
+      "title": "Two starter soups",
+      "page": 19
+    },
+    {
+      "title": "Classic cheese souffle",
+      "page": 20
+    },
+    {
+      "title": "Soft shell crab sandwiches",
+      "page": 21
+    },
+    {
+      "title": "Caviar tasting dishes",
+      "page": 22
+    },
+    {
+      "title": "Steak au poivre",
+      "page": 23
+    },
+    {
+      "title": "Dirty martini steak frites",
+      "page": 24
+    },
+    {
+      "title": "Reverse seared steak and herb butter",
+      "page": 25
+    },
+    {
+      "title": "Venison with raspberry balsamic sauce",
+      "page": 26
+    },
+    {
+      "title": "Venison and Momofuku noodle bowls",
+      "page": 27
+    },
+    {
+      "title": "Fig leaf wrapped branzino",
+      "page": 28
+    },
+    {
+      "title": "More fig leaf ideas",
+      "page": 29
+    },
+    {
+      "title": "Duck breast with fig wine sauce",
+      "page": 30
+    },
+    {
+      "title": "Korean barbecue duck dinner",
+      "page": 31
+    },
+    {
+      "title": "Banchan for the duck menu",
+      "page": 32
+    },
+    {
+      "title": "Crispy salmon with miso fig glaze",
+      "page": 33
+    },
+    {
+      "title": "Trader Joes flatbreads and pita",
+      "page": 34
+    },
+    {
+      "title": "A scallion pancake wrap and gnocchi",
+      "page": 35
+    },
+    {
+      "title": "Turkey mushroom and leek cooking base",
+      "page": 36
+    },
+    {
+      "title": "Turkey skillet variations",
+      "page": 37
+    },
+    {
+      "title": "Turkey bakes and stuffed vegetables",
+      "page": 38
+    },
+    {
+      "title": "Turkey pasta risotto and polenta",
+      "page": 39
+    },
+    {
+      "title": "Turkey patties meatballs and pastry",
+      "page": 40
+    },
+    {
+      "title": "Turkey bowls and breakfast ideas",
+      "page": 41
+    },
+    {
+      "title": "Taco bowls and sheet pan nachos",
+      "page": 42
+    },
+    {
+      "title": "Creamy orzo and five variations",
+      "page": 43
+    },
+    {
+      "title": "Potatoes for the menus",
+      "page": 44
+    },
+    {
+      "title": "Vegetable sides and salads",
+      "page": 45
+    },
+    {
+      "title": "Summer sides and steakhouse asparagus",
+      "page": 46
+    },
+    {
+      "title": "Three sauces to keep",
+      "page": 47
+    },
+    {
+      "title": "Sauces and simple bowls",
+      "page": 48
+    },
+    {
+      "title": "Stuffies and small plates",
+      "page": 49
+    },
+    {
+      "title": "Om Ali",
+      "page": 50
+    },
+    {
+      "title": "Espresso martini creme brulee",
+      "page": 51
+    },
+    {
+      "title": "Fruit desserts and birthday ice cream",
+      "page": 52
+    },
+    {
+      "title": "Grilled peaches and bourbon caramel",
+      "page": 53
+    },
+    {
+      "title": "Drinks from the menus",
+      "page": 54
+    },
+    {
+      "title": "Prep ahead for Kelli birthday dinner",
+      "page": 55
+    },
+    {
+      "title": "Cooking and storage notes",
+      "page": 56
+    },
+    {
+      "title": "Recipe and menu origins",
+      "page": 57
+    }
+  ],
   "pages": [
     {
       "src": "/cookbook/pages/page-01.webp",
@@ -8,6 +226,281 @@
     },
     {
       "src": "/cookbook/pages/page-02.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-03.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-04.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-05.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-06.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-07.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-08.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-09.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-10.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-11.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-12.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-13.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-14.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-15.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-16.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-17.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-18.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-19.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-20.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-21.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-22.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-23.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-24.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-25.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-26.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-27.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-28.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-29.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-30.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-31.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-32.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-33.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-34.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-35.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-36.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-37.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-38.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-39.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-40.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-41.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-42.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-43.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-44.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-45.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-46.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-47.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-48.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-49.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-50.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-51.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-52.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-53.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-54.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-55.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-56.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-57.webp",
       "width": 1700,
       "height": 2200
     }

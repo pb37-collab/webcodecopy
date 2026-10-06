@@ -1,16 +1,32 @@
 "use client";
 
-import { ArrowLeft, ChevronLeft, ChevronRight, Download, Expand, Minimize, ZoomIn } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Download, Expand, List, Minimize, X, ZoomIn } from "lucide-react";
 import Link from "next/link";
 import type { PageFlip } from "page-flip";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cookbook } from "@/data/cookbook";
 import { cn } from "@/lib/utils";
-import { BOOK_PAGES, BookPageContent, isHard, PAGE_RATIO, PDF_HREF, spreadLabel } from "./book-pages";
+import {
+  BOOK_PAGES,
+  BookPageContent,
+  bookIndexOfPage,
+  CONTENTS,
+  isHard,
+  PAGE_RATIO,
+  PDF_HREF,
+  spreadLabel,
+} from "./book-pages";
 import { BookZoom } from "./book-zoom";
 
 const LAST = BOOK_PAGES.length - 1;
 const FLIP_MS = 900;
+/** Pages either side of the open spread whose images load ahead of time. */
+const PRELOAD = 4;
+
+const TOC = [
+  { title: "Title page", page: 1, index: bookIndexOfPage(1) },
+  ...CONTENTS,
+];
 
 type Mode = "landscape" | "portrait";
 
@@ -31,6 +47,7 @@ export function BookReader() {
   const mountRef = useRef<HTMLDivElement>(null);
   const sourceRef = useRef<HTMLDivElement>(null);
   const flipRef = useRef<PageFlip | null>(null);
+  const clonesRef = useRef<HTMLElement[]>([]);
   const pageRef = useRef(0);
   const introDone = useRef(false);
 
@@ -39,6 +56,7 @@ export function BookReader() {
   const [turning, setTurning] = useState(false);
   const [ready, setReady] = useState(false);
   const [zoom, setZoom] = useState<{ focus: number | null } | null>(null);
+  const [tocOpen, setTocOpen] = useState(false);
   const [hint, setHint] = useState(false);
   const [canFullscreen, setCanFullscreen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
@@ -77,6 +95,7 @@ export function BookReader() {
       // page-flip moves its page nodes around, so hand it copies and keep
       // React's originals untouched in the hidden source.
       const nodes = [...sourceRef.current.children].map((n) => n.cloneNode(true) as HTMLElement);
+      clonesRef.current = nodes;
 
       pf = new PageFlip(host, {
         width: 612,
@@ -141,6 +160,17 @@ export function BookReader() {
     flipRef.current?.update();
   }, [bookW, bookH]);
 
+  // Scans are lazy; warm up the pages around the open spread so a turn
+  // never reveals a blank sheet.
+  useEffect(() => {
+    if (!ready) return;
+    clonesRef.current.slice(Math.max(0, page - PRELOAD), page + PRELOAD + 2).forEach((el) =>
+      el.querySelectorAll("img").forEach((img) => {
+        img.loading = "eager";
+      }),
+    );
+  }, [page, ready, mode]);
+
   // ---- navigation
   const spread = spreadAt(page, mode);
   const canPrev = page > 0;
@@ -175,11 +205,15 @@ export function BookReader() {
     setZoom({ focus: spread.length > 1 && clientX > r.left + r.width / 2 ? spread[1] : spread[0] });
   };
 
-  const jump = useCallback((target: number) => {
-    introDone.current = true;
-    setHint(false);
-    flipRef.current?.flip(target);
-  }, []);
+  const jump = useCallback(
+    (target: number) => {
+      introDone.current = true;
+      setHint(false);
+      if (spreadAt(pageRef.current, mode).includes(target)) return;
+      flipRef.current?.flip(target);
+    },
+    [mode],
+  );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -189,7 +223,10 @@ export function BookReader() {
       else if (e.key === "Home" && !zoom) jump(0);
       else if (e.key === "End" && !zoom) jump(LAST);
       else if (e.key === "z" || e.key === "Z") setZoom((z) => (z ? null : { focus: null }));
-      else if (e.key === "Escape") setZoom(null);
+      else if (e.key === "Escape") {
+        setZoom(null);
+        setTocOpen(false);
+      }
       else return;
       e.preventDefault();
     };
@@ -229,15 +266,32 @@ export function BookReader() {
 
       {/* top bar */}
       <header className="relative z-10 flex h-14 shrink-0 items-center justify-between gap-3 px-3 sm:px-5">
-        <Link
-          href="/cookbook/"
-          className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm uppercase tracking-[0.18em] text-delft-100 transition-colors hover:bg-glaze/10"
-        >
-          <ArrowLeft className="size-4" aria-hidden />
-          <span className="hidden sm:inline">Back</span>
-        </Link>
-        <p className="truncate font-delft-display text-lg font-semibold sm:text-xl">{cookbook.title}</p>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <Link
+            href="/cookbook/"
+            aria-label="Back to the cookbook page"
+            className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm uppercase tracking-[0.18em] text-delft-100 transition-colors hover:bg-glaze/10"
+          >
+            <ArrowLeft className="size-4" aria-hidden />
+            <span className="hidden sm:inline">Back</span>
+          </Link>
+          {TOC.length > 1 && (
+            <button
+              type="button"
+              onClick={() => setTocOpen(true)}
+              aria-label="Contents"
+              aria-expanded={tocOpen}
+              className="inline-flex h-10 items-center gap-2 rounded-full border border-glaze/25 px-3 text-sm uppercase tracking-[0.18em] text-delft-100 transition-colors hover:bg-glaze/10 sm:px-4"
+            >
+              <List className="size-4" aria-hidden />
+              <span className="hidden sm:inline">Contents</span>
+            </button>
+          )}
+        </div>
+        <p className="min-w-0 flex-1 truncate text-center font-delft-display text-lg font-semibold sm:text-xl">
+          {cookbook.title}
+        </p>
+        <div className="flex shrink-0 items-center gap-2">
           {canFullscreen && (
             <button
               type="button"
@@ -329,6 +383,57 @@ export function BookReader() {
           </div>
         ))}
       </div>
+
+      {tocOpen && (
+        <div className="fixed inset-0 z-40 flex" role="dialog" aria-modal="true" aria-label="Contents">
+          <nav className="flex h-full w-[min(400px,88vw)] flex-col bg-glaze text-delft-900 shadow-2xl animate-[book-slide_260ms_cubic-bezier(.2,.7,.2,1)]">
+            <div className="flex items-center justify-between border-b-[3px] border-double border-delft-700 px-5 py-4">
+              <p className="font-delft-display text-2xl font-semibold text-delft-800">Contents</p>
+              <button
+                type="button"
+                onClick={() => setTocOpen(false)}
+                aria-label="Close contents"
+                className="grid size-9 place-items-center rounded-full text-delft-700 transition-colors hover:bg-delft-100"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+            <ol className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-3">
+              {TOC.map((entry) => {
+                const here = spread.includes(entry.index);
+                return (
+                  <li key={`${entry.index}-${entry.title}`}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTocOpen(false);
+                        jump(entry.index);
+                      }}
+                      aria-current={here ? "page" : undefined}
+                      className={cn(
+                        "flex w-full items-baseline gap-2 rounded-sm px-3 py-2 text-left text-lg leading-snug transition-colors hover:bg-delft-100",
+                        here && "bg-delft-100 text-delft-700",
+                      )}
+                    >
+                      <span className="min-w-0">{entry.title}</span>
+                      <span aria-hidden className="mb-1 min-w-4 flex-1 border-b border-dotted border-delft-300" />
+                      <span className="font-delft-display text-base tabular-nums text-delft-600">
+                        {entry.page}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          </nav>
+          <button
+            type="button"
+            aria-label="Close contents"
+            onClick={() => setTocOpen(false)}
+            className="flex-1 bg-delft-950/50 animate-[book-fade_200ms_ease-out]"
+          />
+        </div>
+      )}
 
       {zoom && (
         <BookZoom

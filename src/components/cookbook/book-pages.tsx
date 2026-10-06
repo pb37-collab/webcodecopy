@@ -14,7 +14,6 @@ import { DelftPlate, DelftTile, Flourish, MotifGlyph } from "./delft-art";
 export type BookPage =
   | { kind: "cover" }
   | { kind: "endpaper"; end: "front" | "back" }
-  | { kind: "title" }
   | { kind: "scan"; src: string; number: number }
   | { kind: "notes" }
   | { kind: "back" };
@@ -23,9 +22,16 @@ export type BookPage =
 export const PAGE_RATIO = manuscript.pages[0] ? manuscript.pages[0].width / manuscript.pages[0].height : 8.5 / 11;
 export const PDF_HREF = manuscript.pdf;
 
+/** Book index of manuscript page 1 (after the cover and inside cover), so it opens on the right. */
+const FIRST_SCAN = 2;
+export const bookIndexOfPage = (manuscriptPage: number) => FIRST_SCAN + manuscriptPage - 1;
+
+/** The manuscript's own table of contents, mapped to book pages. */
+export const CONTENTS = manuscript.contents.map((c) => ({ ...c, index: bookIndexOfPage(c.page) }));
+
 function buildPages(): BookPage[] {
   const scans: BookPage[] = manuscript.pages.map((p, i) => ({ kind: "scan", src: p.src, number: i + 1 }));
-  const pages: BookPage[] = [{ kind: "cover" }, { kind: "endpaper", end: "front" }, { kind: "title" }, ...scans];
+  const pages: BookPage[] = [{ kind: "cover" }, { kind: "endpaper", end: "front" }, ...scans];
   // With the cover alone on the right, the back cover must land alone on
   // the left — i.e. an even page count. Pad with a notes page if needed.
   if ((pages.length + 2) % 2 !== 0) pages.push({ kind: "notes" });
@@ -41,8 +47,6 @@ export function pageLabel(page: BookPage): string {
       return "Cover";
     case "endpaper":
       return page.end === "front" ? "Inside cover" : "Inside back cover";
-    case "title":
-      return "Title page";
     case "scan":
       return `Page ${page.number}`;
     case "notes":
@@ -91,8 +95,6 @@ function Face({ page }: { page: BookPage }) {
       return <Cover />;
     case "endpaper":
       return <Endpaper end={page.end} />;
-    case "title":
-      return <TitlePage />;
     case "scan":
       return (
         <div className="absolute inset-0 bg-[#fbfaf5]">
@@ -100,7 +102,7 @@ function Face({ page }: { page: BookPage }) {
             src={page.src}
             alt={`Page ${page.number}`}
             fill
-            loading="eager"
+            loading="lazy"
             sizes="(min-width: 1024px) 50vw, 100vw"
             draggable={false}
             className="object-contain mix-blend-multiply"
@@ -122,7 +124,7 @@ function Cover() {
       <div className="absolute inset-0 flex flex-col items-center px-[12%] pt-[12%] pb-[11%] text-center">
         <p className="text-[2.6cqw] uppercase tracking-[0.35em] text-delft-600">A free cookbook</p>
         <DelftPlate className="mt-[7%] w-[62%]" />
-        <p className="mt-[8%] font-delft-display text-[11cqw] font-semibold leading-[0.92]">
+        <p className="mt-[8%] font-delft-display text-[10cqw] font-semibold leading-[0.92]">
           {cookbook.titleLead}
           <span className="block font-medium italic text-delft-600">{cookbook.titleTail}</span>
         </p>
@@ -163,28 +165,6 @@ function Endpaper({ end }: { end: "front" | "back" }) {
   );
 }
 
-function TitlePage() {
-  return (
-    <div className="absolute inset-0 flex flex-col items-center bg-[#fbfaf5] px-[14%] pt-[16%] pb-[12%] text-center text-delft-800">
-      <svg viewBox="0 0 100 100" className="w-[12%] text-delft-700" aria-hidden>
-        <MotifGlyph name="rosette" />
-      </svg>
-      <p className="mt-[10%] font-delft-display text-[10cqw] font-semibold leading-[0.95]">
-        {cookbook.titleLead}
-        <span className="block font-medium italic text-delft-600">{cookbook.titleTail}</span>
-      </p>
-      <Flourish className="mt-[7%] h-auto w-[55%]" />
-      <p className="mt-[7%] font-delft-display text-[4cqw] italic text-delft-900/80">{cookbook.subtitle}</p>
-      <p className="mt-[16%] text-[2.6cqw] uppercase tracking-[0.3em] text-delft-600">Recipes by</p>
-      <p className="mt-[2%] font-delft-display text-[6cqw] font-semibold">{cookbook.author}</p>
-      <div className="mt-auto flex items-center gap-[3%] text-[2.2cqw] uppercase tracking-[0.3em] text-delft-600">
-        <span className="whitespace-nowrap">Free edition</span>
-        <span aria-hidden>&#9670;</span>
-        <span>{cookbook.releaseLabel.replace(/^Releasing\s*/i, "")}</span>
-      </div>
-    </div>
-  );
-}
 
 function NotesPage() {
   return (

@@ -13,10 +13,10 @@
 export type DelftMotif = "tulip" | "windmill" | "rosette" | "jug" | "wheat" | "fish" | "pear";
 
 export const cookbook = {
-  /** Working title — placeholder. */
-  title: "The Blue & White Table",
-  titleLead: "The Blue",
-  titleTail: "& White Table",
+  /** From the manuscript's title page. */
+  title: "The Parker Beck Cookbook",
+  titleLead: "The Parker Beck",
+  titleTail: "Cookbook",
   subtitle: "Recipes worth setting out the good plates for.",
   author: "Parker Beck",
   releaseLabel: "Releasing 2027",
