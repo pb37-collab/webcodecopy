@@ -14,6 +14,22 @@
   --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Cookbook landing page (/cookbook) — Royal Delft blue & white. */
+  --color-glaze: #f7f6f1;
+  --color-glaze-2: #eef1f7;
+  --color-delft-950: #0b1a40;
+  --color-delft-900: #102457;
+  --color-delft-800: #16306f;
+  --color-delft-700: #1d3f8f;
+  --color-delft-600: #2c52a6;
+  --color-delft-500: #4a6fbd;
+  --color-delft-300: #a3b6de;
+  --color-delft-200: #c9d5ee;
+  --color-delft-100: #e3e9f6;
+
+  --font-delft-display: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-delft-body: var(--font-eb-garamond), ui-serif, Georgia, serif;
 }
 
 @layer base {
@@ -35,5 +51,33 @@
   button:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
+  }
+}
+
+/* Cookbook: keep overscroll + canvas in porcelain instead of portfolio black. */
+html:has(.delft-page) {
+  background: var(--color-glaze);
+  color-scheme: light;
+}
+
+@layer components {
+  .delft-page ::selection {
+    background: var(--color-delft-700);
+    color: var(--color-glaze);
+  }
+  .delft-page a:focus-visible,
+  .delft-page button:focus-visible,
+  .delft-page summary:focus-visible {
+    outline-color: var(--color-delft-700);
+  }
+
+  /* Faint tile grid with quarter-rosette corners, like a wall of Delft tiles. */
+  .delft-tiles {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%231d3f8f'%3E%3Cpath d='M0 0h12a12 12 0 0 1-12 12z'/%3E%3Cpath d='M120 0v12a12 12 0 0 1-12-12z'/%3E%3Cpath d='M0 120v-12a12 12 0 0 1 12 12z'/%3E%3Cpath d='M120 120h-12a12 12 0 0 1 12-12z'/%3E%3Ccircle cx='60' cy='60' r='2.5'/%3E%3C/g%3E%3Cpath d='M0 .5h120M.5 0v120' stroke='%231d3f8f' stroke-opacity='.5'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
+  }
+  .delft-tiles-light {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23f7f6f1'%3E%3Cpath d='M0 0h12a12 12 0 0 1-12 12z'/%3E%3Cpath d='M120 0v12a12 12 0 0 1-12-12z'/%3E%3Cpath d='M0 120v-12a12 12 0 0 1 12 12z'/%3E%3Cpath d='M120 120h-12a12 12 0 0 1 12-12z'/%3E%3Ccircle cx='60' cy='60' r='2.5'/%3E%3C/g%3E%3Cpath d='M0 .5h120M.5 0v120' stroke='%23f7f6f1' stroke-opacity='.5'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
   }
 }
