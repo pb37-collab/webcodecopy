@@ -47,6 +47,13 @@ export const substack = {
  */
 export const READER_HREF = "/cookbook/read/";
 
+/**
+ * False until `substack.url` is set. In preview mode the signup form skips
+ * the Substack call and just unlocks the book, so the flow can be reviewed
+ * without subscribing anyone.
+ */
+export const SUBSTACK_LIVE = !substack.url.includes("your-publication");
+
 export const socials = [
   { label: "Substack", href: substack.url },
   { label: "Instagram", href: "https://instagram.com/" },

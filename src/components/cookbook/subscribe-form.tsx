@@ -3,7 +3,7 @@
 import { ArrowRight, BookOpen, Check, Mail } from "lucide-react";
 import Link from "next/link";
 import { useId, useState } from "react";
-import { READER_HREF, substack } from "@/data/cookbook";
+import { READER_HREF, SUBSTACK_LIVE, substack } from "@/data/cookbook";
 import { cn } from "@/lib/utils";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -53,8 +53,12 @@ export function SubscribeForm({
         <div>
           <p className="font-delft-display text-2xl font-semibold leading-tight">Your copy is unlocked.</p>
           <p className={cn("mt-1 text-lg leading-snug", dark ? "text-glaze/85" : "text-delft-800")}>
-            Open it now, or download the PDF from inside. Check <span className="font-semibold">{email}</span>
-            {" "}to confirm your Substack subscription.
+            Open it now, or download the PDF from inside.
+            {SUBSTACK_LIVE && (
+              <>
+                {" "}Check <span className="font-semibold">{email}</span> to confirm your Substack subscription.
+              </>
+            )}
           </p>
           <Link
             href={READER_HREF}
@@ -67,14 +71,20 @@ export function SubscribeForm({
             Open the cookbook
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
           </Link>
-          <a
-            href={substack.url}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-3 block text-base underline decoration-1 underline-offset-4"
-          >
-            No confirmation email? Subscribe on Substack directly
-          </a>
+          {SUBSTACK_LIVE ? (
+            <a
+              href={substack.url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 block text-base underline decoration-1 underline-offset-4"
+            >
+              No confirmation email? Subscribe on Substack directly
+            </a>
+          ) : (
+            <p className={cn("mt-3 text-sm italic", dark ? "text-glaze/70" : "text-delft-800/70")}>
+              Preview mode: Substack isn&rsquo;t connected yet, so no email was sent.
+            </p>
+          )}
         </div>
       </div>
     );
@@ -93,7 +103,9 @@ export function SubscribeForm({
             setStatus("invalid");
             return;
           }
-          // Let the browser post into the hidden iframe, then swap the UI.
+          // Preview mode: nowhere to post yet, just unlock.
+          if (!SUBSTACK_LIVE) e.preventDefault();
+          // Otherwise let the browser post into the hidden iframe, then swap the UI.
           try {
             localStorage.setItem("cookbook-unlocked", "1");
           } catch {
