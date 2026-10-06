@@ -1,0 +1,15 @@
+{
+  "pdf": "/cookbook/the-blue-and-white-table.pdf",
+  "pages": [
+    {
+      "src": "/cookbook/pages/page-01.webp",
+      "width": 1700,
+      "height": 2200
+    },
+    {
+      "src": "/cookbook/pages/page-02.webp",
+      "width": 1700,
+      "height": 2200
+    }
+  ]
+}

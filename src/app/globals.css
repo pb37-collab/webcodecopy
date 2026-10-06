@@ -81,3 +81,26 @@ html:has(.delft-page) {
     background-size: 120px 120px;
   }
 }
+
+/* Cookbook reader (/cookbook/read). */
+.book-host.stf__parent {
+  touch-action: none;
+}
+@keyframes book-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.94) rotateX(8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes book-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

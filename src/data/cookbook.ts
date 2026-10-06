@@ -41,6 +41,12 @@ export const substack = {
   cadence: "One email a week. No spam, unsubscribe in one click.",
 } as const;
 
+/**
+ * Where the unlocked book lives (/cookbook/read). Put the full URL in your
+ * Substack welcome email too, so subscribers can always get back to it.
+ */
+export const READER_HREF = "/cookbook/read/";
+
 export const socials = [
   { label: "Substack", href: substack.url },
   { label: "Instagram", href: "https://instagram.com/" },

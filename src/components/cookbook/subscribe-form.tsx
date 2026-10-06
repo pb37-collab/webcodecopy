@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, Check, Mail } from "lucide-react";
+import { ArrowRight, BookOpen, Check, Mail } from "lucide-react";
+import Link from "next/link";
 import { useId, useState } from "react";
-import { substack } from "@/data/cookbook";
+import { READER_HREF, substack } from "@/data/cookbook";
 import { cn } from "@/lib/utils";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -50,19 +51,29 @@ export function SubscribeForm({
           <Check className="size-5" aria-hidden />
         </span>
         <div>
-          <p className="font-delft-display text-2xl font-semibold leading-tight">You&rsquo;re on the list.</p>
+          <p className="font-delft-display text-2xl font-semibold leading-tight">Your copy is unlocked.</p>
           <p className={cn("mt-1 text-lg leading-snug", dark ? "text-glaze/85" : "text-delft-800")}>
-            Check <span className="font-semibold">{email}</span>{" "}
-            and confirm your subscription &mdash; your free
-            copy arrives by email.
+            Open it now, or download the PDF from inside. Check <span className="font-semibold">{email}</span>
+            {" "}to confirm your Substack subscription.
           </p>
+          <Link
+            href={READER_HREF}
+            className={cn(
+              "group mt-4 inline-flex h-11 items-center gap-2 rounded-sm px-5 font-delft-display text-lg font-semibold transition-colors",
+              dark ? "bg-glaze text-delft-800 hover:bg-delft-100" : "bg-delft-700 text-glaze hover:bg-delft-900",
+            )}
+          >
+            <BookOpen className="size-5" aria-hidden />
+            Open the cookbook
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+          </Link>
           <a
             href={substack.url}
             target="_blank"
             rel="noreferrer"
-            className="mt-2 inline-block text-base underline decoration-1 underline-offset-4"
+            className="mt-3 block text-base underline decoration-1 underline-offset-4"
           >
-            Didn&rsquo;t get it? Subscribe on Substack directly
+            No confirmation email? Subscribe on Substack directly
           </a>
         </div>
       </div>
@@ -83,6 +94,11 @@ export function SubscribeForm({
             return;
           }
           // Let the browser post into the hidden iframe, then swap the UI.
+          try {
+            localStorage.setItem("cookbook-unlocked", "1");
+          } catch {
+            // Storage blocked (private mode) — the unlock link still works.
+          }
           setTimeout(() => setStatus("sent"), 0);
         }}
         className={cn(
