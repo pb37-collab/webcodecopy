@@ -10,7 +10,7 @@
 | # | Need | Why |
 |---|---|---|
 | B1 | **Clean reference photos of the Meta-compliant labels**: GroMax bottle, RootMax bottle and Nano Odor Max bottle, front-on, plain background, as high-res as possible. The label artwork files (PDF/AI/PNG) are even better. | Every product image must show the same canonical label (see `DECISIONS.md`). Without a reference, the AI invents label text. The best existing references are in `public/content/ngm/NGM_S1_beforeafter.webp` (GroMax/RootMax: white bottle, dark green panel, gold lion crest) and `public/content/nom/NOM_S1_hotel.webp` (Odor Max: clear bottle, white label, gold lion). Both are cropped from ads, so they're low-res. |
-| B2 | **Positioning answer** (question Q1 in `BUILD_PLAN.md`): garden-first (tomatoes, peppers, herbs, houseplants) or cannabis-explicit. | This changes the plants in about 30 images. **This brief assumes garden-first**, which is Meta-safe and matches the new label. Cannabis appears only as text in the research numbers, never as plant imagery. If the answer is cannabis-explicit, swap the plant subject in the `U*`, `R02`/`R03` and `W*` prompts. |
+| B2 | ~~Positioning~~ **Answered: Hybrid.** | Home, product pages and main how-to use **garden imagery** (sections 2–8). Cannabis-plant imagery appears **only** in the separate cannabis growers page (section 7b). |
 | B3 | **Bottle size**: the labels say 1 pint (16 fl oz) per bottle, while the bundle SKU says 32 oz (2 × 16). | Scale shots and "what's in the box" need the right bottle size. |
 | B4 | Real photo of **Matt Cinquanta** (case study), plus any real customer photos or videos. | **We will not AI-generate a real, named person**, or any "customer" presented as a real buyer (FTC fake-review rule). Without real photos, testimonial cards use initials avatars. |
 
@@ -147,15 +147,15 @@ These pair with coded step cards built from `research/HOW_TO_USE_SOURCE.md`. Dos
 
 | ID | P | Step | Prompt |
 |---|---|---|---|
-| U01 | P0 | 1 · Mix your solution | Potting bench: a 1 liter clear measuring jug of water, two dosing syringes (one with a green cap, one with a brown cap), GroMax and RootMax bottles behind it, a pitcher of water, morning light. *(Reuse P04 if it is strong enough.)* |
-| U02 | P0 | 2 · Prep the soil (−9 and −5 days) | A freshly prepared, empty raised bed of dark, moist soil being drenched from a green watering can, with seedling trays waiting at the edge |
+| U01 | P0 | 1 · Mix your solution | Potting bench: a clear pump sprayer and a green watering can side by side, each beside a 1 liter measuring jug of water; a dosing syringe dispensing a few mL; GroMax standing by the sprayer and RootMax by the watering can; morning light. Shows GroMax → spray and RootMax → drench. |
+| U02 | P0 | 2 · Prep the soil (−9 and −5 days, **both products**) | A freshly prepared, empty raised bed of dark, moist soil being drenched from a green watering can, with seedling trays waiting at the edge and **both** bottles on the bed's edge |
 | U03 | P0 | 3 · First spray (early growth) | A young seedling with its first few true leaves being lightly misted with a pump sprayer at sunrise. *(Can share a session with P02.)* |
 | U04 | P0 | 4 · Ongoing routine (veg) | A vigorous, leafy young plant in a garden bed mid-season, half the frame showing a mist sprayer and the other half a watering can at the base (visualizes "alternate every 5–7 days") |
 | U05 | P0 | 5 · How much (~8 oz per plant) | A measuring cup pouring about one cup of solution around the base of a plant in a fabric pot, with a row of five identical fabric pots behind it (matches the "5 plants ≈ 40 oz" line) |
 | U06 | P0 | 6 · Flowering / fruiting stage | A plant covered in flowers and first small fruit, a watering can at the soil only, the spray bottle set aside on the bench (drench-only stage) |
 | U07 | P0 | 7 · Finish (~2 weeks before harvest) | A ripe, ready-to-harvest plant with full fruit, garden shears and a harvest basket waiting, golden hour |
 
-> **Step 6 depends on question Q2** (leaf-spray clarification in `DECISIONS.md`). If GroMax leaf spraying continues through flowering, U06 shows a light mist on leaves instead.
+> Confirmed in `DECISIONS.md`: GroMax = leaf spray, RootMax = soil drench, both together for pre-plant soil prep. Flowering is RootMax drench only.
 
 ---
 
@@ -174,6 +174,19 @@ Real numbers are coded as animated counters and bars. Images give each study a s
 | R07 | P1 | 1:1 | **Lab detail** | Lab glassware with a pale green liquid sample, a pipette, and a leaf sample under soft clean light | "Why nano" science card |
 
 > Each case study card gets a real photo where one exists (Matt Cinquanta, Alluvial Trade field photos) from item B4. Otherwise it uses R-series images or initials.
+
+### 7b. Cannabis growers page (CG): hybrid positioning
+
+This is a separate page (e.g. `/pages/cannabis-growers`), linked from The Research and the footer. **It is never used as a Meta ad destination.** It may show cannabis plants. Still no smoking imagery and no people consuming.
+
+| ID | P | Ratio | Shot | Prompt |
+|---|---|---|---|---|
+| CG01 | P1 | 16:9 + 4:5 | Hero | Clean, professional indoor cannabis grow room, dense healthy canopy under full-spectrum LEDs, GroMax and RootMax bottles on a stainless bench in the foreground |
+| CG02 | P1 | 4:5 | Indoor trial | Two blocks of cannabis plants in fabric pots under lights, the right block visibly fuller (pairs with 27 → 38 lbs, +40.7%) |
+| CG03 | P1 | 4:5 | Outdoor trial | Two outdoor rows of cannabis plants, the right row taller (pairs with 47.5 → 55.8 lbs, +17.5%) |
+| CG04 | P1 | 1:1 | How-to (cannabis) | Young cannabis plant with a few fan leaves being lightly misted at sunrise (cannabis version of U03) |
+| CG05 | P2 | 1:1 | Flowering drench | Flowering cannabis plant in a fabric pot, watering can at the soil only |
+| CG06 | P2 | 4:5 | Root ball | Dense white root ball from a cannabis plant pulled from a fabric pot |
 
 ---
 

@@ -76,7 +76,8 @@
    - **GroMax** feeds the leaves: foliar spray, above the soil.
    - A short "together vs alone" explainer, plus BA2 (roots) and BA3 (leaves) before/after sliders.
 3. **How to use Grow Max:** this is the new dedicated section.
-   - A **7-step interactive timeline** from the X chart: Mix → Prep soil (−9 / −5 days) → First spray → Routine (alternate every 5–7 days, shown as an animated cycle) → How much (~8 oz per plant, with a **plant-count calculator**: enter plants, get total solution and mL of each product) → Flowering → Finish (−2 weeks).
+   - A **7-step interactive timeline** from the X chart plus the owner's confirmations: Mix (2 mL per 1 L) → Prep soil with **both** (−9 / −5 days) → First **GroMax** leaf spray → Routine (**GroMax spray ↔ RootMax drench**, every 5–7 days, shown as an animated cycle) → How much (~8 oz per plant, with a **plant-count calculator**: enter plants, get total solution and mL of each product) → Flowering (RootMax drench only) → Finish (−2 weeks).
+   - A one-line memory hook up top: **"GroMax = leaves. RootMax = roots. Both = soil prep."**
    - The **How-to video** (V02) with chapters.
    - The "Quick rules" card.
    - A downloadable / printable one-page guide.
@@ -127,6 +128,11 @@
 - **Before/after sliders.**
 - **Methodology and disclaimer:** "results vary".
 - **CTA** to the bundle.
+
+### 2.5b Cannabis growers page (hybrid positioning)
+- `/pages/cannabis-growers`, linked from The Research and the footer, **not** from the main nav or the ads.
+- Contents: cannabis-specific results (CTG indoor and outdoor, THC study, Matt Cinquanta), cannabis how-to imagery (CG01–CG06), and the same purchase CTA.
+- Excluded from Meta ad destinations. It keeps the main product pages Meta-safe.
 
 ### 2.6 Other pages
 About, Contact (form), FAQ hub, How to Use (standalone, SEO-targeted, reusing the PDP section), 404, search, collection (all products), cart page (fallback), password page.
@@ -240,9 +246,9 @@ The landing pages (`deep-clean`, `feed-bloom`, `flip-unlock`, `nano-odor-max`, `
 
 Answers go in `DECISIONS.md`.
 
-1. **Q1 Positioning.** Garden-first imagery (tomatoes, herbs, houseplants; Meta-safe, matching the new label) or cannabis-explicit like the live site ("Premium Cannabis Growth Formula", THC numbers)? Recommendation: **garden-first visuals and copy**, with cannabis results kept as text inside the Research section.
+1. ~~Q1 Positioning~~ **Answered: hybrid** (see §2.5b).
 2. **Q2 How-to details.**
-   - (a) Leaf spray: GroMax alone, or the 2 + 2 mL mix? Which mix goes in the watering can? Does leaf spraying stop in flowering, as the chart says?
+   - ~~(a) spray vs drench~~ **Answered** (see `DECISIONS.md`).
    - (b) Bottle size (16 oz each?) and how long one bundle lasts.
    - (c) Can we show per-gallon doses?
 3. **Q3 Claims.** Which numbers stay? The draft footnotes everything. The live site also uses "+24.2% THC", "100x absorption", "clinical trials" and "Pet and child safe".
@@ -252,9 +258,9 @@ Answers go in `DECISIONS.md`.
 7. **Q7 Real footage.** Is the "See It In Action" Odor video real? Any real customer or grower photos or videos?
 8. **Q8 Social handles** for the footer: brand X, Instagram, TikTok?
 9. **Q9 Competitor names.** Keep Febreze and Ozium in the comparison table, or switch to generic names?
-10. **Q10 Code home and deploy access.** OK to create a private repo `nanogrowmax-theme`? OK for me to create a **new unpublished theme** in Shopify and push files to it? (I never touch the live theme.)
+10. ~~Q10 Code home and deploy~~ **Approved.**
 11. **Q11 Free gift.** BOGOS or the native automatic discount: which one stays?
-12. **Q12 The $11.99 2-Pack upsell.** Create a real 40%-off discount so it's actually $11.99?
+12. ~~Q12~~ **Approved: make it really $11.99.** Still to confirm: turn the discount on now (which also fixes the live overcharge) or at launch?
 13. **Q13 Apps.** OK to replace UFE, FastBundle and one of LogRocket/Contentsquare with native features?
 14. **Q14 Popup prizes.** The free-Odor-Max prize code is expired. Renew it, or replace it with another code at the same 10% odds? The free-shipping prize (14%) does nothing in the US: keep it or swap it?
 15. **Q15 SMS.** Add an optional phone field (Klaviyo SMS) to the popup?
