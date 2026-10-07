@@ -381,9 +381,9 @@ var PACKS = [
 - Checkout: cart permalink `https://nanogrowmax.com/cart/{variant}:1?discount=…&utm_*/fbclid`:
 
 ```js
-var DCSHIP_STARTS_MS = Date.UTC(2026, 8, 1, 4, 0, 0); /* Sep 1, 2026 04:00 UTC */
+var DC_SHIP_STARTS_MS = Date.UTC(2026, 8, 1, 4, 0, 0); /* Sep 1, 2026 04:00 UTC */
 function discountParam(){
-  return Date.now() >= DCSHIP_STARTS_MS ? '[CODE:deepclean-25],[CODE:deepclean-ship]' : '[CODE:deepclean-25]';
+  return Date.now() >= DC_SHIP_STARTS_MS ? '[CODE:deepclean-25],[CODE:deepclean-ship]' : '[CODE:deepclean-25]';
 }
 ```
 

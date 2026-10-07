@@ -337,7 +337,7 @@ Pick one.
 | Zero Discount-FastBundle | (blank) | $0, FastBundle leftover |
 | BULK50 | `BULK50` | BXGY, buy 1 get 1 50% off |
 | BOGOS 40% Off Canna Buust | (app code) | thank-you-page upsell |
-| Pick Your Prize – Free Odor Max w/ Purchase | `FREECANNA` | 100% off Odor Max, min $1 |
+| Pick Your Prize – Free Odor Max w/ Purchase | `[CODE:fre-x]` | 100% off Odor Max, min $1 |
 | FREE | `FREE` | 100% off |
 | FREE1 | `FREE1` | 100% off, 7 uses |
 | FREE2 | `FREE2` | free shipping |
@@ -358,7 +358,7 @@ Pick one.
 
 | App | What it does |
 |---|---|
-| Klaviyo | Onsite forms plus web pixel, account `RVqrQR` |
+| Klaviyo | Onsite forms plus web pixel, account `[KLAVIYO-PUBLIC-ID]` |
 | Judge.me | Reviews |
 | BOGOS.io Free Gift | secomapp; gift clones, gift and shipping codes |
 | UFE Cross-sell / Upsell / Bundle (Helixo) | Upsells and bundles |
@@ -436,7 +436,7 @@ Pick one.
 External sources:
 - Shopify core: `origin_trials`, `load_feature`, `perf-kit`, `portable-wallets` (accelerated checkout), `shop-js` cart-sync, `standard-actions`, `checkouts/internal/preloads.js`.
 - Theme `t/29`: `theme.js`, `theme.css`, `pick-your-prize.js`/`.css`.
-- **Klaviyo** `static.klaviyo.com/onsite/js/RVqrQR/klaviyo.js`.
+- **Klaviyo** `static.klaviyo.com/onsite/js/[KLAVIYO-PUBLIC-ID]/klaviyo.js`.
 - **Judge.me** `judgeme-773/loader.js` + `shopify_v2.css`, with assets from judge.me, cdn/cdn1/cdn2.judge.me and api.judge.me.
 - **BOGOS** `freegifts-233` (glider, lz-string, freegifts-main.css) + `cdn.bogos.io/.../freegifts_data_*.min.js` + `collect.bogos.io`.
 - **UFE (Helixo)** `ufe-extensions-48/ufeWidgetLoader.js`.
