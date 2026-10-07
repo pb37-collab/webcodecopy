@@ -55,7 +55,8 @@ On the site, this becomes the **"How to use Grow Max"** section of the Grow Max 
 - Spray only when it's cool (morning/evening)
 
 ## Open questions for the owner (affect site copy)
-1. **Step 1 mixing.** The graphic shows both droppers going into one jug. Is the dose 2 mL of *each* product in the same liter, or 2 mL of one product per liter, mixed separately (GroMax solution for spraying, RootMax solution for drenching)? Steps 3–6 apply them separately, so the site needs to state this clearly.
+1. ~~Step 1 mixing~~ **Answered 2026-10-07:** "Mix both together, 2 mL each per liter." The site says: **2 mL GroMax + 2 mL RootMax in the same 1 L of non-chlorinated water, mixed fresh each time.** That one mix is used for both the leaf spray and the soil drench.
+   - Follow-up to confirm: in Step 6 (flowering), the chart says "Only use Root Max in soil". Does the flowering drench switch to RootMax only (2 mL/L), or is it still the combined mix, just never sprayed on leaves?
 2. **Imperial units.** Most US customers use gallons. Is it fine to show "≈ 7.5 mL per gallon" (2 mL/L × 3.785) next to the metric dose, or do you have an official per-gallon figure?
 3. **Bottle yield.** How many liters of solution, or how many feedings, does one 32 oz bottle make? This would feed a "cost per plant" or "one bottle lasts X weeks" calculator.
 4. **Indoor, hydro, houseplants, lawns.** Do the same steps apply, or is this chart specific to soil-grown plants? The live site has a "works anywhere" section.
