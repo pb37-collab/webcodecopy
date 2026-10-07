@@ -933,7 +933,7 @@ export async function klaviyoSubscribe({ email, phone, prize, source = 'Holiday 
   - **If you build your own popup, turn Klaviyo forms off** so the two don't double-fire.
   - Alternatively, use Klaviyo's native forms and skip the custom build. The tradeoff is less control over performance and design.
 - **Flows:** trigger the welcome flow from "Added to list" (the popup list). Branch on `popup_prize` and `interest`.
-- **Codes:** for abuse resistance, use Klaviyo **unique coupon codes**, synced to Shopify with expiry, in the welcome email. The on-site reveal can use a tier code (SPIN10 / SPIN15 / FREESHIP) set to "one use per customer" with an end date.
+- **Codes:** for abuse resistance, use Klaviyo **unique coupon codes**, synced to Shopify with expiry, in the welcome email. The on-site reveal can use a tier code (SPIN10 / SPIN15 / [CODE:prize-freeship]) set to "one use per customer" with an end date.
   - Never trust a client-side wheel outcome for high-value prizes. Anyone can call the API with any prize property.
 
 Sources:
