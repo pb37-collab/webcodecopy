@@ -234,7 +234,7 @@ function SharePanel({ id }: { id: string }) {
   }, [entry]);
 
   if (!entry) return null;
-  const text = `I just entered to win a ${eqGiveaway.brand} ${eqGiveaway.product} kit. ${eqGiveaway.winners} winners. Enter here:`;
+  const text = `I just entered to win a ${eqGiveaway.brand} ${eqGiveaway.product} kit plus ${eqGiveaway.bonus.size} of live hash rosin. ${eqGiveaway.winners} winners. Enter here:`;
 
   async function copy() {
     try {

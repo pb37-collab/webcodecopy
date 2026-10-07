@@ -82,6 +82,25 @@ export const eqGiveaway = {
     youtubeId: null as string | null,
   },
 
+  /**
+   * Bonus for every winner. Hemp-derived THCa can't ship to every state, so
+   * the page and rules promise it only where the brand can legally deliver.
+   */
+  bonus: {
+    size: "1g",
+    name: "Gush Mintz Live Hash Rosin",
+    brand: "Miracle of the Desert",
+    url: "https://www.miracleofthedesert.com/collections/rosin/products/gush-mintz-live-hash-rosin-copy",
+    /** 1g list price on the brand's store. */
+    value: 39.99,
+    image: `${MEDIA}/bonus-rosin.webp`,
+    genetics: "Kush Mints × F1 Durbs × Gushers",
+    flavor: "Sweet berry-cherry up front, sour citrus behind it and a cool menthol finish.",
+    tags: ["Solventless", "Hemp-derived THCa", "Indica-dominant", "1 gram"],
+    restriction:
+      "Ships only to states where Miracle of the Desert can legally deliver hemp-derived THCa. Winners elsewhere receive the EQ kit only.",
+  },
+
   specs: [
     { value: "25s", label: "Heat-up time" },
     { value: "450–650°F", label: "Precision temperature" },
@@ -141,6 +160,10 @@ export const eqGiveaway = {
     {
       q: "Does the colorway I pick matter?",
       a: "It tells us which finish to ship if you win. We'll match it while stock lasts.",
+    },
+    {
+      q: "What's the bonus rosin?",
+      a: "Every winner also gets 1g of Miracle of the Desert's Gush Mintz Live Hash Rosin, a solventless, hemp-derived THCa concentrate. It ships only to states where Miracle of the Desert can legally deliver; winners elsewhere receive the EQ kit only.",
     },
     {
       q: "How do bonus entries work?",

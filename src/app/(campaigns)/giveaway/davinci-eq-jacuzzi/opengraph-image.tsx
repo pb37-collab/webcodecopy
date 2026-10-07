@@ -59,6 +59,7 @@ export default function OpenGraphImage() {
               {g.winners} winners
             </span>
             <span style={{ border: "2px solid #ffffff33", padding: "8px 20px", borderRadius: 14 }}>${total} in prizes</span>
+            <span style={{ border: "2px solid #f2b34a88", color: "#f7d9a3", padding: "8px 20px", borderRadius: 14 }}>+{g.bonus.size} rosin</span>
           </div>
         </div>
         <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>

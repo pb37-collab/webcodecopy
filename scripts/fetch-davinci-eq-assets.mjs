@@ -5,7 +5,8 @@
  *
  *   node scripts/fetch-davinci-eq-assets.mjs
  *
- * Needs network access to davincivaporizer.com and cdn.shopify.com, curl,
+ * Needs network access to davincivaporizer.com, miracleofthedesert.com and
+ * cdn.shopify.com, curl,
  * and ffmpeg on PATH for the videos (they're skipped without it).
  *
  * Photos come from the product listing, matched by file name so a reordered
@@ -106,6 +107,21 @@ for (const p of PHOTOS) {
   await img.clone().webp({ quality: 84, alphaQuality: 90 }).toFile(path.join(OUT, `${p.out}.webp`));
   if (p.png) await img.clone().resize({ width: 800 }).png({ compressionLevel: 9 }).toFile(path.join(OUT, `${p.png}.png`));
   console.log(`✓ ${p.out}.webp${p.png ? ` (+ ${p.png}.png)` : ""}`);
+}
+
+// Bonus prize photo from Miracle of the Desert (also a Shopify store).
+const BONUS_PRODUCT = "https://www.miracleofthedesert.com/products/gush-mintz-live-hash-rosin-copy.js";
+try {
+  const bonus = JSON.parse((await get(BONUS_PRODUCT)).toString("utf8"));
+  const src = bonus.featured_image ?? bonus.images?.[0];
+  if (!src) throw new Error("no product image");
+  await sharp(await get(src))
+    .resize({ width: 1000, height: 1000, fit: "inside", withoutEnlargement: true })
+    .webp({ quality: 84, alphaQuality: 90 })
+    .toFile(path.join(OUT, "bonus-rosin.webp"));
+  console.log(`✓ bonus-rosin.webp (${bonus.title})`);
+} catch (err) {
+  console.warn(`✗ bonus-rosin.webp: ${err.message.split("\n")[0]} (the page shows its stand-in graphic)`);
 }
 
 // Videos

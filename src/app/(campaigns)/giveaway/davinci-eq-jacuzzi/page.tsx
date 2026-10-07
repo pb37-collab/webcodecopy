@@ -55,6 +55,7 @@ export default function EqJacuzziGiveaway() {
   const films = g.media.films.filter((f) => hasPublicFile(f.src));
   const macro = hasPublicFile(g.media.quartzMacro.src) ? g.media.quartzMacro : null;
   const closeup = hasPublicFile(g.media.closeup) ? g.media.closeup : null;
+  const bonusImage = hasPublicFile(g.bonus.image) ? g.bonus.image : null;
 
   return (
     <EqExperience>
@@ -90,9 +91,11 @@ export default function EqJacuzziGiveaway() {
               <p className="mt-2 text-[15px] text-ink-2 lg:hidden">
                 <span className="text-eq">Jacuzzi Collection</span> · {g.winners} kits · ${totalValue} in prizes
               </p>
+              <BonusPill short className="mt-2 lg:hidden" />
               <p className="mt-5 hidden max-w-lg text-[17px] leading-relaxed text-ink-2 lg:block">
                 {`The ${g.brand} EQ Jacuzzi Collection: an electric quartz rig with a 60 ml Jacuzzi bubbler, on-device touchscreen, 25-second heat-up and a smell-resistant travel case. We're giving away ${g.winners} complete kits. Entering takes ten seconds.`}
               </p>
+              <BonusPill className="mt-4 hidden lg:inline-flex" />
             </div>
 
             <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
@@ -292,6 +295,7 @@ export default function EqJacuzziGiveaway() {
               ))}
             </ul>
           </div>
+          <BonusCard image={bonusImage} />
         </section>
 
         {/* FAQ + RULES */}
@@ -326,6 +330,7 @@ export default function EqJacuzziGiveaway() {
                   through your referral link. {g.winners} winners will be selected at random on or about {g.drawDate}{" "}
                   and notified by email; a winner who doesn&rsquo;t respond within 72 hours may be replaced by an
                   alternate. Prize: one {g.product} per winner (ARV ${g.retailPrice}; total ARV ${totalValue}).
+                  {` Bonus: ${g.bonus.size} of ${g.bonus.brand} ${g.bonus.name} per winner (ARV $${g.bonus.value.toFixed(2)}), shipped only to states where ${g.bonus.brand} can legally deliver hemp-derived THCa; winners elsewhere receive the EQ kit only and no substitute.`}
                   Odds depend on the number of eligible entries received. Sponsor: {g.sponsor}. This promotion
                   is not sponsored, endorsed or administered by, or associated with, Instagram, Meta, X or TikTok.
                 </p>
@@ -375,11 +380,75 @@ export default function EqJacuzziGiveaway() {
   );
 }
 
+/** "+ 1g Gush Mintz Live Hash Rosin" chip for the hero. */
+function BonusPill({ className, short }: { className?: string; short?: boolean }) {
+  return (
+    <a
+      href="#bonus"
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border border-[#f2b34a]/40 bg-[#f2b34a]/10 py-1 pr-3 pl-1 text-[12.5px] text-[#f7d9a3] transition-colors hover:border-[#f2b34a]/70 lg:text-[13px]",
+        className,
+      )}
+    >
+      <span className="rounded-full bg-[#f2b34a] px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-[#1a1206]">
+        Bonus
+      </span>
+      {short ? `+${g.bonus.size} live hash rosin for every winner` : `+${g.bonus.size} ${g.bonus.name} for every winner`}
+    </a>
+  );
+}
+
+/** Bonus prize card under "what's in the box". Amber, not the colorway tint, so it reads as a separate gift. */
+function BonusCard({ image }: { image: string | null }) {
+  return (
+    <div id="bonus" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-20">
+      <div className="relative grid overflow-hidden rounded-3xl border border-[#f2b34a]/30 bg-[#0d0b08] bg-[image:radial-gradient(70%_90%_at_15%_50%,rgba(242,179,74,0.22),transparent_70%)] sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)]">
+        <div className="relative grid min-h-[240px] place-items-center p-8">
+          {image ? (
+            <Image src={image} alt={`${g.bonus.brand} ${g.bonus.name}, ${g.bonus.size}`} fill sizes="(min-width: 640px) 40vw, 90vw" className="object-contain p-8 drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]" />
+          ) : (
+            <div aria-hidden className="relative grid size-40 place-items-center">
+              <div className="absolute inset-0 animate-[eq-glow_5s_ease-in-out_infinite] rounded-full bg-[#f2b34a]/30 blur-2xl" />
+              <div className="relative grid size-32 place-items-center rounded-[38%] border border-[#f7d9a3]/40 bg-[radial-gradient(circle_at_35%_30%,#ffe7b0,#f2b34a_45%,#9a5a12)] shadow-[inset_0_-10px_30px_rgba(0,0,0,0.35),0_20px_50px_-10px_rgba(242,179,74,0.6)]">
+                <span className="text-4xl font-bold text-[#1a1206]">{g.bonus.size}</span>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="relative p-6 sm:p-10">
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#f2b34a]">Bonus for every winner</p>
+          <h3 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            +{g.bonus.size} {g.bonus.name}
+          </h3>
+          <p className="mt-1 text-[15px] text-ink-2">from {g.bonus.brand}</p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {g.bonus.tags.map((t) => (
+              <span key={t} className="rounded-full border border-[#f2b34a]/30 bg-[#f2b34a]/10 px-3 py-1 text-[12.5px] text-[#f7d9a3]">
+                {t}
+              </span>
+            ))}
+          </div>
+          <p className="mt-5 text-[15px] leading-relaxed text-ink-2">
+            {`${g.bonus.genetics}. ${g.bonus.flavor} Load it into the quartz crucible on your new EQ and dial in a Smart Path.`}
+          </p>
+          <p className="mt-5 border-t border-white/10 pt-4 text-[12.5px] leading-snug text-ink-3">
+            {g.bonus.restriction} 21+ only.{" "}
+            <a href={g.bonus.url} target="_blank" rel="noopener noreferrer" className="text-ink-2 underline underline-offset-2 hover:text-ink">
+              View at {g.bonus.brand}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Ticker() {
   const items = [
     `${g.winners} winners`,
     "EQ Electric Quartz · Jacuzzi Collection",
     `$${totalValue} in prizes`,
+    `+${g.bonus.size} live hash rosin per winner`,
     "25-second heat-up",
     "No purchase necessary",
     `${g.minAge}+ only`,
