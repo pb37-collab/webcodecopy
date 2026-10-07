@@ -5,10 +5,16 @@
 
 ---
 
-## 0. Before generating anything (blockers)
+## 0. Before generating anything (status)
 
-| # | Need | Why |
+| # | Need | Status |
 |---|---|---|
+| B1 | Product label references | ✅ **Resolved.** Use the **real product stock images** from Higgsfield (real labels). IDs are in `DECISIONS.md` → "Canonical product images". Pass them as reference media in every product shot: GroMax `5ba17cf4…`/`cdcd7a10…`, RootMax `dceb5c30…`/`80cfd07c…`, duo element **NGM-Bottle-Duo** `<<<d0f45d5c-278a-4c7c-9540-8f1c51e9bdc6>>>`, Odor Max `b3d0453a…`/`290a6250…`/`661565d9…`. First step on generation day: create a Higgsfield element **NOM-Bottle** from `b3d0453a…` so Odor Max can be placed with `<<<id>>>` the same way as the duo. |
+| B2 | Positioning | ✅ **Hybrid.** Garden imagery on the main site; cannabis imagery only on the cannabis growers page (section 7b). |
+| B3 | Bottle size | ✅ GroMax 16 fl oz + RootMax 16 fl oz (32 fl oz bundle). Odor Max 8 oz. |
+| B4 | Real people | Real customer photos come from X (the owner imports them). **Never AI-generate a real, named person or a fake "customer."** Higgsfield personas (NGM-Grower-Claire/Elena/Maya, NOM-Home-Diego/Nina) may appear in **illustrative** lifestyle shots only, never next to a review or quote. |
+
+---|---|---|
 | B1 | **Clean reference photos of the Meta-compliant labels**: GroMax bottle, RootMax bottle and Nano Odor Max bottle, front-on, plain background, as high-res as possible. The label artwork files (PDF/AI/PNG) are even better. | Every product image must show the same canonical label (see `DECISIONS.md`). Without a reference, the AI invents label text. The best existing references are in `public/content/ngm/NGM_S1_beforeafter.webp` (GroMax/RootMax: white bottle, dark green panel, gold lion crest) and `public/content/nom/NOM_S1_hotel.webp` (Odor Max: clear bottle, white label, gold lion). Both are cropped from ads, so they're low-res. |
 | B2 | ~~Positioning~~ **Answered: Hybrid.** | Home, product pages and main how-to use **garden imagery** (sections 2–8). Cannabis-plant imagery appears **only** in the separate cannabis growers page (section 7b). |
 | B3 | **Bottle size**: the labels say 1 pint (16 fl oz) per bottle, while the bundle SKU says 32 oz (2 × 16). | Scale shots and "what's in the box" need the right bottle size. |
@@ -35,7 +41,7 @@
 
 **Hard rules for every image:**
 - **No text baked into images.** All headlines, numbers, badges and labels are coded in HTML. That keeps them SEO-indexable, translatable, sharp on every screen and editable later. (The live site's text-baked PNGs are 1–1.7 MB each and can't be read by Google.)
-- **Label must match the reference** (B1). If the AI garbles the label, regenerate or fix it with an inpaint or edit pass. Never ship a garbled label.
+- **Label must match the real product reference** (B1). Prefer **compositing the real stock bottle** into a generated scene (generate the scene with the reference media attached, or generate an empty scene and place the cut-out bottle) over letting the model redraw the label. If a label comes out garbled, regenerate or fix it with an inpaint or edit pass. Never ship a garbled label.
 - **No cannabis leaves, buds, smoking devices, joints or bongs** in any image under the garden-first assumption. Smoke for Odor Max is shown as neutral haze or a stale-air tint, never as a person smoking.
 - **No competitor brand logos** (Febreze, Ozium and so on). Comparison shots use generic unbranded products.
 - **No real named people and no fake "customers."** Hands, over-the-shoulder and faceless lifestyle shots are fine.
@@ -50,7 +56,7 @@
 **File naming:** `ngm-<area>-<slug>-<ratio>.png`, for example `ngm-home-hero-4x5.png` or `ngm-howto-step1-1x1.png`.
 
 **Priority:**
-- **P0** blocks launch (49 entries).
+- **P0** blocks launch (52 entries).
 - **P1** is strongly wanted.
 - **P2** is nice to have, or holiday-only.
 
@@ -62,10 +68,10 @@ Generate in that order so a credit shortfall never blocks launch.
 
 | ID | P | Ratio | Shot | Prompt (add style line + label reference) | Used in |
 |---|---|---|---|---|---|
-| G01 | P0 | 1:1, 4:5 | **Grow Max Bundle hero packshot** | Two white 16 oz bottles, GroMax (left) and RootMax (right), labels facing camera, standing on a dark polished stone plinth. Deep forest-green background fading to black, thin acid-lime rim light on the bottle edges, soft green haze behind, subtle reflection on the plinth. A few glossy basil leaves and two vine tomatoes at the plinth base. | Bundle PDP gallery #1, product cards, cart, OG image |
-| G02 | P0 | 1:1 ✂ | GroMax single, front | Single GroMax bottle, label straight-on, plain light seamless background, soft even studio light, gentle ground shadow | Product card, "why both" diagram, cart thumbnail, upsell tile |
-| G03 | P0 | 1:1 ✂ | RootMax single, front | Same as G02 with RootMax | Same as G02 |
-| G04 | P0 | 1:1 ✂ | Nano Odor Max single, front | Clear 8 oz fine-mist spray bottle, white Nano Odor Max label with gold lion crest, label straight-on, plain light seamless background, soft studio light | Odor PDP, tier cards (the coded tier cards repeat this cutout ×2/×3/×5), cart, upsell |
+| G01 | P1 (stock duo exists) | 1:1, 4:5 | **Grow Max Bundle hero packshot**, a premium plinth version of `ngm-stock-bundle-duo-black` | Two white 16 oz bottles, GroMax (left) and RootMax (right), labels facing camera, standing on a dark polished stone plinth. Deep forest-green background fading to black, thin acid-lime rim light on the bottle edges, soft green haze behind, subtle reflection on the plinth. A few glossy basil leaves and two vine tomatoes at the plinth base. | Bundle PDP gallery #1, product cards, cart, OG image |
+| G02 | ✅ exists | 1:1 ✂ | GroMax single, front (`ngm-stock-gromax-white/black`). Only needs background removal. | Single GroMax bottle, label straight-on, plain light seamless background, soft even studio light, gentle ground shadow | Product card, "why both" diagram, cart thumbnail, upsell tile |
+| G03 | ✅ exists | 1:1 ✂ | RootMax single, front (`ngm-stock-rootmax-white/black`). Only needs background removal. | Same as G02 with RootMax | Same as G02 |
+| G04 | ✅ exists | 1:1 ✂ | Nano Odor Max single, front (`ngm-stock-odormax-white`). Only needs background removal. | Clear 8 oz fine-mist spray bottle, white Nano Odor Max label with gold lion crest, label straight-on, plain light seamless background, soft studio light | Odor PDP, tier cards (the coded tier cards repeat this cutout ×2/×3/×5), cart, upsell |
 | G05 | P0 | 1:1, 4:5 | Odor Max hero, lab-dark | Nano Odor Max bottle on a dark stone plinth, deep forest background, a fine mist cloud just leaving the nozzle and backlit in lime-tinted light, droplets frozen mid-air | Odor PDP gallery #1, home Odor band |
 | G06 | P0 | 4:5, 16:9 | **"Everything in the box"** | Overhead flat lay on a warm paper-textured surface: GroMax and RootMax bottles, one Nano Odor Max bottle tied with a thin lime ribbon and a small blank kraft gift tag, a 10 mL measuring syringe, a small glass measuring jug, a few basil leaves. Clean, airy, organized. | Bundle PDP gallery (shows the free Odor Max gift), home offer band |
 | G07 | P1 | 1:1 | GroMax in hand (scale) | A gardener's hand (sleeve rolled, light soil on the fingers) holding the GroMax bottle in a sunny garden, bottle sharp, garden bokeh behind | PDP gallery (size and scale) |
@@ -220,17 +226,30 @@ The game puts the **BEFORE** image on a canvas over the **AFTER** image, and the
 | ID | P | Room / odor | AFTER prompt (then edit into BEFORE) |
 |---|---|---|---|
 | SG1 | P0 | **Living room: smoke and stale air** | Cozy modern living room, linen sofa, plants, afternoon sun → BEFORE: same room dim, with a hazy grey stale-smoke cast hanging in the air, curtains drawn, an empty takeout box and a crumpled throw on the coffee table |
-| SG2 | P0 | **Kitchen: cooking odors** | Bright clean kitchen with an island and a pan on the stove → BEFORE: same kitchen hazy with a lingering yellowish cooking-fume cast, a pan of fried fish, trash bag by the door |
+| SG2 | P0 | **Bedroom closet: clothes** | Bright bedroom with an open closet of fresh hung clothes → BEFORE: same room dim and hazy, a pile of worn clothes and a hoodie on the bed |
 | SG3 | P0 | **Car: food and gym bag** | Clean car interior from the back seat → BEFORE: same car, hazy and dim, fast-food bag and sweaty gym bag on the seat |
-| SG4 | P0 | **Pet corner: dog and litter** | Bright mudroom corner with a tidy dog bed and a happy dog → BEFORE: same corner, hazy and dim, a rumpled dog bed, muddy paw prints |
-| SG5 | P1 | Bedroom / laundry | Fresh bright bedroom with made bed → BEFORE: same room hazy, laundry pile and sneakers on the floor |
+| SG4 | P0 | **Apartment kitchen and couch (whole apartment)** | Open-plan apartment, kitchen and sofa, bright and clean → BEFORE: same space hazy, takeout boxes, stale-air cast |
+| SG5 | P1 | Pet corner (optional 5th room) | Bright mudroom corner with a tidy dog bed → BEFORE: same corner, hazy, rumpled dog bed |
 
-### 8b. "Not just smoke" use-case grid (UC)
+### 8b. "Every unwanted odor" use-case grid (UC)
 
-This is a 12-tile grid, 1:1, generated in **one consistent style**: bright, clean, a little moody, with the bottle visible in about half the tiles. These come from the brand's content angles. Confirm or extend the list (question Q6).
+Per the owner, Odor Max **removes any unwanted odor: car, apartment, house, fabrics (clothes, furniture) and smoke.** It **penetrates deep below the surface, unlike candles and scented sprays.**
+- Ratio 1:1, one consistent bright-clean style, with the real bottle (via reference) in about half the tiles.
 
 | ID | P | Use case | Prompt seed |
 |---|---|---|---|
+| UC01 | P0 | **Car** | Sunlit fabric car interior, bottle on the console, fine mist over the seats |
+| UC02 | P0 | **Apartment** | Compact modern apartment living space, open window light, mist in the air |
+| UC03 | P0 | **House** | Bright family home living room and entryway, clean and airy |
+| UC04 | P0 | **Clothes** | Hoodie and jacket on a hanger being misted, closet behind |
+| UC05 | P0 | **Furniture** | Linen sofa and cushions being misted, deep-fabric feel |
+| UC06 | P0 | **Smoke odor** | Sheer curtains and a lounge chair in soft light, faint grey haze clearing |
+| UC07 | P1 | Bedding and mattress | Fresh made bed, mist over the duvet |
+| UC08 | P1 | Carpets and rugs | Thick rug in a sunny room, mist settling into the fibers |
+| UC09 | P2 | Pets (couch and pet bed) | Dog bed beside a sofa, clean and bright |
+| UC10 | P2 | Gym bag and shoes | Gym bag and sneakers, bottle beside them |
+
+---|---|---|---|
 | UC01 | P0 | Smoke and vape (rooms, curtains) | Sheer curtains in a bright room catching a light mist |
 | UC02 | P0 | Pets (dog beds, couches) | Golden retriever on a sofa, mist in the foreground |
 | UC03 | P0 | Litter box area | Tidy laundry-room cat litter corner, clean |
@@ -258,7 +277,10 @@ The wheel, prize text and odds are **coded**. Only the decorative art is generat
 | C04 | P1 | 16:9 | **Popup header art** | Forest-green velvet backdrop with scattered lime confetti, a few gold sparkles, the three products softly lit at the bottom edge |
 | C05 | P2 | 1:1 ✂ | Wheel hub emblem | Gold lion crest medallion, front-on (cut out); used as the spin wheel centre |
 
-The cart drawer uses the G02, G03 and G04 cutouts for upsell tiles. No new art is needed.
+| C06 | P0 | 1:1 ✂ | **Easter egg reveal** (spray game) | A gold lion-crest medallion bursting out of a cracked forest-green vault door, gold light rays and lime sparks, plain dark background (cut out). Used in the "You found the secret 25% off" animation. |
+| C07 | P1 | 1:1 ✂ | Easter egg key | An ornate gold key with the lion crest on its bow, floating, soft glow (cut out) |
+
+The cart drawer uses the G02, G03 and G04 stock cutouts for upsell tiles. No new art is needed.
 
 ---
 
@@ -299,12 +321,12 @@ Specs:
 
 ## 12. Generation-day checklist
 
-1. Upload the B1 label references to Higgsfield and save them as reference elements: `ref-gromax`, `ref-rootmax`, `ref-odormax`.
-2. Generate G01–G06 (packshots) and approve the labels. **Stop and fix the labels before anything else.**
+1. The real stock images are already in Higgsfield (IDs in `DECISIONS.md`). Create elements **NOM-Bottle** (Odor Max), **GroMax-Bottle** and **RootMax-Bottle** from them. **NGM-Bottle-Duo** already exists.
+2. Run background removal on the stock singles (G02–G04 cutouts). Generate G05 and G06 and approve the labels. **Stop and fix the labels before anything else.**
 3. Generate H01 (hero), P01 (why both), BA1–BA3 (before/after pairs) and SG1–SG4 (spray game rooms). These are the hardest and most important.
 4. Generate U01–U07, R01–R05, O01–O03, UC01–UC06, C01–C03 and H03–H06, H09.
 5. P1 items, then P2 items, as credits allow.
 6. Videos last: V02 and V05 first.
 7. Export at full resolution and name per section 1. Drop them in `docs/nanogrowmax/generated/` (or share a Drive/Dropbox folder). They then get uploaded to Shopify Files and wired into the theme.
 
-**Total: 84 shot entries** (P0 49 · P1 27 · P2 8), including 7 new videos. That comes to about 120 renders once the extra aspect ratios and the BEFORE edit passes are counted. If credits are tight, the P0 set alone carries the launch.
+**Total: about 100 shot entries** (P0 52 · P1 36 · P2 12), including 7 videos. Three packshots already exist as real stock images. If credits are tight, the P0 set alone carries the launch.

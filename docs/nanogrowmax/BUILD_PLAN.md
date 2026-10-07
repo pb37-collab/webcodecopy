@@ -29,7 +29,7 @@
   - LCP ≤ 2.0 s, INP ≤ 150 ms, CLS ≤ 0.05
   - Under 60 KB of theme JS on first load
   - System font fallback; one self-hosted display font, preloaded
-- **Code location:** theme source in a **private** GitHub repo (see Q10). This repo is public, so it only holds the docs.
+- **Code location:** theme source in a **private** GitHub repo (`pb37-collab/nanogrowmax-theme`). This repo is public, so it only holds the docs.
 
 ---
 
@@ -40,26 +40,26 @@
 - **Header:** logo with lion crest · Grow Max · Odor Max · The Research · How to Use · Cart. Mobile uses a full-screen menu with product cards.
 - **Cart drawer** (§4).
 - **Popup** (§5).
-- **Footer:** shop links, How to Use, Research, About, Contact, FAQ, all policies (privacy, terms, refund, shipping, cookie preferences / "Your privacy choices"), social links (Q8), payment icons, newsletter, USDA BioPreferred badge.
+- **Footer:** shop links, How to Use, Research, About, Contact, FAQ, all policies (privacy, terms, refund, shipping, cookie preferences / "Your privacy choices"), social links ([X](https://x.com/NanoGrowMaxInc), [Instagram](https://www.instagram.com/nanogrowmaxinc/), [TikTok](https://www.tiktok.com/@nanogrowmaxinc), also in Organization `sameAs` markup), payment icons, newsletter, USDA BioPreferred badge.
 - **Legal pages carried over:** Privacy, Terms, Refund, Shipping, Contact and Your Privacy Choices. Shipping and Terms are also set as real Shopify policies, so they appear at checkout.
 
 ### 2.2 Home / landing page: "what we sell and why it's the best"
 1. **Hero:** golden-garden image (H01) or video (V01). The headline is coded. Two CTAs: *Shop the Grow Max Bundle* / *Shop Odor Max*. Trust chips: Free shipping · 30-day money-back · USDA BioPreferred.
-2. **Animated proof strip:** count-up numbers as you scroll, e.g. **+40.7%** yield (indoor trial), **+51%** tomato field trial, **60 sec** odor gone, **30-day** guarantee. Every number is footnoted to the Research section (Q3 sets which claims stay).
+2. **Animated proof strip:** count-up numbers as you scroll, e.g. **+40.7%** yield (indoor trial), **+51%** tomato field trial, **60 sec** odor gone, **30-day** guarantee. Every number links to its study in the Research section.
 3. **Meet the system:** two product cards, RootMax (roots below) and GroMax (leaves above), merging into the **Grow Max Bundle** card. A free Odor Max gift ribbon shows on the bundle.
 4. **How it works in 3 steps:** Mix → Spray & drench → Harvest more. Links to the full how-to.
 5. **Before/after slider** (BA1 tomato), drag-to-compare.
 6. **Works on everything you grow:** a swipeable grid (H03–H08).
 7. **Research teaser:** three animated stat cards linking to The Research.
 8. **Odor Max feature band:** "Not just smoke. Every odor. 60 seconds." A mini spray-demo loop links to the Odor PDP.
-9. **Reviews / UGC:** real reviews only, from Judge.me (Q4).
+9. **Reviews / UGC:** the real named testimonials (imported into Judge.me) plus real customer photos imported from X.
 10. **Guarantee and free shipping band.**
 11. **FAQ** (top 6 across both products).
 12. **Final CTA** with the holiday gift scene (G10).
 
 ### 2.3 Grow Max Bundle PDP (`/products/nanogrow-max`): the flagship
 1. **Purchase section** (above the fold on mobile):
-   - Gallery: 8 slides with swipe, thumbnails, zoom, and video slots
+   - Gallery: 8 slides with swipe, thumbnails, zoom, and video slots. Slide 1 is the **real stock product photo** (`ngm-stock-bundle-duo-black`).
    - Title, real Judge.me stars
    - Price $99.99 with compare-at ~~$109.98~~ and a "Save $9.99" badge
    - **Option tiles:**
@@ -89,7 +89,7 @@
    - Each card has study details (plants, days) and links to the full Research page.
 5. **Before/after gallery:** BA1, BA4, BA5 and BA6 sliders.
 6. **Comparison table:** NanoGrow vs salt-based nutrients / organic teas / cal-mag (carried over and cleaned up).
-7. **What's in the box** (G06), plus "one bundle lasts…" (Q2b).
+7. **What's in the box** (G06), plus "one bundle lasts…" (open question 2).
 8. **Reviews** (Judge.me).
 9. **FAQ:** grow-specific, including the old FAQ plus dosing, safety, storage, "can I use it with my current nutrients?", hydro/coco and shipping.
 10. **Cross-sell:** "Complete the routine": Odor Max.
@@ -112,11 +112,12 @@
    - Pick a room (living room, kitchen, car, pet corner), then spray away the haze.
    - Each cleared room reveals the science line and use case.
    - A timer shows "cleared in X seconds" against the **60-second** promise.
-   - Completing the game reveals the existing deep-clean reward (Q5). Touch-optimized, with a 2-tap fallback and reduced-motion support.
+   - **Easter egg:** clearing every room triggers a special **"You found the secret!"** animation: a vault cracks open, the gold lion crest bursts out with lime sparks and confetti, and the phone vibrates. The visitor gets a **secret 25% off** code, auto-applied to the cart, with an optional "email me this code" capture. It's never mentioned anywhere else on the site, so it stays a genuine secret.
+   - Touch-optimized, with a 2-tap fallback and reduced-motion support.
 3. **The 60-second explainer:** an animated 0 → 60 s timeline plus the fabric cutaway (O02): "sprays & candles stop here / Odor Max reaches here".
-4. **Not just smoke: every odor.** A 12-tile use-case grid (UC01–UC12).
+4. **Every unwanted odor, gone.** A use-case grid: car · apartment · house · clothes · furniture · smoke (plus bedding and carpets). The key message: **"Penetrates deep below the surface, where candles and scented sprays can't reach."**
 5. **How to use:** 2–3 sprays, wait 60 s, second pass for cars and heavy fabric; about 250 sprays per bottle (from the FAQ).
-6. **Comparison:** Odor Max vs masking sprays, aerosol sanitizers and candles. Generic names only, with no competitor brands, unless you approve keeping the current Febreze/Ozium table (Q9).
+6. **Comparison:** Odor Max vs **Febreze** vs **Ozium** vs candles/generic sprays (names kept, owner-approved).
 7. **Video:** "See it in action" (real video), plus dramatization clips if used.
 8. **Reviews and FAQ:** the existing 10-question FAQ, cleaned up.
 9. **Cross-sell:** the Grow Max Bundle comes with a free Odor Max.
@@ -146,13 +147,14 @@ The landing pages (`deep-clean`, `feed-bloom`, `flip-unlock`, `nano-odor-max`, `
 | Offer | How it works on the new site |
 |---|---|
 | Bundle $99.99 (compare $109.98) | Option tiles; "Save $9.99" badge |
-| **Free 8 oz Odor Max with the bundle** | Keep **one** mechanism (Q11): BOGOS or the native "Spend $99.99, get 1 free" automatic discount, **not both**. Advertised on the PDP, in the cart ("🎁 Free Odor Max added") and in the popup. |
+| **Free 8 oz Odor Max with the Grow Max Bundle or the Odor Max 4-Pack** | Every buyer gets it. Bundle: the theme adds the $0 gift line automatically when the bundle is in the cart, and removes it when the bundle leaves. It's backed by **one** native automatic discount, so it also works with Buy Now and express checkout. BOGOS gets retired after testing. 4-Pack: the variant already ships 4 + 1 bonus bottle. Advertised on both PDPs, in the cart ("🎁 Free Odor Max added") and in the popup. |
 | Odor Max ladder $12.99 / $19.99 / $29.99 / $39.99 (4+1) | Tier cards; the $12.99 single is offered again |
-| **Odor Max 2-Pack "$11.99, 40% off" upsell** | ⚠ **Currently displays $11.99 but charges $19.99.** No discount makes it $11.99. Fix: create a real automatic discount (2-Pack at 40% off when GroMax, RootMax or the bundle is in the cart), or show the true price (Q12). Shown on the PDP and in the cart drawer, **including for bundle buyers** (today it's hidden from them). |
+| **Post-purchase upsell: Odor Max 2-Pack at 40% off ($11.99)** | **After checkout**, on the Upsell.com (ex-ReConvert) one-click post-purchase page: Grow Max Bundle buyers can add 2 bottles of Odor Max at 40% off with no re-entering of payment. Post-purchase pages need an app by Shopify's rules, so this one app stays. The broken "$11.99" banner in the cart (which charged $19.99) is removed. |
+| In-cart upsells (native) | GroMax-only or RootMax-only buyers: "Upgrade to the Grow Max Bundle: save $9.99 + get a FREE Odor Max" (one-tap swap). Odor Max-only buyers: "Add the Grow Max Bundle". Odor Max 1–3-pack buyers: "Upgrade to the 4-Pack + free bonus bottle". |
 | Free shipping, every order (US rate is $0) | Cart: "✓ Free shipping unlocked" on every order. No threshold bar. |
 | 30-day money-back guarantee | Trust row, PDP, cart and footer |
 | Codes: the grow intro code, the odor intro code, the 20% grow code, the prize codes, the deep-clean codes and the win-back codes | All still valid at checkout. The cart gets a **discount code field**. Popup and landing-page codes are **auto-applied** and shown in the cart. |
-| UFE / Upsell.com / FastBundle apps | Replaced by native theme upsells where possible, which is faster. App embeds are removed only with your OK (Q13). |
+| Apps | **Approved:** replace UFE, FastBundle and BOGOS with native theme features, and keep one session-recording tool. **Upsell.com stays** for the post-purchase offer only. |
 
 ---
 
@@ -173,28 +175,39 @@ The landing pages (`deep-clean`, `feed-bloom`, `flip-unlock`, `nano-odor-max`, `
   - Checkout link prefetch and preconnect.
   - Shopify storefront events, so apps (BOGOS) update the drawer.
   - No jQuery.
-- **App cleanup to cut load time:** remove one of the two session-recording tools (LogRocket or Contentsquare), and drop the unused FastBundle and UFE once native upsells replace them (Q13). Expect page weight to fall from roughly 1.5–2.5 MB to well under 1 MB on mobile.
+- **App cleanup to cut load time:** remove one of the two session-recording tools (LogRocket or Contentsquare), and drop FastBundle, UFE and BOGOS once native upsells and the gift logic replace them (approved). Expect page weight to fall from roughly 1.5–2.5 MB to well under 1 MB on mobile.
 
 ---
 
-## 5. Popup rebuild ("Pick Your Prize"): same 3 games, same prizes, same odds
+## 5. Popup rebuild ("Pick Your Prize"): the same 3 games, built to convert
 
-- **Games:** Spin-A-Sale Wheel, Scratch To Reveal and Mystery Box. They're recoded as lightweight canvas/CSS (around 15 KB), styled lab-dark with lime and gold, and use the C01–C05 art.
-- **Prizes and odds unchanged** (weights 48 / 20 / 14 / 10 / 8). Two prize codes need your call (Q14):
-  - The free-Odor-Max prize code **expired Sept 11**, so 10% of winners currently get a dead code.
-  - The free-shipping prize is worth nothing in the US, because shipping is already free.
-- **Flow:**
-  1. Small teaser tab ("🎁 Play for a prize").
-  2. The sheet opens after about 12 s or 50% scroll on mobile. That avoids Google's intrusive-interstitial penalty and doesn't block the first view of ad traffic.
-  3. Pick a game, enter email (plus optional phone with TCPA consent text, Q15), play, reveal the prize.
-  4. **The code is auto-applied to the cart** and persists across sessions.
-  5. A "your code" chip stays visible in the cart.
+The owner's direction: keep the 3 games, use best judgement on prizes and odds, maximize conversion and contact capture.
+
+- **Games:** Spin-A-Sale Wheel, Scratch To Reveal and Mystery Box. They're recoded as lightweight canvas/CSS (around 15 KB, loaded only when the popup opens), styled lab-dark with lime and gold, using the C01–C05 art.
+- **Everyone wins. New prize table** (all real, working codes):
+
+  | Prize | Weight | Why |
+  |---|---|---|
+  | 10% off your order | 34 | Entry prize, still a reason to buy today |
+  | **15% off your order** | 30 | The most common "good" win; the sweet spot for conversion |
+  | **FREE Nano Odor Max bottle** with any order ($12.99 value) | 20 | High perceived value, low cost; introduces the second product |
+  | 20% off your order | 13 | A "big win" moment |
+  | **25% off: JACKPOT** | 3 | Rare and exciting, makes the game feel real |
+
+  - **Free shipping is removed as a prize** because every order already ships free. The expired free-bottle code is replaced.
+  - The average discount is about 11%, with 20% of winners getting a free bottle instead.
+  - All codes are **new, single-use per customer**, and **combine with the free-gift discount**, so bundle buyers still get their free bottle. The old codes stay valid for anyone who already has them.
+- **Flow (built for mobile and for contact capture):**
+  1. A small teaser tab, "🎁 Play for a prize". Never on arrival. The sheet slides up after **12 s or 50% scroll** on mobile, or on exit-intent on desktop. That's Google-safe (no intrusive interstitial on landing) and doesn't block ad traffic's first view.
+  2. **Pick a game → enter email → play.** Email is captured before the reveal (the one required field) and subscribes immediately.
+  3. **Reveal with an animation.** The code is **auto-applied to the cart** (`/cart/update.js` discount, merged with any existing codes) and saved, so closing the popup never loses it. A "🎁 15% OFF applied" chip stays visible site-wide and in the cart.
+  4. **Optional SMS step on the reveal screen:** "Text me my code + get VIP early access to Black Friday", with the phone field and TCPA consent text. This adds SMS contacts without adding friction before the prize.
 - **Klaviyo wiring (the current setup is broken):**
-  - Subscribe via the Klaviyo client Subscriptions API to a **single opt-in list**. The current list is double opt-in, and only 5 profiles joined since April.
-  - Include profile properties: `prize_name`, `prize_code`, `game`, `signup_source`, `product_interest`.
-  - Fire a "Won Prize" event. Check the response and retry.
-  - **Turn on the welcome flow** (it's set to manual) and change it to **include the actual code** from the profile property (Q16). I'll draft the flow emails.
-- **Frequency rules actually enforced:** don't show again for 7 days after close; never show after a win, a signup, or on checkout-intent pages; don't show to Klaviyo-identified subscribers.
+  - **Single opt-in** list "Pick Your Prize — Popup".
+  - Profile properties `prize_name`, `prize_code`, `game`, `signup_source`, `product_interest` (the page they were on).
+  - A "Won Prize" event. The response is checked and retried.
+  - The welcome flow is **rewritten to include the actual code** from the profile and **switched on**, plus a 24 h and 72 h "your code is waiting" reminder.
+- **Frequency rules actually enforced:** don't show again for 7 days after closing. Never show after a win or signup, on cart or checkout pages, or to known Klaviyo subscribers (`_kx`). Landing pages get their own offers instead.
 
 ---
 
@@ -211,7 +224,7 @@ The landing pages (`deep-clean`, `feed-bloom`, `flip-unlock`, `nano-odor-max`, `
 - **Standalone "How to Use" page** and Research page targeting searches like "how to use nano fertilizer", "foliar spray schedule" and "best odor eliminator for smoke".
 - Open Graph and Twitter cards on every page (the live theme has none). Canonical `/products/` URLs.
 - Headings and copy in HTML, never in images.
-- **Claims cleanup** (Q3): no "clinical trials", "Verified Purchase" only on real reviews, "USDA BioPreferred (biobased)" rather than "organic", and footnoted numbers. This protects Google Merchant listings, Meta ad approval and FTC compliance.
+- **Claims** (owner: all factual, all stay): each one is shown with its study context (trial size, days, crop), e.g. "+40.7% yield: 49-day indoor trial, 18 vs 18 plants". THC figures go on the cannabis growers page. "USDA BioPreferred (biobased)" is labelled exactly. Context keeps the claims credible and helps Google Merchant listings and Meta ad review.
 
 ---
 
@@ -242,27 +255,11 @@ The landing pages (`deep-clean`, `feed-bloom`, `flip-unlock`, `nano-odor-max`, `
 
 ---
 
-## 9. Questions for the owner
+## 9. Owner questions: status
 
-Answers go in `DECISIONS.md`.
-
-1. ~~Q1 Positioning~~ **Answered: hybrid** (see §2.5b).
-2. **Q2 How-to details.**
-   - ~~(a) spray vs drench~~ **Answered** (see `DECISIONS.md`).
-   - (b) Bottle size (16 oz each?) and how long one bundle lasts.
-   - (c) Can we show per-gallon doses?
-3. **Q3 Claims.** Which numbers stay? The draft footnotes everything. The live site also uses "+24.2% THC", "100x absorption", "clinical trials" and "Pet and child safe".
-4. **Q4 Reviews.** Are the hard-coded "Verified Purchase" testimonials (Marcus T., Trevor K. and others) real customers? If yes, import them into Judge.me so they count. If not, they come down.
-5. **Q5 Spray game reward** on the Odor PDP: keep the deep-clean free-shipping + 25% codes, or make it informational only?
-6. **Q6 Odor use cases.** Confirm or extend the 12 in the image brief.
-7. **Q7 Real footage.** Is the "See It In Action" Odor video real? Any real customer or grower photos or videos?
-8. **Q8 Social handles** for the footer: brand X, Instagram, TikTok?
-9. **Q9 Competitor names.** Keep Febreze and Ozium in the comparison table, or switch to generic names?
-10. ~~Q10 Code home and deploy~~ **Approved.**
-11. **Q11 Free gift.** BOGOS or the native automatic discount: which one stays?
-12. ~~Q12~~ **Approved: make it really $11.99.** Still to confirm: turn the discount on now (which also fixes the live overcharge) or at launch?
-13. **Q13 Apps.** OK to replace UFE, FastBundle and one of LogRocket/Contentsquare with native features?
-14. **Q14 Popup prizes.** The free-Odor-Max prize code is expired. Renew it, or replace it with another code at the same 10% odds? The free-shipping prize (14%) does nothing in the US: keep it or swap it?
-15. **Q15 SMS.** Add an optional phone field (Klaviyo SMS) to the popup?
-16. **Q16 Klaviyo.** OK to switch the popup list to single opt-in and turn on a rewritten welcome flow that includes the prize code?
-17. **Q17 Holiday offer.** Is there a specific BFCM deal to build in (for example a gift-box bundle or tiered sitewide discount)?
+All the first-round questions are answered (see `DECISIONS.md`). Still open:
+1. **Per-gallon dosing:** can the site show "≈ 7.5 mL per gallon" next to 2 mL per liter?
+2. **How long one bundle lasts** (e.g. "one bundle = X feedings for 5 plants"), for the value calculator.
+3. **Klaviyo SMS:** is SMS enabled on the Klaviyo account (needed for the optional phone step)?
+4. **Customer photos from X:** send the post links or the files. Credits are shown as @handle, with permission.
+5. **Holiday/BFCM offer:** coming at the end of October. Slots are built.
