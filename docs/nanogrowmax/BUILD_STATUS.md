@@ -8,7 +8,7 @@
 | zz-sandbox PDP / Odor / Site / Popup | 188877930799 / 188877963567 / 188877996335 / 188878029103 | Per-agent build sandboxes. **Delete after launch** (Online Store → Themes; the API can't delete themes). |
 
 ## Code
-- Theme source: local git repo, to be pushed to the private `pb37-collab/nanogrowmax-theme` once the Claude GitHub App has access to it. Conventions are in the theme repo's `docs/CONVENTIONS.md`.
+- Theme source: private repo **`pb37-collab/nanogrowmax-theme`** (`main` = integrated build; `feature/*` = agent branches). Conventions are in the theme repo's `docs/CONVENTIONS.md`.
 - Deploy method: Admin API `themeFilesUpsert` (TEXT bodies, or staged-upload URLs for binaries). Once the repo is attached, connecting it through Shopify's GitHub integration makes deploys automatic.
 
 ## Done
