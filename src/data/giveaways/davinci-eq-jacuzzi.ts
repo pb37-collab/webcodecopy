@@ -93,10 +93,12 @@ export const eqGiveaway = {
     url: "https://www.miracleofthedesert.com/collections/rosin/products/gush-mintz-live-hash-rosin-copy",
     /** 1g list price on the brand's store. */
     value: 39.99,
+    /** Labeled jar (card) and the open jar from above (round inset). */
     image: `${MEDIA}/bonus-rosin.webp`,
-    genetics: "Kush Mints × F1 Durbs × Gushers",
-    flavor: "Sweet berry-cherry up front, sour citrus behind it and a cool menthol finish.",
-    tags: ["Solventless", "Hemp-derived THCa", "Indica-dominant", "1 gram"],
+    imageTop: `${MEDIA}/bonus-rosin-top.webp`,
+    genetics: "Kush Mints × (F1 Durbs × Gushers)",
+    flavor: "Sweet and sugary with ripe cherry, sour citrus and cool menthol, finishing on funky diesel.",
+    tags: ["Solventless", "Hemp-derived THCa", "Indica-dominant 70/30", "1 gram"],
     restriction:
       "Ships only to states where Miracle of the Desert can legally deliver hemp-derived THCa. Winners elsewhere receive the EQ kit only.",
   },

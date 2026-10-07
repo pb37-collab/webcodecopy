@@ -5,8 +5,8 @@
  *
  *   node scripts/fetch-davinci-eq-assets.mjs
  *
- * Needs network access to davincivaporizer.com, miracleofthedesert.com and
- * cdn.shopify.com, curl,
+ * Needs network access to davincivaporizer.com, www.miracleofthedesert.com
+ * and cdn.shopify.com, curl,
  * and ffmpeg on PATH for the videos (they're skipped without it).
  *
  * Photos come from the product listing, matched by file name so a reordered
@@ -109,19 +109,33 @@ for (const p of PHOTOS) {
   console.log(`✓ ${p.out}.webp${p.png ? ` (+ ${p.png}.png)` : ""}`);
 }
 
-// Bonus prize photo from Miracle of the Desert (also a Shopify store).
+// Bonus prize photos from Miracle of the Desert (also a Shopify store; the
+// listing lives on www.miracleofthedesert.com). White-background shots, so
+// each is cropped to the jar: the labeled front for the card, the open jar
+// seen from above for the round inset.
 const BONUS_PRODUCT = "https://www.miracleofthedesert.com/products/gush-mintz-live-hash-rosin-copy.js";
 try {
   const bonus = JSON.parse((await get(BONUS_PRODUCT)).toString("utf8"));
-  const src = bonus.featured_image ?? bonus.images?.[0];
-  if (!src) throw new Error("no product image");
-  await sharp(await get(src))
-    .resize({ width: 1000, height: 1000, fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 84, alphaQuality: 90 })
-    .toFile(path.join(OUT, "bonus-rosin.webp"));
-  console.log(`✓ bonus-rosin.webp (${bonus.title})`);
+  const imgs = (bonus.images ?? []).map((u) => (u.startsWith("//") ? `https:${u}` : u));
+  const pickImg = (re) => imgs.find((u) => re.test(u.split("?")[0])) ?? imgs[0];
+  const shots = [
+    { src: pickImg(/-f\.\w+$/), out: "bonus-rosin", crop: 0.62 },
+    { src: pickImg(/-t-1\.\w+$/), out: "bonus-rosin-top", crop: 0.72 },
+  ];
+  for (const shot of shots) {
+    if (!shot.src) throw new Error("no product image");
+    const buf = await get(shot.src);
+    const { width, height } = await sharp(buf).metadata();
+    const side = Math.round(Math.min(width, height) * shot.crop);
+    await sharp(buf)
+      .extract({ left: Math.round((width - side) / 2), top: Math.round((height - side) / 2), width: side, height: side })
+      .resize({ width: 900, height: 900 })
+      .webp({ quality: 86 })
+      .toFile(path.join(OUT, `${shot.out}.webp`));
+    console.log(`✓ ${shot.out}.webp (${bonus.title})`);
+  }
 } catch (err) {
-  console.warn(`✗ bonus-rosin.webp: ${err.message.split("\n")[0]} (the page shows its stand-in graphic)`);
+  console.warn(`✗ bonus photos: ${err.message.split("\n")[0]} (the page shows its stand-in graphic)`);
 }
 
 // Videos

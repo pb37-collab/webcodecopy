@@ -56,6 +56,7 @@ export default function EqJacuzziGiveaway() {
   const macro = hasPublicFile(g.media.quartzMacro.src) ? g.media.quartzMacro : null;
   const closeup = hasPublicFile(g.media.closeup) ? g.media.closeup : null;
   const bonusImage = hasPublicFile(g.bonus.image) ? g.bonus.image : null;
+  const bonusTop = hasPublicFile(g.bonus.imageTop) ? g.bonus.imageTop : null;
 
   return (
     <EqExperience>
@@ -295,7 +296,7 @@ export default function EqJacuzziGiveaway() {
               ))}
             </ul>
           </div>
-          <BonusCard image={bonusImage} />
+          <BonusCard image={bonusImage} top={bonusTop} />
         </section>
 
         {/* FAQ + RULES */}
@@ -399,13 +400,25 @@ function BonusPill({ className, short }: { className?: string; short?: boolean }
 }
 
 /** Bonus prize card under "what's in the box". Amber, not the colorway tint, so it reads as a separate gift. */
-function BonusCard({ image }: { image: string | null }) {
+function BonusCard({ image, top }: { image: string | null; top: string | null }) {
   return (
     <div id="bonus" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-20">
       <div className="relative grid overflow-hidden rounded-3xl border border-[#f2b34a]/30 bg-[#0d0b08] bg-[image:radial-gradient(70%_90%_at_15%_50%,rgba(242,179,74,0.22),transparent_70%)] sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)]">
         <div className="relative grid min-h-[240px] place-items-center p-8">
           {image ? (
-            <Image src={image} alt={`${g.bonus.brand} ${g.bonus.name}, ${g.bonus.size}`} fill sizes="(min-width: 640px) 40vw, 90vw" className="object-contain p-8 drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]" />
+            // Brand photos are on white: show the jar on a white tile, with the
+            // open jar from above as a round inset.
+            <div className="relative w-full max-w-[340px]">
+              <div aria-hidden className="absolute -inset-6 rounded-[2.5rem] bg-[#f2b34a]/25 blur-3xl" />
+              <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-white shadow-[0_30px_70px_-25px_rgba(242,179,74,0.65)]">
+                <Image src={image} alt={`${g.bonus.brand} ${g.bonus.name} jar, ${g.bonus.size}`} fill sizes="340px" className="object-cover" />
+              </div>
+              {top && (
+                <div className="absolute -right-3 -bottom-4 size-[38%] overflow-hidden rounded-full border-4 border-[#0d0b08] bg-white shadow-[0_15px_40px_-10px_rgba(0,0,0,0.7)] sm:-right-5">
+                  <Image src={top} alt={`${g.bonus.name} in the open jar`} fill sizes="140px" className="object-cover" />
+                </div>
+              )}
+            </div>
           ) : (
             <div aria-hidden className="relative grid size-40 place-items-center">
               <div className="absolute inset-0 animate-[eq-glow_5s_ease-in-out_infinite] rounded-full bg-[#f2b34a]/30 blur-2xl" />
