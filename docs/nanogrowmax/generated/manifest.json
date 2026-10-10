@@ -1,0 +1,199 @@
+{
+ "model": "nano_banana_pro @ 2k",
+ "rules": [
+  "Real product stock photos as image_references",
+  "No text in images",
+  "Odor Max: when spraying, the clear protective overcap is REMOVED (owner note 2026-10-10)"
+ ],
+ "jobs": {
+  "G05": {
+   "job": "a15307d8-f2de-4ab1-872a-70915c55eea2",
+   "file": "calib-3-nbpro-odor.png",
+   "note": "calibration, owner-approved (cap off)"
+  },
+  "H01-4x5": {
+   "job": "b75469d7-35f4-4708-9065-744013df62c3",
+   "file": "calib-1-nbpro-hero.png"
+  },
+  "G01": {
+   "job": "5003e44f-7d7a-4fef-8533-2b2946e1c614"
+  },
+  "G06": {
+   "job": "ff5dfe69-d351-4f5c-8395-70c78a153178"
+  },
+  "G07": {
+   "job": "0cf913d0-6121-4210-aa7c-195d91a6ebe1"
+  },
+  "G08": {
+   "job": "bcd9ede7-e660-4e68-a630-dbb7b6105113"
+  },
+  "G10-16x9": {
+   "job": "9b9f445b-3ac9-4120-9868-f84c05865c31"
+  },
+  "G10-4x5": {
+   "job": "1c1cf495-17b6-43c5-aaed-f8754e9ea411"
+  },
+  "G11": {
+   "job": "bb10d0a7-f3e4-40f9-80b9-24ff91f7a73c"
+  },
+  "H01-16x9": {
+   "job": "5b34db9d-1254-43e2-8900-6802ad7954f0"
+  },
+  "H10": {
+   "job": "4af808dd-924a-40c3-b879-ad35245435d7"
+  },
+  "H11": {
+   "job": "9604220d-5d08-408c-9d60-a700c4e843d0"
+  },
+  "P02": {
+   "job": "90125318-ef72-4ea5-a256-217bf45f7e66"
+  },
+  "P03": {
+   "job": "44a1a290-90e1-44ab-af2e-3c2ff8729307"
+  },
+  "H03": {
+   "job": "37a33ae9-62d1-460a-9bb3-2f792a1b9b59"
+  },
+  "H04": {
+   "job": "96076382-6567-49c2-bb83-4345fbbf25f7"
+  },
+  "H05": {
+   "job": "cddd2c1b-84dc-4aaa-92ea-f02dd5cd25c1"
+  },
+  "H06": {
+   "job": "1d662108-cad9-4140-aeb6-c17f958640c7"
+  },
+  "H07": {
+   "job": "b5f310a3-fbd3-4d23-9b8a-8657c062d079"
+  },
+  "H08": {
+   "job": "af583718-219e-4588-b6bb-57319af9aab5"
+  },
+  "H09": {
+   "job": "91b66b68-e883-4743-8d2e-570d14b255a3"
+  },
+  "P01": {
+   "job": "be22b6b1-3f01-410c-939e-acafb2a9f3df"
+  },
+  "P04": {
+   "job": "9d3b4637-3cf3-4351-96d1-9c6e09c12be9"
+  },
+  "U01": {
+   "job": "e1e70c5d-f6c6-4117-af63-d10349edab9e"
+  },
+  "U02": {
+   "job": "625c8772-5cf5-4cdf-9f6b-304726dc0329"
+  },
+  "U03": {
+   "job": "9e806260-18de-4b98-bdb5-e3bb7715af6f"
+  },
+  "U04": {
+   "job": "679953eb-4684-40f8-8150-34aee4c4497e"
+  },
+  "U05": {
+   "job": "020924c8-286f-4268-821b-a97785973072"
+  },
+  "U06": {
+   "job": "e0edcaf0-ca9a-4331-b2d0-6bb8b0201398"
+  },
+  "U07": {
+   "job": "764089af-036a-4922-924f-6263509e518d"
+  },
+  "BA1-after": {
+   "job": "3347c91e-6b8f-4578-918a-9dc40f84aad1"
+  },
+  "BA4-after": {
+   "job": "293c3b2c-5e12-4e9d-a7a6-82d03bb6a034"
+  },
+  "BA5-after": {
+   "job": "19af501c-261a-4772-b3fb-04234b894faf"
+  },
+  "BA2": {
+   "job": "cc7f9f69-b2dc-42ba-8ceb-ba5060996dd4"
+  },
+  "BA3": {
+   "job": "8da78f03-bf24-453f-981c-ff5b7c185ce2"
+  },
+  "R07": {
+   "job": "ba6ff2e9-e968-4177-9e13-76e3a0c8e18e"
+  },
+  "O02": {
+   "job": "945e5265-72a1-4d36-b8b4-ae49141bbc14"
+  },
+  "R01-16x9": {
+   "job": "9b05fd70-d653-427c-be93-e5d18a92e908"
+  },
+  "R02": {
+   "job": "a66ac24a-e7cc-4ca6-a675-0ea0c0be9f0b"
+  },
+  "R03": {
+   "job": "1e3e5147-50e8-4290-b91d-05ba4dc5f0f8"
+  },
+  "R04": {
+   "job": "7f58394b-c118-4879-a173-b725a27af2ef"
+  },
+  "R05": {
+   "job": "f7b92ed2-fbc6-4e33-abfd-2ba232ec0312"
+  },
+  "R01-4x5": {
+   "job": "b5c4e2c2-64d5-4140-8192-5e9683cebc32"
+  },
+  "CG01": {
+   "job": "1d79c921-64c3-4f17-b8c3-ea317620260b"
+  },
+  "CG02": {
+   "job": "aad43b90-5a24-45d1-873a-48c3c5b10101"
+  },
+  "CG03": {
+   "job": "a0f60b7a-20c9-42aa-931f-8f45a2af43f6"
+  },
+  "CG04": {
+   "job": "fd346da9-a070-449f-a449-d4ad8d2897fa"
+  },
+  "CG05": {
+   "job": "1ad8c112-3a86-4d06-8f66-0a7039456765"
+  },
+  "CG06": {
+   "job": "6f7b3cc1-b402-42f2-ae33-8282a6862430"
+  },
+  "C03": {
+   "job": "451313fb-be82-46c4-bea6-04d6ecbfc1c9"
+  },
+  "SG1-after": {
+   "job": "c2a05fe6-0995-4e18-b237-b8c0842492af"
+  },
+  "SG2-after": {
+   "job": "f9b25f97-621f-4502-9c60-d11abf7fd50d"
+  },
+  "SG3-after": {
+   "job": "45dd7a78-8a28-44aa-a5cd-98cdfeaf1926"
+  },
+  "SG4-after": {
+   "job": "443e6725-edc1-4cc4-8c5e-6330ef6b7f7b"
+  },
+  "UC01": {
+   "job": "9ea073a1-9237-47af-9a8a-e966e5c02614"
+  },
+  "UC02": {
+   "job": "7c97faae-325a-4afb-b331-9c5b5fdd02ee"
+  },
+  "UC03": {
+   "job": "05397b77-1bf7-4874-afe0-a388f1432531"
+  },
+  "UC04": {
+   "job": "4451251f-8fa2-456d-90f8-03c7b891e98a"
+  },
+  "UC05": {
+   "job": "33664628-2374-4801-91d5-98ff64851071"
+  },
+  "UC06": {
+   "job": "c0023ca5-80f0-4440-8444-0834a6cf1672"
+  },
+  "UC07": {
+   "job": "7e8fcc79-287d-40c6-b2a0-000f15981cc3"
+  },
+  "UC08": {
+   "job": "d0045a56-520b-47d8-a5fa-c6bc92c2cf68"
+  }
+ }
+}
