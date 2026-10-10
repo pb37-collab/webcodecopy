@@ -14,7 +14,7 @@ import {
 } from "@/lib/giveaway";
 import { cn } from "@/lib/utils";
 import { ColorwayPicker } from "./colorway-picker";
-import { useEnded, useEq } from "./experience";
+import { opensLabel, useEnded, useEq, useNotStarted } from "./experience";
 
 type Status = { kind: "idle" } | { kind: "submitting" } | { kind: "error"; message: string };
 
@@ -34,6 +34,7 @@ function useCaptureConfig(): CaptureConfig | null {
 export function EntryForm({ id = "enter" }: { id?: string }) {
   const { colorway, entry, setEntry } = useEq();
   const ended = useEnded();
+  const notStarted = useNotStarted();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -47,6 +48,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (notStarted || ended) return;
     const clean = email.trim().toLowerCase();
     if (!EMAIL_PATTERN.test(clean)) return setStatus({ kind: "error", message: "Enter a valid email address." });
     if (!age) return setStatus({ kind: "error", message: `Confirm you're ${eqGiveaway.minAge}+ and accept the rules.` });
@@ -77,6 +79,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
   }
 
   const busy = status.kind === "submitting";
+  const locked = ended || busy || notStarted;
 
   return (
     <form
@@ -99,7 +102,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
           placeholder="First name"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
-          disabled={ended || busy}
+          disabled={locked}
           className="h-12 rounded-xl border border-white/10 bg-white/[0.04] px-4 text-[15px] text-ink outline-none transition-colors placeholder:text-ink-3 focus:border-eq/70 focus:bg-white/[0.06]"
         />
         <label className="sr-only" htmlFor={`${uid}-email`}>Email address</label>
@@ -113,7 +116,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
           placeholder="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          disabled={ended || busy}
+          disabled={locked}
           aria-invalid={status.kind === "error" && !EMAIL_PATTERN.test(email.trim()) ? true : undefined}
           className="h-12 rounded-xl border border-white/10 bg-white/[0.04] px-4 text-[15px] text-ink outline-none transition-colors placeholder:text-ink-3 focus:border-eq/70 focus:bg-white/[0.06]"
         />
@@ -139,21 +142,21 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
       </fieldset>
 
       <div className="mt-4 space-y-2.5 text-[13px] leading-snug text-ink-2">
-        <Checkbox checked={age} onChange={setAge} disabled={ended || busy}>
+        <Checkbox checked={age} onChange={setAge} disabled={locked}>
           I&rsquo;m {eqGiveaway.minAge}+ and agree to the{" "}
           <a href="#rules" className="text-ink underline decoration-white/30 underline-offset-2 hover:decoration-eq">
             official rules
           </a>
           .
         </Checkbox>
-        <Checkbox checked={optIn} onChange={setOptIn} disabled={ended || busy}>
+        <Checkbox checked={optIn} onChange={setOptIn} disabled={locked}>
           Yes, email me {eqGiveaway.brand} drops, restocks and offers. Unsubscribe anytime.
         </Checkbox>
       </div>
 
       <button
         type="submit"
-        disabled={ended || busy}
+        disabled={locked}
         className="group relative mt-5 flex h-14 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-eq text-[15px] font-semibold text-[#08080b] transition-[filter,transform] duration-200 hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
       >
         <span
@@ -162,6 +165,8 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
         />
         {ended ? (
           "Entries closed"
+        ) : notStarted ? (
+          `Entries open ${opensLabel}`
         ) : busy ? (
           <>
             <Loader2 className="size-4 animate-spin" /> Entering…
@@ -176,7 +181,9 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
       <p role="status" aria-live="polite" className={cn("mt-3 min-h-5 text-[13px]", status.kind === "error" ? "text-[#ff8f8f]" : "text-ink-3")}>
         {status.kind === "error"
           ? status.message
-          : `${eqGiveaway.winners} winners · drawn ${eqGiveaway.drawDate} · No purchase necessary`}
+          : notStarted
+            ? `The form unlocks ${opensLabel}. Come back then to enter.`
+            : `${eqGiveaway.winners} winners · drawn ${eqGiveaway.drawDate} · No purchase necessary`}
       </p>
 
       {config && !isConfigured(config) && <DemoNote />}

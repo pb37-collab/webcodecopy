@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CountdownInline } from "./countdown";
-import { useEnded, useEq } from "./experience";
+import { useEnded, useEq, useNotStarted } from "./experience";
 
 /** Scrolls to the entry form and puts the cursor in the email field. */
 function jumpToForm(target: string) {
@@ -20,6 +20,7 @@ function jumpToForm(target: string) {
 export function HeroCta({ target = "enter", className }: { target?: string; className?: string }) {
   const { entry } = useEq();
   const ended = useEnded();
+  const notStarted = useNotStarted();
   if (ended) return null;
   return (
     <a
@@ -39,7 +40,7 @@ export function HeroCta({ target = "enter", className }: { target?: string; clas
         className="pointer-events-none absolute inset-y-0 left-0 w-1/3 animate-[eq-shine_3.2s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"
       />
       <span className="flex items-center gap-2">
-        {entry ? "Share for bonus entries" : "Enter to win · free"}
+        {entry ? "Share for bonus entries" : notStarted ? "Entries open soon" : "Enter to win · free"}
         <ArrowDown className="size-4" />
       </span>
       <span className="absolute right-4 font-mono text-[11px] font-medium opacity-70 max-[359px]:hidden">
@@ -53,6 +54,7 @@ export function HeroCta({ target = "enter", className }: { target?: string; clas
 export function StickyCta({ target = "enter" }: { target?: string }) {
   const { entry } = useEq();
   const ended = useEnded();
+  const notStarted = useNotStarted();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export function StickyCta({ target = "enter" }: { target?: string }) {
         }}
         className="flex h-12 items-center justify-between rounded-xl bg-eq px-4 text-[15px] font-semibold text-[#08080b]"
       >
-        <span>{entry ? "Share for bonus entries" : "Enter to win"}</span>
+        <span>{entry ? "Share for bonus entries" : notStarted ? "Entries open soon" : "Enter to win"}</span>
         <span className="flex items-center gap-2 font-mono text-[12px]">
           <CountdownInline /> <ArrowRight className="size-4" />
         </span>

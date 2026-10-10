@@ -15,6 +15,7 @@ type ExperienceValue = {
 const ExperienceContext = createContext<ExperienceValue | null>(null);
 
 const STORAGE_KEY = `giveaway:${eqGiveaway.slug}`;
+const START = Date.parse(eqGiveaway.startsAt);
 const END = Date.parse(eqGiveaway.endsAt);
 
 function subscribeClock(cb: () => void) {
@@ -105,4 +106,24 @@ export function useEnded(): boolean {
   return now !== null && now >= END;
 }
 
+/**
+ * True before entries open (false during SSR, so the form renders open until
+ * the clock runs). Adding ?preview to the URL unlocks the form early so the
+ * team can send a test entry before launch.
+ */
+export function useNotStarted(): boolean {
+  const now = useNow();
+  if (now === null || now >= START) return false;
+  return !new URLSearchParams(window.location.search).has("preview");
+}
+
+export const giveawayStart = START;
 export const giveawayEnd = END;
+
+/** "Monday, Oct 12 at 9:00 AM ET" for the opening time. */
+export const opensLabel = (() => {
+  const d = new Date(START);
+  const day = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "short", day: "numeric", timeZone: "America/New_York" }).format(d);
+  const time = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }).format(d);
+  return `${day} at ${time} ET`;
+})();

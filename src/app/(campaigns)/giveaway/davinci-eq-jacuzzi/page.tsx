@@ -70,7 +70,7 @@ export default function EqJacuzziGiveaway() {
             </span>
           </a>
           <span className="hidden font-mono text-[11px] uppercase tracking-[0.16em] text-ink-3 sm:block">
-            Ends in <CountdownInline className="text-ink" />
+            <CountdownInline prefix className="text-ink" />
           </span>
         </header>
 
@@ -105,8 +105,7 @@ export default function EqJacuzziGiveaway() {
 
             <div className="lg:col-start-1 lg:row-start-2">
               <HeroCta className="mb-5" />
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-3 lg:mb-3">Entries close in</p>
-              <Countdown />
+              <Countdown label />
               <div className="mt-5">
                 <EntryForm />
               </div>

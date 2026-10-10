@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { giveawayEnd, useNow } from "./experience";
+import { giveawayEnd, giveawayStart, useNow } from "./experience";
 
 function parts(ms: number) {
   const s = Math.max(0, Math.floor(ms / 1000));
@@ -15,10 +15,11 @@ function parts(ms: number) {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** Large segmented countdown for the hero. */
-export function Countdown({ className }: { className?: string }) {
+/** Large segmented countdown: to opening before entries open, then to the close. */
+export function Countdown({ className, label }: { className?: string; label?: boolean }) {
   const now = useNow();
-  const p = now === null ? null : parts(giveawayEnd - now);
+  const pre = now !== null && now < giveawayStart;
+  const p = now === null ? null : parts((pre ? giveawayStart : giveawayEnd) - now);
   const closed = now !== null && now >= giveawayEnd;
   const units = [
     { label: "Days", value: p?.days },
@@ -37,7 +38,12 @@ export function Countdown({ className }: { className?: string }) {
   }
 
   return (
-    <div className={className} role="timer" aria-live="off" aria-label="Time left to enter">
+    <div className={className} role="timer" aria-live="off" aria-label={pre ? "Time until entries open" : "Time left to enter"}>
+      {label && (
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-3 lg:mb-3">
+          {pre ? "Entries open in" : "Entries close in"}
+        </p>
+      )}
       <div className="grid grid-cols-4 gap-2 sm:gap-3">
         {units.map((u) => (
           <div
@@ -61,15 +67,23 @@ export function Countdown({ className }: { className?: string }) {
   );
 }
 
-/** One-line countdown for the ticker and sticky bar. */
-export function CountdownInline({ className }: { className?: string }) {
+/**
+ * One-line countdown for the header, hero CTA and sticky bar. `prefix` adds
+ * "Opens in" / "Ends in" in front, matching the phase.
+ */
+export function CountdownInline({ className, prefix }: { className?: string; prefix?: boolean }) {
   const now = useNow();
-  if (now === null) return <span className={className}>--d --:--:--</span>;
-  if (now >= giveawayEnd) return <span className={className}>Closed</span>;
-  const p = parts(giveawayEnd - now);
+  const pre = now !== null && now < giveawayStart;
+  const lead = prefix ? <>{pre ? "Opens in" : "Ends in"} </> : null;
+  if (now === null) return <>{lead}<span className={className}>--d --:--:--</span></>;
+  if (now >= giveawayEnd) return <>{prefix ? "Entries " : null}<span className={className}>Closed</span></>;
+  const p = parts((pre ? giveawayStart : giveawayEnd) - now);
   return (
-    <span className={cn("tabular-nums", className)}>
-      {p.days}d {pad(p.hours)}:{pad(p.minutes)}:{pad(p.seconds)}
-    </span>
+    <>
+      {lead}
+      <span className={cn("tabular-nums", className)}>
+        {p.days}d {pad(p.hours)}:{pad(p.minutes)}:{pad(p.seconds)}
+      </span>
+    </>
   );
 }

@@ -64,61 +64,90 @@ export const isConfigured = (c: CaptureConfig) => Boolean((c.klaviyoCompanyId &&
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+/**
+ * Sends the entry to every configured destination. It succeeds if at least
+ * one of them accepts it, so a hiccup at Klaviyo can't lose an entry the
+ * webhook (e.g. the Google Sheet) already saved, and vice versa.
+ */
 export async function submitEntry(entry: GiveawayEntry, config: CaptureConfig): Promise<SubmitResult> {
+  const useKlaviyo = Boolean(config.klaviyoCompanyId && config.klaviyoListId);
+  const useWebhook = Boolean(config.webhookUrl);
+  if (!useKlaviyo && !useWebhook) return { ok: true, demo: true };
+
+  const [klaviyo, webhook] = await Promise.all([
+    useKlaviyo ? sendToKlaviyo(entry, config) : Promise.resolve(false),
+    useWebhook ? sendToWebhook(entry, config.webhookUrl) : Promise.resolve(false),
+  ]);
+  if (klaviyo || webhook) return { ok: true, demo: false };
+  return { ok: false, error: "We couldn't save your entry. Check your connection and try again." };
+}
+
+/**
+ * Klaviyo client subscription. If Klaviyo rejects the request body (for
+ * example a profile field it no longer accepts), retry with just the email
+ * and list so the sign-up still lands; the extra details are nice to have.
+ */
+async function sendToKlaviyo(entry: GiveawayEntry, config: CaptureConfig): Promise<boolean> {
+  const url = `https://a.klaviyo.com/client/subscriptions/?company_id=${encodeURIComponent(config.klaviyoCompanyId)}`;
+  const post = (body: unknown) =>
+    fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/vnd.api+json", revision: "2025-01-15" },
+      body: JSON.stringify(body),
+    });
   try {
-    if (config.klaviyoCompanyId && config.klaviyoListId) {
-      const res = await fetch(
-        `https://a.klaviyo.com/client/subscriptions/?company_id=${encodeURIComponent(config.klaviyoCompanyId)}`,
-        {
-          method: "POST",
-          headers: { "content-type": "application/vnd.api+json", revision: "2025-01-15" },
-          body: JSON.stringify(klaviyoBody(entry, config.klaviyoListId)),
-        },
-      );
-      if (!res.ok) return { ok: false, error: "We couldn't save your entry. Try again in a moment." };
+    const res = await post(klaviyoBody(entry, config.klaviyoListId));
+    if (res.ok) return true;
+    if (res.status === 400 || res.status === 422) {
+      console.warn(`Klaviyo rejected the full entry (HTTP ${res.status}); retrying with email and list only.`);
+      const retry = await post(klaviyoBody(entry, config.klaviyoListId, { minimal: true }));
+      return retry.ok;
     }
-    if (config.webhookUrl) {
-      // no-cors + text/plain: a "simple request" any webhook accepts, even one
-      // that sends no CORS headers. The response is opaque in that case.
-      const res = await fetch(config.webhookUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "content-type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ ...entry, enteredAt: new Date().toISOString() }),
-      });
-      if (!res.ok && res.type !== "opaque") {
-        return { ok: false, error: "We couldn't save your entry. Try again in a moment." };
-      }
-    }
-    return { ok: true, demo: !isConfigured(config) };
+    return false;
   } catch {
-    return { ok: false, error: "Network hiccup. Check your connection and try again." };
+    return false;
   }
 }
 
-function klaviyoBody(entry: GiveawayEntry, listId: string) {
+/**
+ * no-cors + text/plain: a "simple request" any webhook accepts, even one that
+ * sends no CORS headers. The response is opaque then, so a request that went
+ * out counts as delivered.
+ */
+async function sendToWebhook(entry: GiveawayEntry, url: string): Promise<boolean> {
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "content-type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ ...entry, enteredAt: new Date().toISOString() }),
+    });
+    return res.ok || res.type === "opaque";
+  } catch {
+    return false;
+  }
+}
+
+function klaviyoBody(entry: GiveawayEntry, listId: string, { minimal = false } = {}) {
+  const extras = minimal
+    ? {}
+    : {
+        ...(entry.firstName ? { first_name: entry.firstName } : {}),
+        properties: {
+          giveaway: entry.giveaway,
+          giveaway_colorway: entry.colorway,
+          giveaway_ref_code: entry.refCode,
+          giveaway_referred_by: entry.referredBy ?? "",
+          giveaway_age_confirmed: entry.ageConfirmed,
+          ...prefixKeys(entry.utm, "giveaway_"),
+        },
+      };
   return {
     data: {
       type: "subscription",
       attributes: {
         custom_source: `Giveaway: ${entry.giveaway}`,
-        profile: {
-          data: {
-            type: "profile",
-            attributes: {
-              email: entry.email,
-              ...(entry.firstName ? { first_name: entry.firstName } : {}),
-              properties: {
-                giveaway: entry.giveaway,
-                giveaway_colorway: entry.colorway,
-                giveaway_ref_code: entry.refCode,
-                giveaway_referred_by: entry.referredBy ?? "",
-                giveaway_age_confirmed: entry.ageConfirmed,
-                ...prefixKeys(entry.utm, "giveaway_"),
-              },
-            },
-          },
-        },
+        profile: { data: { type: "profile", attributes: { email: entry.email, ...extras } } },
       },
       relationships: { list: { data: { type: "list", id: listId } } },
     },
