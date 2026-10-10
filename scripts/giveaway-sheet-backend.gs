@@ -1,6 +1,6 @@
 /**
- * Google Sheet backend for the giveaway page: stores entries and serves the
- * live entry count + referral totals. Free, no server to run.
+ * Google Sheet backend for the giveaway page: stores entries, credits
+ * referrals and reports totals. Free, no server to run.
  *
  * SETUP (about 5 minutes)
  *  1. Create a Google Sheet. Extensions → Apps Script. Replace Code.gs with
@@ -8,11 +8,11 @@
  *  2. Deploy → New deployment → type "Web app".
  *       Execute as: Me        Who has access: Anyone
  *     Copy the Web app URL (ends in /exec).
- *  3. In Vercel (or .env.local), set BOTH of these to that URL:
- *       NEXT_PUBLIC_GIVEAWAY_ENDPOINT=<url>     (entries are POSTed here)
- *       NEXT_PUBLIC_GIVEAWAY_COUNT_URL=<url>    (the page GETs the count here)
- *     Redeploy the site. Klaviyo variables can stay set too; entries then go
- *     to both.
+ *  3. Paste that URL into "webhookUrl" in the page's config.json (next to
+ *     the page on your host; no rebuild needed). Klaviyo fields can be filled
+ *     in too; entries then go to both.
+ *     Building from source instead? NEXT_PUBLIC_GIVEAWAY_ENDPOINT=<url> works
+ *     as a build-time default.
  *  4. After editing this script later: Deploy → Manage deployments → Edit →
  *     New version, or the old code keeps running.
  *
@@ -23,7 +23,9 @@
  *  - tickets = entrants + BONUS × credited referrals.
  *
  * The "Entries" tab is the draw list: draw from it with each entrant weighted
- * by 1 + BONUS × their referrals.
+ * by 1 + BONUS × their referrals. Opening the web app URL in a browser shows
+ * the running totals ({"entrants", "tickets"}); add ?ref=CODE for one
+ * entrant's credited referrals.
  */
 
 const SHEET_NAME = "Entries";

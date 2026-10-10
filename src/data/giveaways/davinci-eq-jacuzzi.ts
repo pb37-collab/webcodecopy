@@ -48,8 +48,6 @@ export const eqGiveaway = {
   endsAt: "2026-10-25T23:59:00-04:00",
   drawDate: "October 28, 2026",
   referralBonus: 3,
-  /** The live entry count and odds stay hidden until this many people have entered. */
-  showCountFrom: 100,
   minAge: 21,
   eligibility: "legal residents of the 50 United States and D.C.",
 
@@ -59,6 +57,9 @@ export const eqGiveaway = {
     { id: "gunmetal", name: "Gunmetal", accent: "#a7b1bf", deep: "#14171c", ...shots("gunmetal") },
     { id: "onyx", name: "Onyx", accent: "#e9e1cf", deep: "#121110", ...shots("onyx") },
   ] satisfies readonly Colorway[],
+
+  /** Entry-capture settings (Klaviyo / webhook), editable on the host without a rebuild. */
+  captureConfig: `${MEDIA}/config.json`,
 
   media: {
     /** Overhead macro of the quartz crucible (DaVinci homepage hero clip). */

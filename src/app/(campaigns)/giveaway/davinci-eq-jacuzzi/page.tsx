@@ -7,7 +7,6 @@ import { ColorwayPicker } from "@/components/giveaway/eq/colorway-picker";
 import { Countdown, CountdownInline } from "@/components/giveaway/eq/countdown";
 import { EntryForm } from "@/components/giveaway/eq/entry-form";
 import { EqExperience } from "@/components/giveaway/eq/experience";
-import { EntryStatsBar, OddsCalculator } from "@/components/giveaway/eq/odds";
 import { Bubbles, Caustics, QuartzCrystal } from "@/components/giveaway/eq/motion";
 import { ProductStage } from "@/components/giveaway/eq/product-stage";
 import { QuartzLab } from "@/components/giveaway/eq/quartz-lab";
@@ -108,7 +107,6 @@ export default function EqJacuzziGiveaway() {
               <HeroCta className="mb-5" />
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-3 lg:mb-3">Entries close in</p>
               <Countdown />
-              <EntryStatsBar className="mt-3" />
               <div className="mt-5">
                 <EntryForm />
               </div>
@@ -132,8 +130,6 @@ export default function EqJacuzziGiveaway() {
             ))}
           </dl>
         </section>
-
-        <OddsCalculator />
 
         {films.length > 0 && <FilmBand films={films} />}
 

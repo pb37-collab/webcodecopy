@@ -5,18 +5,31 @@ import { ArrowRight, Check, Copy, Loader2, Share2 } from "lucide-react";
 import { eqGiveaway } from "@/data/giveaways/davinci-eq-jacuzzi";
 import {
   EMAIL_PATTERN,
-  captureConfigured,
+  isConfigured,
+  loadCaptureConfig,
   refCodeFor,
   readAttribution,
   submitEntry,
+  type CaptureConfig,
 } from "@/lib/giveaway";
-import { bumpOwnEntry } from "@/lib/giveaway-stats";
 import { cn } from "@/lib/utils";
 import { ColorwayPicker } from "./colorway-picker";
 import { useEnded, useEq } from "./experience";
-import { ShareOdds } from "./odds";
 
 type Status = { kind: "idle" } | { kind: "submitting" } | { kind: "error"; message: string };
+
+/** Capture settings from config.json; null while loading. */
+function useCaptureConfig(): CaptureConfig | null {
+  const [config, setConfig] = useState<CaptureConfig | null>(null);
+  useEffect(() => {
+    let live = true;
+    loadCaptureConfig(eqGiveaway.captureConfig).then((c) => live && setConfig(c));
+    return () => {
+      live = false;
+    };
+  }, []);
+  return config;
+}
 
 export function EntryForm({ id = "enter" }: { id?: string }) {
   const { colorway, entry, setEntry } = useEq();
@@ -28,6 +41,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
   const [optIn, setOptIn] = useState(false);
   const [trap, setTrap] = useState("");
   const uid = useId();
+  const config = useCaptureConfig();
 
   if (entry) return <SharePanel id={id} />;
 
@@ -39,6 +53,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
     if (!optIn) return setStatus({ kind: "error", message: "Opt in to emails to enter. Unsubscribe anytime." });
 
     setStatus({ kind: "submitting" });
+    const capture = config ?? (await loadCaptureConfig(eqGiveaway.captureConfig));
     const refCode = await refCodeFor(clean, eqGiveaway.slug);
     // Bots fill the hidden field; give them a success screen and save nothing.
     if (trap) {
@@ -56,9 +71,8 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
       utm,
       marketingOptIn: true,
       ageConfirmed: true,
-    });
+    }, capture);
     if (!result.ok) return setStatus({ kind: "error", message: result.error });
-    bumpOwnEntry();
     setEntry({ refCode, email: clean, demo: result.demo });
   }
 
@@ -165,7 +179,7 @@ export function EntryForm({ id = "enter" }: { id?: string }) {
           : `${eqGiveaway.winners} winners · drawn ${eqGiveaway.drawDate} · No purchase necessary`}
       </p>
 
-      {!captureConfigured && <DemoNote />}
+      {config && !isConfigured(config) && <DemoNote />}
     </form>
   );
 }
@@ -208,7 +222,7 @@ function DemoNote() {
   return (
     <p className="mt-3 rounded-lg border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-[12px] leading-snug text-amber-100">
       <strong className="font-semibold">Demo mode:</strong>{" "}entry capture isn&rsquo;t connected yet, so entries
-      aren&rsquo;t saved. Set the Klaviyo or webhook variables before launch.
+      aren&rsquo;t saved. Fill in config.json before launch.
     </p>
   );
 }
@@ -262,11 +276,9 @@ function SharePanel({ id }: { id: string }) {
           Entry locked: <span className="text-eq">{colorway.name}</span>.
         </h2>
         <p className="mt-2 text-[14px] leading-relaxed text-ink-2">
-          Want better odds? Every friend who enters with your link adds{" "}
+          Want more entries? Every friend who enters with your link adds{" "}
           <strong className="text-ink">+{eqGiveaway.referralBonus} bonus entries</strong> to yours.
         </p>
-
-        <ShareOdds />
 
         <div className="mt-4 flex gap-2">
           <input

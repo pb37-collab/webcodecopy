@@ -2,14 +2,18 @@
  * Giveaway entry capture for statically exported pages (no server). Entries go
  * straight from the browser to the email platform:
  *
- *   NEXT_PUBLIC_KLAVIYO_COMPANY_ID + NEXT_PUBLIC_KLAVIYO_LIST_ID
+ *   Klaviyo company ID (public API key) + list ID
  *     → Klaviyo client subscription (public key, safe in the browser)
- *   NEXT_PUBLIC_GIVEAWAY_ENDPOINT
+ *   Webhook URL
  *     → plain JSON POST to a webhook (Zapier, Make, Apps Script, …).
- *     scripts/giveaway-sheet-backend.gs is a ready-made Google Sheet backend
- *     that also serves the live entry count (see giveaway-stats.ts).
+ *     scripts/giveaway-sheet-backend.gs is a ready-made Google Sheet backend.
  *
- * With neither set the page runs in demo mode and shows a visible banner, so
+ * Settings come from a config.json served next to the page, so a hosted copy
+ * can be connected by editing one file, no rebuild. NEXT_PUBLIC_KLAVIYO_COMPANY_ID,
+ * NEXT_PUBLIC_KLAVIYO_LIST_ID and NEXT_PUBLIC_GIVEAWAY_ENDPOINT still work as
+ * build-time defaults; non-empty values in config.json win.
+ *
+ * With nothing set the page runs in demo mode and shows a visible banner, so
  * an unconfigured page can't quietly drop real entries.
  */
 
@@ -27,31 +31,56 @@ export type GiveawayEntry = {
 
 export type SubmitResult = { ok: true; demo: boolean } | { ok: false; error: string };
 
-const KLAVIYO_COMPANY_ID = process.env.NEXT_PUBLIC_KLAVIYO_COMPANY_ID ?? "";
-const KLAVIYO_LIST_ID = process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID ?? "";
-const WEBHOOK = process.env.NEXT_PUBLIC_GIVEAWAY_ENDPOINT ?? "";
+export type CaptureConfig = { klaviyoCompanyId: string; klaviyoListId: string; webhookUrl: string };
 
-export const captureConfigured = Boolean((KLAVIYO_COMPANY_ID && KLAVIYO_LIST_ID) || WEBHOOK);
+const BUILD_DEFAULTS: CaptureConfig = {
+  klaviyoCompanyId: process.env.NEXT_PUBLIC_KLAVIYO_COMPANY_ID ?? "",
+  klaviyoListId: process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID ?? "",
+  webhookUrl: process.env.NEXT_PUBLIC_GIVEAWAY_ENDPOINT ?? "",
+};
+
+const loads = new Map<string, Promise<CaptureConfig>>();
+
+/** Reads config.json once per page load; a missing or broken file falls back to build defaults. */
+export function loadCaptureConfig(path: string): Promise<CaptureConfig> {
+  let p = loads.get(path);
+  if (!p) {
+    p = fetch(path, { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : {}))
+      .catch(() => ({}))
+      .then((file: Partial<Record<keyof CaptureConfig, unknown>>) => {
+        const pick = (k: keyof CaptureConfig) => {
+          const v = file?.[k];
+          return typeof v === "string" && v.trim() ? v.trim() : BUILD_DEFAULTS[k];
+        };
+        return { klaviyoCompanyId: pick("klaviyoCompanyId"), klaviyoListId: pick("klaviyoListId"), webhookUrl: pick("webhookUrl") };
+      });
+    loads.set(path, p);
+  }
+  return p;
+}
+
+export const isConfigured = (c: CaptureConfig) => Boolean((c.klaviyoCompanyId && c.klaviyoListId) || c.webhookUrl);
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-export async function submitEntry(entry: GiveawayEntry): Promise<SubmitResult> {
+export async function submitEntry(entry: GiveawayEntry, config: CaptureConfig): Promise<SubmitResult> {
   try {
-    if (KLAVIYO_COMPANY_ID && KLAVIYO_LIST_ID) {
+    if (config.klaviyoCompanyId && config.klaviyoListId) {
       const res = await fetch(
-        `https://a.klaviyo.com/client/subscriptions/?company_id=${encodeURIComponent(KLAVIYO_COMPANY_ID)}`,
+        `https://a.klaviyo.com/client/subscriptions/?company_id=${encodeURIComponent(config.klaviyoCompanyId)}`,
         {
           method: "POST",
           headers: { "content-type": "application/vnd.api+json", revision: "2025-01-15" },
-          body: JSON.stringify(klaviyoBody(entry)),
+          body: JSON.stringify(klaviyoBody(entry, config.klaviyoListId)),
         },
       );
       if (!res.ok) return { ok: false, error: "We couldn't save your entry. Try again in a moment." };
     }
-    if (WEBHOOK) {
+    if (config.webhookUrl) {
       // no-cors + text/plain: a "simple request" any webhook accepts, even one
       // that sends no CORS headers. The response is opaque in that case.
-      const res = await fetch(WEBHOOK, {
+      const res = await fetch(config.webhookUrl, {
         method: "POST",
         mode: "no-cors",
         headers: { "content-type": "text/plain;charset=utf-8" },
@@ -61,13 +90,13 @@ export async function submitEntry(entry: GiveawayEntry): Promise<SubmitResult> {
         return { ok: false, error: "We couldn't save your entry. Try again in a moment." };
       }
     }
-    return { ok: true, demo: !captureConfigured };
+    return { ok: true, demo: !isConfigured(config) };
   } catch {
     return { ok: false, error: "Network hiccup. Check your connection and try again." };
   }
 }
 
-function klaviyoBody(entry: GiveawayEntry) {
+function klaviyoBody(entry: GiveawayEntry, listId: string) {
   return {
     data: {
       type: "subscription",
@@ -91,7 +120,7 @@ function klaviyoBody(entry: GiveawayEntry) {
           },
         },
       },
-      relationships: { list: { data: { type: "list", id: KLAVIYO_LIST_ID } } },
+      relationships: { list: { data: { type: "list", id: listId } } },
     },
   };
 }
