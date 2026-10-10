@@ -44,9 +44,9 @@ export const eqGiveaway = {
   retailPrice: 549,
   winners: 5,
   /** ISO with offset. The countdown and form close at `endsAt`. */
-  startsAt: "2026-10-05T09:00:00-04:00",
-  endsAt: "2026-10-25T23:59:00-04:00",
-  drawDate: "October 28, 2026",
+  startsAt: "2026-10-12T09:00:00-04:00",
+  endsAt: "2026-10-16T17:00:00-04:00",
+  drawDate: "October 19, 2026",
   referralBonus: 3,
   minAge: 21,
   eligibility: "legal residents of the 50 United States and D.C.",
