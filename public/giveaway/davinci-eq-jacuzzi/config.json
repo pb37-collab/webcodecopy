@@ -1,0 +1,6 @@
+{
+  "_help": "Connect entry capture here; no rebuild needed. Use Klaviyo (both Klaviyo fields), a webhook, or both. webhookUrl can be the Google Sheet backend's /exec URL. Leave everything empty and the page stays in demo mode with a visible banner.",
+  "klaviyoCompanyId": "",
+  "klaviyoListId": "",
+  "webhookUrl": ""
+}
