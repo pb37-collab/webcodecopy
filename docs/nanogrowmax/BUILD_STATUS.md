@@ -4,7 +4,7 @@
 | Theme | ID | Purpose |
 |---|---|---|
 | Copy of rename-odor-max-grow-max-8-24 | 188058468655 | Previous live theme (rollback). Never edited. |
-| NanoGrow Max — Holiday 2026 (mobile fixes) | 189006348591 | Previous live (rollback). Use this as the next work copy. Further edits go to a fresh copy, because the API can't write to the live theme. |
+| NanoGrow Max — Holiday 2026 (mobile fixes) | 189006348591 | Work copy = live + Klaviyo Viewed Product/Added to Cart tracking on the landing pages + injected social bar hidden (commit 4e7de95). **Owner publishes.** Further edits go to a fresh copy, because the API can't write to the live theme. |
 | NanoGrow Max — Holiday 2026 (landing pages) | 188877701423 | **LIVE** (published 2026-10-12). Includes the mobile fixes and the refreshed Meta ad landing pages. The new theme. Duplicated from live (keeps landing pages, app embeds and settings), with the new design system deployed on top. Preview: `https://nanogrowmax.com/?preview_theme_id=188877701423` |
 | zz-sandbox PDP / Odor / Site / Popup | 188877930799 / 188877963567 / 188877996335 / 188878029103 | Per-agent build sandboxes. **Delete after launch** (Online Store → Themes; the API can't delete themes). |
 
@@ -62,6 +62,11 @@
   - The 4-pack bonus bottle is part of that variant, so it's included.
   - Recommended fix: make the bundle a Shopify Bundle that includes the 8 oz Odor Max (or a Flow that adds it on order created).
 - Klaviyo welcome emails: templates exist (source in the theme repo, docs/klaviyo/). The flow is built by the owner in the Klaviyo UI.
+
+## 2026-10-12 store clean-up
+- Created pages /pages/how-to-use and /pages/cannabis-growers (they were 404s), with SEO titles and descriptions. Main menu: added How to Use; "Case Studies" renamed "The Research". Footer menu: added For Cannabis Growers.
+- Archived the BOGOS gift products. Shopify Flow "Bundle gift: add free 8 oz Odor Max" (built via Cowork) adds the free bottle to express-checkout bundle orders.
+- Still open: uninstall BOGOS (owner); build the Klaviyo welcome flow (Cowork); the social-icons.js script tag points at the old theme "nanogrow-cannabust-theme-2" asset (hidden by CSS; delete that old theme or the app).
 
 ## Owner to-dos in the theme editor
 - Turn off the "Metashop (Instagram/Facebook)" app embed. It adds a second social-icons bar under the footer.
