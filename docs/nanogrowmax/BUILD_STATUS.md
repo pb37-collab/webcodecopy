@@ -4,8 +4,8 @@
 | Theme | ID | Purpose |
 |---|---|---|
 | Copy of rename-odor-max-grow-max-8-24 | 188058468655 | Previous live theme (rollback). Never edited. |
-| NanoGrow Max — Holiday 2026 (mobile fixes) | 189006348591 | Copy of the live theme with the 2026-10-12 mobile fixes. **Owner publishes.** Further edits go to a fresh copy, because the API can't write to the live theme. |
-| NanoGrow Max — Holiday 2026 (in progress) | 188877701423 | **LIVE since 2026-10-11 (published by the owner).** The new theme. Duplicated from live (keeps landing pages, app embeds and settings), with the new design system deployed on top. Preview: `https://nanogrowmax.com/?preview_theme_id=188877701423` |
+| NanoGrow Max — Holiday 2026 (mobile fixes) | 189006348591 | **LIVE** (published 2026-10-12). Further edits go to a fresh copy, because the API can't write to the live theme. |
+| NanoGrow Max — Holiday 2026 (landing pages) | 188877701423 | Work copy with the refreshed Meta ad landing pages (2026-10-12). **Owner publishes.** The new theme. Duplicated from live (keeps landing pages, app embeds and settings), with the new design system deployed on top. Preview: `https://nanogrowmax.com/?preview_theme_id=188877701423` |
 | zz-sandbox PDP / Odor / Site / Popup | 188877930799 / 188877963567 / 188877996335 / 188878029103 | Per-agent build sandboxes. **Delete after launch** (Online Store → Themes; the API can't delete themes). |
 
 ## Code
@@ -50,6 +50,18 @@
 - Footer "Explore" uses the main menu.
 - Popup: Klaviyo company and list now default in theme settings. The SMS step is hidden until "SMS is set up in Klaviyo" is ticked.
 - Live store: the popup prize codes and the easter-egg code were created (one use per customer, combine with the free-bottle offer). The free-bottle automatic discount now combines with order and product discounts. The single opt-in popup list was created in Klaviyo.
+
+## 2026-10-12 Meta ad landing pages (in the landing-pages copy)
+- `/pages/nano-nutrient` (Grow Max) and `/pages/nano-odor-max` take almost all the ad traffic.
+- Fixed:
+  - The Grow Max landing page sent the bundle to checkout without the promised free Odor Max, because the page never loaded the gift script. The page now adds the gift and removes legacy $0 gift lines.
+  - Wrong dosing math (5 mL/gal) was replaced with 2 mL per 1 L.
+- Both pages were rebuilt with the generated images: research, before/after, how-to, use cases and FAQ.
+- Express checkout (Apple Pay / Shop Pay / Google Pay) is in both buy boxes.
+  - Express checkout of the **bundle** skips the cart, so the free bottle isn't included. The page notes this.
+  - The 4-pack bonus bottle is part of that variant, so it's included.
+  - Recommended fix: make the bundle a Shopify Bundle that includes the 8 oz Odor Max (or a Flow that adds it on order created).
+- Klaviyo welcome emails: templates exist (source in the theme repo, docs/klaviyo/). The flow is built by the owner in the Klaviyo UI.
 
 ## Owner to-dos in the theme editor
 - Turn off the "Metashop (Instagram/Facebook)" app embed. It adds a second social-icons bar under the footer.
