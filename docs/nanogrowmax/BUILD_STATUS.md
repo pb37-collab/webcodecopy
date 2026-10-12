@@ -3,8 +3,9 @@
 ## Themes in the Shopify store
 | Theme | ID | Purpose |
 |---|---|---|
-| Copy of rename-odor-max-grow-max-8-24 | 188058468655 | **LIVE.** Never edited. |
-| NanoGrow Max — Holiday 2026 (in progress) | 188877701423 | The new theme. Duplicated from live (keeps landing pages, app embeds and settings), with the new design system deployed on top. Preview: `https://nanogrowmax.com/?preview_theme_id=188877701423` |
+| Copy of rename-odor-max-grow-max-8-24 | 188058468655 | Previous live theme (rollback). Never edited. |
+| NanoGrow Max — Holiday 2026 (mobile fixes) | 189006348591 | Copy of the live theme with the 2026-10-12 mobile fixes. **Owner publishes.** Further edits go to a fresh copy, because the API can't write to the live theme. |
+| NanoGrow Max — Holiday 2026 (in progress) | 188877701423 | **LIVE since 2026-10-11 (published by the owner).** The new theme. Duplicated from live (keeps landing pages, app embeds and settings), with the new design system deployed on top. Preview: `https://nanogrowmax.com/?preview_theme_id=188877701423` |
 | zz-sandbox PDP / Odor / Site / Popup | 188877930799 / 188877963567 / 188877996335 / 188878029103 | Per-agent build sandboxes. **Delete after launch** (Online Store → Themes; the API can't delete themes). |
 
 ## Code
@@ -40,6 +41,15 @@
 - How to Use (until the page exists): https://nanogrowmax.com/pages/about?preview_theme_id=188877701423&view=how-to-use
 - Cannabis growers (until the page exists): https://nanogrowmax.com/pages/about?preview_theme_id=188877701423&view=cannabis-growers
 - Popup (forced open): add `&ngm_popup=1` to any link
+
+## 2026-10-12 mobile pass (in the mobile-fixes copy)
+- Product galleries: square frame on mobile, photos fill it, no dots over the product.
+- Home hero: the photo/video band is clipped to its own space, and the trust chips are a tidy 3-up row.
+- "60s / odor gone" badge sized to fit. Stat tags and before/after labels no longer wrap or collide.
+- Mobile menu cards: Grow Max Bundle $99.99, Nano Odor Max "From $12.99" (they skip the hidden $0 gift variant). The social-share price does the same.
+- Footer "Explore" uses the main menu.
+- Popup: Klaviyo company and list now default in theme settings. The SMS step is hidden until "SMS is set up in Klaviyo" is ticked.
+- Live store: the popup prize codes and the easter-egg code were created (one use per customer, combine with the free-bottle offer). The free-bottle automatic discount now combines with order and product discounts. The single opt-in popup list was created in Klaviyo.
 
 ## Owner to-dos in the theme editor
 - Turn off the "Metashop (Instagram/Facebook)" app embed. It adds a second social-icons bar under the footer.
