@@ -4,8 +4,8 @@
 | Theme | ID | Purpose |
 |---|---|---|
 | Copy of rename-odor-max-grow-max-8-24 | 188058468655 | Previous live theme (rollback). Never edited. |
-| NanoGrow Max — Holiday 2026 (mobile fixes) | 189006348591 | **LIVE** (published 2026-10-12). Further edits go to a fresh copy, because the API can't write to the live theme. |
-| NanoGrow Max — Holiday 2026 (landing pages) | 188877701423 | Work copy with the refreshed Meta ad landing pages (2026-10-12). **Owner publishes.** The new theme. Duplicated from live (keeps landing pages, app embeds and settings), with the new design system deployed on top. Preview: `https://nanogrowmax.com/?preview_theme_id=188877701423` |
+| NanoGrow Max — Holiday 2026 (mobile fixes) | 189006348591 | Previous live (rollback). Use this as the next work copy. Further edits go to a fresh copy, because the API can't write to the live theme. |
+| NanoGrow Max — Holiday 2026 (landing pages) | 188877701423 | **LIVE** (published 2026-10-12). Includes the mobile fixes and the refreshed Meta ad landing pages. The new theme. Duplicated from live (keeps landing pages, app embeds and settings), with the new design system deployed on top. Preview: `https://nanogrowmax.com/?preview_theme_id=188877701423` |
 | zz-sandbox PDP / Odor / Site / Popup | 188877930799 / 188877963567 / 188877996335 / 188878029103 | Per-agent build sandboxes. **Delete after launch** (Online Store → Themes; the API can't delete themes). |
 
 ## Code
