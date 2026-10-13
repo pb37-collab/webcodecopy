@@ -5,8 +5,9 @@
  * product pages and WooCommerce store API on looperverse.com (Oct 2026):
  *   /product/duos-gummies/  (product 23659)
  *   /product/fusion-3g/     (product 23678)
- * Sample counts and shipping prices come from the Looper x Canna Connect
- * onboarding doc (50 Duos at $6.99 shipping, 60 Fusion at $7.99 shipping).
+ * Sample counts come from the Looper x Canna Connect onboarding doc (50 Duos,
+ * 60 Fusion). The pages never show a shipping price: the customer sees the
+ * shipping cost for the first time at checkout.
  * Fusion strain types are printed on each flavor's box.
  *
  * `variationId` is the retail WooCommerce variation for that flavor, listed
@@ -26,9 +27,9 @@ export const products = {
     slug: "free-duos",
     pageUrl: "https://looperverse.com/free-duos",
     productUrl: "https://looperverse.com/product/duos-gummies/",
-    title: "Free Looper Duos Gummies | Just Pay Shipping",
+    title: "Free Looper Duos Gummies | You Just Cover Shipping",
     description:
-      "Claim a free 10-count jar of Looper Duos THC Gummies. Pick your flavor pair, drop your email and just pay $6.99 shipping. 21+.",
+      "Claim a free 10-count jar of Looper Duos THC Gummies. Pick your flavor pair, drop your email and just cover shipping. 21+.",
     ogImage: "https://looperverse.com/wp-content/uploads/2026/09/DUOSRENDER-SET1-800px.png",
     groupImage: "2026/09/DUOSRENDER-SET1-800px.png",
     groupAlt: "Looper Duos Gummies jars in all five flavors",
@@ -40,12 +41,11 @@ export const products = {
     claimUnit: "Free Jar",
     stickyTitle: "Free Duos Jar",
     retail: 12.99,
-    shipping: 6.99,
     supply: 50,
     eventName: "Claimed Free Sample",
     sampleKey: "duos_gummies",
     welcome: "Your first jar's on us",
-    marquee: ["Free Duos Jar", "Just Pay {ship} Shipping", "25mg THC + 5mg CBD", "5 Flavor Pairs", "Only {supply} Jars", "21+ Only"],
+    marquee: ["Free Duos Jar", "You Just Cover Shipping", "25mg THC + 5mg CBD", "5 Flavor Pairs", "Only {supply} Jars", "21+ Only"],
     lede: [
       ["b", "A full 10-gummy jar, free."],
       ["t", " Pick your flavor pair, drop your email and "],
@@ -54,7 +54,7 @@ export const products = {
     stats: [
       ["$0", "Jar"],
       ["10", "Gummies"],
-      ["{ship}", "Shipping"],
+      ["5", "Flavor Pairs"],
     ],
     pickTitle: "Pick your pair",
     pickHint: "Two flavors in every gummy. Tap one to lock it in.",
@@ -80,10 +80,10 @@ export const products = {
     steps: [
       ["Pick Your Pair", "Choose one of the five Duos flavor pairs. Every gummy has two flavor layers.", "= 1 Free Jar"],
       ["Drop Your Email", "Tell us where you are and where to send Looper news. Takes about 30 seconds.", "= 30 Seconds"],
-      ["Check Out", "Your jar is $0 at checkout. You just cover {ship} shipping, and it's on the way.", "= $0 + {ship} Shipping"],
+      ["Check Out", "Your jar is $0 at checkout. You just cover shipping, and it's on the way.", "= $0 + Shipping"],
     ],
     faq: [
-      ["Is it really free?", "Yes. The jar of Duos is $0. The only thing you pay at checkout is {ship} to cover shipping."],
+      ["Is it really free?", "Yes. The jar of Duos is $0. The only thing you pay is shipping, and you'll see the exact shipping cost at checkout before you pay anything."],
       ["What's in each gummy?", "25mg THC and 5mg CBD, with two flavor layers in every gummy. A jar holds 10 gummies, for 250mg THC and 50mg CBD in total. New to edibles? Start with part of a gummy and give it time."],
       ["How many can I claim?", "One free sample per person and household, and there are only {supply} jars in this drop. Want more flavors after you try it? They're in the shop."],
       ["Where do you ship?", "We can ship to {stateCount} states: {states}. If yours isn't listed, we can't send a sample there yet."],
@@ -98,9 +98,9 @@ export const products = {
     slug: "free-fusion",
     pageUrl: "https://looperverse.com/free-fusion",
     productUrl: "https://looperverse.com/product/fusion-3g/",
-    title: "Free Looper Fusion 3G Vape | Just Pay Shipping",
+    title: "Free Looper Fusion 3G Vape | You Just Cover Shipping",
     description:
-      "Claim a free Looper Fusion 3G disposable. Pick from six fruit-forward flavors, drop your email and just pay $7.99 shipping. 21+.",
+      "Claim a free Looper Fusion 3G disposable. Pick from six fruit-forward flavors, drop your email and just cover shipping. 21+.",
     ogImage: "https://looperverse.com/wp-content/uploads/2026/09/FUSIONRENDER-GROUP1-1000px.png",
     groupImage: "2026/09/FUSIONRENDER-GROUP1-1000px.png",
     groupAlt: "Looper Fusion 3G disposable with boxes in all six flavors",
@@ -112,12 +112,11 @@ export const products = {
     claimUnit: "Free Vape",
     stickyTitle: "Free Fusion 3G",
     retail: 25.99,
-    shipping: 7.99,
     supply: 60,
     eventName: "Claimed Free Sample",
     sampleKey: "fusion_3g",
     welcome: "Your first 3G's on us",
-    marquee: ["Free Fusion 3G", "Just Pay {ship} Shipping", "THCA + Delta-8 + THCP", "6 Flavors", "Only {supply} Vapes", "21+ Only"],
+    marquee: ["Free Fusion 3G", "You Just Cover Shipping", "THCA + Delta-8 + THCP", "6 Flavors", "Only {supply} Vapes", "21+ Only"],
     lede: [
       ["b", "A full 3-gram Fusion disposable, free."],
       ["t", " Pick your flavor, drop your email and "],
@@ -126,7 +125,7 @@ export const products = {
     stats: [
       ["$0", "Vape"],
       ["3G", "Disposable"],
-      ["{ship}", "Shipping"],
+      ["6", "Flavors"],
     ],
     pickTitle: "Pick your flavor",
     pickHint: "Six fruit-forward flavors. Tap one to lock it in.",
@@ -153,10 +152,10 @@ export const products = {
     steps: [
       ["Pick Your Flavor", "Choose one of six Fusion flavors, from Hard Strawberry to Twisted Lime.", "= 1 Free Vape"],
       ["Drop Your Email", "Tell us where you are and where to send Looper news. Takes about 30 seconds.", "= 30 Seconds"],
-      ["Check Out", "Your Fusion is $0 at checkout. You just cover {ship} shipping, and it's on the way.", "= $0 + {ship} Shipping"],
+      ["Check Out", "Your Fusion is $0 at checkout. You just cover shipping, and it's on the way.", "= $0 + Shipping"],
     ],
     faq: [
-      ["Is it really free?", "Yes. The Fusion 3G is $0. The only thing you pay at checkout is {ship} to cover shipping."],
+      ["Is it really free?", "Yes. The Fusion 3G is $0. The only thing you pay is shipping, and you'll see the exact shipping cost at checkout before you pay anything."],
       ["What's in a Fusion?", "3 grams of a THCA, Delta-8 and THCP blend in a pre-filled, pre-charged, draw-activated disposable. Each flavor is marked Sativa, Indica or Hybrid on the box. New to it? Start with one small pull and give it time."],
       ["How many can I claim?", "One free sample per person and household, and there are only {supply} vapes in this drop. Want another flavor after you try it? They're in the shop."],
       ["Where do you ship?", "We can ship to {stateCount} states: {states}. If yours isn't listed, we can't send a sample there yet."],

@@ -40,7 +40,6 @@ function checkoutUrl(slug, email, state){
 
 /* ---------- setup: fill config-driven text ---------- */
 (function(){
-  document.querySelectorAll('[data-ship]').forEach(e => e.textContent = money(CONFIG.SHIPPING));
   document.querySelectorAll('[data-retail]').forEach(e => e.textContent = money(CONFIG.RETAIL));
   document.querySelectorAll('[data-supply]').forEach(e => e.textContent = CONFIG.SUPPLY);
   document.querySelectorAll('[data-ship-states]').forEach(e => e.textContent = SHIP_STATES.join(', '));
@@ -258,7 +257,7 @@ if (isClosed()) closeOffer();
       go.removeAttribute('href'); go.setAttribute('aria-disabled', 'true');
       go.innerHTML = 'Checkout link not set';
       $('redirectBar').hidden = true;
-      $('successText').innerHTML = 'Live, this step sends them straight to checkout for <b>' + f.name + '</b>: $0 for the ' + PRODUCT.unit + ', <b>' + money(CONFIG.SHIPPING) + '</b> shipping.';
+      $('successText').innerHTML = 'Live, this step sends them straight to checkout for <b>' + f.name + '</b>: $0 for the ' + PRODUCT.unit + ', they just cover shipping.';
       $('previewNote').hidden = false;
       $('previewNote').innerHTML = '<b>Preview mode.</b> ' + (isLive() ? '' : 'No Klaviyo list is set, so nothing was sent. ') + 'Add this flavor\'s link to <code>CONFIG.CHECKOUT[\'' + f.slug + '\']</code> to turn on the redirect.';
     }
@@ -309,7 +308,7 @@ if (isClosed()) closeOffer();
       body: JSON.stringify({ data: {
         type:'event',
         attributes: {
-          properties: { sample: PRODUCT.fullName, sample_key: PRODUCT.sampleKey, flavor: p.flavor.name, flavor_slug: p.flavor.slug, shipping: CONFIG.SHIPPING, retail_value: CONFIG.RETAIL, state: p.state, checkout_url: p.checkout || '', ...utm },
+          properties: { sample: PRODUCT.fullName, sample_key: PRODUCT.sampleKey, flavor: p.flavor.name, flavor_slug: p.flavor.slug, retail_value: CONFIG.RETAIL, state: p.state, checkout_url: p.checkout || '', ...utm },
           metric: { data: { type:'metric', attributes: { name: CONFIG.KLAVIYO_EVENT } } },
           profile: { data: { type:'profile', attributes: { email: p.email } } },
           value: 0,

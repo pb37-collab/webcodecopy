@@ -2,26 +2,30 @@
 
 Two free-sample landing pages for Looper, built in the same style as the Looperverse Giveaway page
 (`looperverse.com/giveaway`). The visitor picks a flavor, enters their email and state, and goes straight
-to checkout. **The product is free; the customer pays shipping.**
+to checkout. **The product is free; the customer just covers shipping.**
 
-| Page | Product | Flavors | Shipping | Samples |
-|---|---|---|---|---|
-| `free-duos/index.html` | Looper Duos Gummies (10 × 25mg THC + 5mg CBD) | 5 flavor pairs | $6.99 | 50 jars |
-| `free-fusion/index.html` | Looper Fusion 3G disposable (THCA + Delta-8 + THCP) | 6 flavors | $7.99 | 60 vapes |
+**No shipping price appears anywhere on the pages.** They say "free, you just cover shipping" and the
+order summary shows "Shipping: At checkout", so the customer sees the shipping cost for the first time
+at checkout. Shipping can be a flat rate or vary by state without touching the pages.
+
+| Page | Product | Flavors | Samples |
+|---|---|---|---|
+| `free-duos/index.html` | Looper Duos Gummies (10 × 25mg THC + 5mg CBD) | 5 flavor pairs | 50 jars |
+| `free-fusion/index.html` | Looper Fusion 3G disposable (THCA + Delta-8 + THCP) | 6 flavors | 60 vapes |
 
 As with the giveaway, **each page is one self-contained HTML file**: markup, CSS, JS and product images are
 all inside `index.html`. There's no build step for Looper and nothing else to upload.
 
 Product copy, flavor names, flavor notes, retail prices and images come from the live product pages
-(`/product/duos-gummies/`, `/product/fusion-3g/`). Sample counts and shipping prices come from the
-Looper × Canna Connect onboarding doc.
+(`/product/duos-gummies/`, `/product/fusion-3g/`). Sample counts come from the Looper × Canna Connect
+onboarding doc.
 
 ## What's on each page (mobile first)
 
 1. **Hero:** product name with the giveaway's cyan/magenta glitch, the product group render,
-   "$0 / what you get / shipping" stats and the sample count ("Only 50 free jars in this drop").
+   "$0 / what you get / flavors" stats and the sample count ("Only 50 free jars in this drop").
 2. **Claim card:** flavor picker (photo tiles), email, ship-to state, one 21+ / email-consent checkbox,
-   an order summary (~~$12.99~~ **Free** + $6.99 shipping) and the claim button.
+   an order summary (~~$12.99~~ **Free**, Shipping: *At checkout*) and the claim button.
 3. **Sticky claim bar** on phones. It stays at the bottom of the screen until the claim card is on screen.
 4. As Featured On strip, What You Get, flavor cards (each with a "Claim" button that selects that flavor),
    How It Works, FAQ, Offer Details and the same footer and disclaimers as the giveaway.
@@ -53,7 +57,7 @@ Everything lives in the `CONFIG` block near the bottom of each `index.html` (sea
 | `KLAVIYO_LIST_ID` | ⚠️ **blank** | The free-sample list. While blank, the page is in preview mode and **sends nothing** to Klaviyo. |
 | `KLAVIYO_COMPANY_ID` | ✅ `RwbMFF` | Looper's public Klaviyo key (same as the giveaway) |
 | `KLAVIYO_EVENT` | ✅ `Claimed Free Sample` | Event logged on every claim; use it to trigger flows |
-| `SHIPPING` / `RETAIL` / `SUPPLY` | ✅ set | Every price and count on the page updates from these |
+| `RETAIL` / `SUPPLY` | ✅ set | The struck-through retail price and the sample count update from these |
 | `LEFT` | optional | Set a number (e.g. `18`) to show "Only 18 of 50 free jars left" with a meter. Update it by hand. |
 | `SOLD_OUT_FLAVORS` | optional | e.g. `['blue-razz-grape']` greys out that flavor and marks it "Gone" |
 | `SOLD_OUT` | optional | `true` closes the offer and points every button to the product page |
@@ -61,8 +65,9 @@ Everything lives in the `CONFIG` block near the bottom of each `index.html` (sea
 
 ### Checkout links
 
-Each flavor needs a link that lands the customer on checkout with that flavor at **$0** and shipping at
-$6.99 (Duos) or $7.99 (Fusion). The links accept tokens: `{email}`, `{flavor}` and `{state}`.
+Each flavor needs a link that lands the customer on checkout with that flavor at **$0**. Shipping is
+charged and shown at checkout (flat or by state, set in WooCommerce). The links accept tokens:
+`{email}`, `{flavor}` and `{state}`.
 
 The retail WooCommerce variations, for reference when you build the $0 sample links:
 
@@ -85,7 +90,7 @@ Each claim calls Klaviyo's client APIs (public key only, no server or secret nee
 
 1. `POST a.klaviyo.com/client/subscriptions`: subscribes the email to `KLAVIYO_LIST_ID`.
    Source: "Looper Free Sample LP: Duos" or "…: Fusion".
-2. `POST a.klaviyo.com/client/events`: logs **Claimed Free Sample** with sample, flavor, state, shipping,
+2. `POST a.klaviyo.com/client/events`: logs **Claimed Free Sample** with sample, flavor, state,
    retail value, checkout link and UTMs.
 
 Profile fields set:

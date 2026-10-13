@@ -35,7 +35,6 @@ const money = (n) => `$${n.toFixed(2)}`;
 /** Escape copy, then swap in live-updating tokens (the page re-fills them from CONFIG). */
 function fill(text, p) {
   return esc(text)
-    .replace(/\{ship\}/g, `<span data-ship>${money(p.shipping)}</span>`)
     .replace(/\{retail\}/g, `<span data-retail>${money(p.retail)}</span>`)
     .replace(/\{supply\}/g, `<span data-supply>${p.supply}</span>`)
     .replace(/\{stateCount\}/g, `<span data-state-count>${SHIP_STATES.length}</span>`)
@@ -69,7 +68,6 @@ async function render(p) {
     CHECKOUT: Object.fromEntries(
       p.flavors.map((f) => [f.slug, `https://looperverse.com/checkout/?PLACEHOLDER=${p.id}-${f.slug}`]),
     ),
-    SHIPPING: p.shipping,
     RETAIL: p.retail,
     SUPPLY: p.supply,
     LEFT: null,
@@ -117,7 +115,7 @@ async function render(p) {
 
   const specs = p.specs.map(([b, s]) => `<li><b>${esc(b)}</b><span>${esc(s)}</span></li>`).join("");
   const stats = p.stats
-    .map(([b, s]) => `<div class="stat"><b>${b === "{ship}" ? `<span data-ship>${money(p.shipping)}</span>` : esc(b)}</b><span>${esc(s)}</span></div>`)
+    .map(([b, s]) => `<div class="stat"><b>${esc(b)}</b><span>${esc(s)}</span></div>`)
     .join("\n          ");
   const steps = p.steps
     .map(
@@ -245,12 +243,12 @@ ${tiles}
 
           <div class="summary" aria-label="What you pay">
             <div><span>${esc(p.shortName)} ${esc(p.unit)} <i id="sumFlavor"></i></span><span><s data-retail>${money(p.retail)}</s><b class="free">Free</b></span></div>
-            <div><span>Shipping</span><span class="ship" data-ship>${money(p.shipping)}</span></div>
+            <div><span>Shipping</span><span class="ship">At checkout</span></div>
           </div>
           <button class="cta" type="submit" id="submitBtn">Claim My ${esc(p.claimUnit)} <span class="arr" aria-hidden="true">→</span></button>
           <div class="msg" id="formMsg" role="alert"></div>
           <div class="trust"><span>Lab Tested</span><span>21+ Only</span><span>1 Per Person</span></div>
-          <p class="fine">Free product, you pay <span data-ship>${money(p.shipping)}</span> shipping at checkout. One free sample per person and household while supplies last. Ships only to the states in the <a href="#details">Offer Details</a>.</p>
+          <p class="fine">The product is free. You just cover shipping, shown at checkout. One free sample per person and household while supplies last. Ships only to the states in the <a href="#details">Offer Details</a>.</p>
         </form>
 
         <!-- ===== success: on the way to checkout ===== -->
@@ -258,7 +256,7 @@ ${tiles}
           <div class="welcome">Locked in</div>
           <div class="lock-art" id="lockArt" style="--img:var(--f-${first.slug})" role="img" aria-label="Your flavor"></div>
           <h3><span id="successFlavor">${esc(first.name)}</span>//</h3>
-          <p id="successText">Taking you to checkout. Your ${esc(p.unit)} is <b>$0</b>, you just cover <b data-ship>${money(p.shipping)}</b> shipping.</p>
+          <p id="successText">Taking you to checkout. Your ${esc(p.unit)} is <b>$0</b>, you just cover shipping.</p>
           <div class="redirect-bar" id="redirectBar"><i></i></div>
           <a class="cta" id="checkoutBtn" href="#">Continue to Checkout <span class="arr" aria-hidden="true">→</span></a>
           <div class="preview" id="previewNote" hidden></div>
@@ -343,7 +341,7 @@ ${flavorCards}
       <div class="rules rv">
         <h3>Free Sample Offer Details</h3>
         <ol>
-          <li><strong>The offer:</strong> ${esc(p.rulesItem)} The product is free. You pay <span data-ship>${money(p.shipping)}</span> shipping at checkout.</li>
+          <li><strong>The offer:</strong> ${esc(p.rulesItem)} The product is free; you just cover shipping, which is shown at checkout before you pay.</li>
           <li><strong>Limit:</strong> One (1) free sample per person, household and shipping address. Duplicate or fraudulent claims may be canceled.</li>
           <li><strong>While supplies last:</strong> This drop is limited to <span data-supply>${p.supply}</span> ${esc(p.unit)}s. Flavors are subject to availability.</li>
           <li><strong>Eligibility:</strong> You must be 21 years of age or older. Samples ship only to U.S. addresses in these states: <span data-ship-states>${esc(SHIP_STATES.join(", "))}</span>.</li>
@@ -378,7 +376,7 @@ ${flavorCards}
 <!-- ===== sticky claim bar (phones) ===== -->
 <div class="sticky" id="sticky">
   <span class="thumb" style="--img:var(--group)" aria-hidden="true"></span>
-  <div class="s-txt"><b>${esc(p.stickyTitle)}</b><span>Just <span data-ship>${money(p.shipping)}</span> shipping · 21+</span></div>
+  <div class="s-txt"><b>${esc(p.stickyTitle)}</b><span>Just cover shipping · 21+</span></div>
   <a class="cta" href="#claim" data-claim-link>Claim <span class="arr" aria-hidden="true">→</span></a>
 </div>
 
@@ -403,7 +401,6 @@ ${checkoutLines}
   },
   PASS_UTM: true,           // copy utm_* / fbclid / gclid from the ad onto the checkout link
 
-  SHIPPING: ${config.SHIPPING},          // what the customer pays at checkout
   RETAIL: ${config.RETAIL},           // shown struck through next to "Free"
   SUPPLY: ${config.SUPPLY},              // samples in this drop
   LEFT: null,              // optional: set a number (e.g. 18) to show "18 of ${config.SUPPLY} left" with a meter
