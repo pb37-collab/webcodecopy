@@ -5,9 +5,9 @@
  * product pages and WooCommerce store API on looperverse.com (Oct 2026):
  *   /product/duos-gummies/  (product 23659)
  *   /product/fusion-3g/     (product 23678)
- * Each page allows 150 free samples across all of its flavors (set Oct 2026;
- * the onboarding doc's first numbers were 50 Duos / 60 Fusion). The pages never show a shipping price: the customer sees the
- * shipping cost for the first time at checkout.
+ * Stock (Oct 2026): 110 free samples in total, 10 of each flavor, so 50 Duos
+ * (5 flavors) and 60 Fusion (6 flavors). The pages never show a shipping price:
+ * the customer sees the shipping cost for the first time at checkout.
  * Fusion strain types are printed on each flavor's box.
  *
  * `variationId` is the retail WooCommerce variation for that flavor, listed
@@ -41,7 +41,8 @@ export const products = {
     claimUnit: "Free Jar",
     stickyTitle: "Free Duos Jar",
     retail: 12.99,
-    supply: 150,
+    supply: 50,
+    perFlavor: 10,
     eventName: "Claimed Free Sample",
     sampleKey: "duos_gummies",
     welcome: "Your first jar's on us",
@@ -85,7 +86,7 @@ export const products = {
     faq: [
       ["Is it really free?", "Yes. The jar of Duos is $0. The only thing you pay is shipping, and you'll see the exact shipping cost at checkout before you pay anything."],
       ["What's in each gummy?", "25mg THC and 5mg CBD, with two flavor layers in every gummy. A jar holds 10 gummies, for 250mg THC and 50mg CBD in total. New to edibles? Start with part of a gummy and give it time."],
-      ["How many can I claim?", "One free sample per person and household, and there are only {supply} jars in this drop. Want more flavors after you try it? They're in the shop."],
+      ["How many can I claim?", "One free sample per person and household, and there are only {supply} jars in this drop ({perFlavor} of each flavor pair). Want more flavors after you try it? They're in the shop."],
       ["Where do you ship?", "We can ship to {stateCount} states: {states}. If yours isn't listed, we can't send a sample there yet."],
       ["Is it lab tested?", "Yes. Every jar has a QR code that links to its batch results, and you can see Looper's lab reports any time."],
     ],
@@ -112,7 +113,8 @@ export const products = {
     claimUnit: "Free Vape",
     stickyTitle: "Free Fusion 3G",
     retail: 25.99,
-    supply: 150,
+    supply: 60,
+    perFlavor: 10,
     eventName: "Claimed Free Sample",
     sampleKey: "fusion_3g",
     welcome: "Your first 3G's on us",
@@ -157,7 +159,7 @@ export const products = {
     faq: [
       ["Is it really free?", "Yes. The Fusion 3G is $0. The only thing you pay is shipping, and you'll see the exact shipping cost at checkout before you pay anything."],
       ["What's in a Fusion?", "3 grams of a THCA, Delta-8 and THCP blend in a pre-filled, pre-charged, draw-activated disposable. Each flavor is marked Sativa, Indica or Hybrid on the box. New to it? Start with one small pull and give it time."],
-      ["How many can I claim?", "One free sample per person and household, and there are only {supply} vapes in this drop. Want another flavor after you try it? They're in the shop."],
+      ["How many can I claim?", "One free sample per person and household, and there are only {supply} vapes in this drop ({perFlavor} of each flavor). Want another flavor after you try it? They're in the shop."],
       ["Where do you ship?", "We can ship to {stateCount} states: {states}. If yours isn't listed, we can't send a sample there yet."],
       ["Is it lab tested?", "Yes. Fusion is third-party tested with a Certificate of Analysis for every batch, and you can see Looper's lab reports any time."],
     ],

@@ -37,6 +37,7 @@ function fill(text, p) {
   return esc(text)
     .replace(/\{retail\}/g, `<span data-retail>${money(p.retail)}</span>`)
     .replace(/\{supply\}/g, `<span data-supply>${p.supply}</span>`)
+    .replace(/\{perFlavor\}/g, String(p.perFlavor))
     .replace(/\{stateCount\}/g, `<span data-state-count>${SHIP_STATES.length}</span>`)
     .replace(/\{states\}/g, `<span data-ship-states>${esc(SHIP_STATES.join(", "))}</span>`);
 }
@@ -95,7 +96,7 @@ async function render(p) {
   const tiles = p.flavors
     .map(
       (f) => `            <input type="radio" name="flavor" id="f-${f.slug}" value="${f.slug}">
-            <label for="f-${f.slug}" style="--img:var(--f-${f.slug});--glow:${f.glow}99"><span class="ph" aria-hidden="true"></span><b>${esc(f.name)}</b>${f.strain ? `<em>${esc(f.strain)}</em>` : ""}</label>`,
+            <label for="f-${f.slug}" style="--img:var(--f-${f.slug});--glow:${f.glow}99"><span class="ph" aria-hidden="true"></span><b>${esc(f.name)}</b>${f.strain ? `<em>${esc(f.strain)}</em>` : ""}<span class="fl-left" data-left-for="${f.slug}" hidden></span></label>`,
     )
     .join("\n");
 
@@ -106,6 +107,7 @@ async function render(p) {
           <div class="txt">
             <h3>${esc(f.name)}</h3>
             ${f.strain ? `<span class="strain">${esc(f.strain)}</span>` : ""}
+            <span class="fc-left" data-left-for="${f.slug}" hidden></span>
             <p>${esc(f.note)}</p>
             <a class="pill" href="#claim" data-pick="${f.slug}">Claim<span class="xs-hide">&nbsp;This Flavor</span> <span aria-hidden="true">→</span></a>
           </div>
@@ -347,7 +349,7 @@ ${flavorCards}
         <ol>
           <li><strong>The offer:</strong> ${esc(p.rulesItem)} The product is free; you just cover shipping, which is shown at checkout before you pay.</li>
           <li><strong>Limit:</strong> One (1) free sample per person, household and shipping address. Duplicate or fraudulent claims may be canceled.</li>
-          <li><strong>While supplies last:</strong> This drop is limited to <span data-supply>${p.supply}</span> ${esc(p.unit)}s. Flavors are subject to availability.</li>
+          <li><strong>While supplies last:</strong> This drop is limited to <span data-supply>${p.supply}</span> ${esc(p.unit)}s, ${p.perFlavor} of each flavor. When a flavor runs out it can't be claimed.</li>
           <li><strong>Eligibility:</strong> You must be 21 years of age or older. Samples ship only to U.S. addresses in these states: <span data-ship-states>${esc(SHIP_STATES.join(", "))}</span>.</li>
           <li><strong>Emails:</strong> Claiming a sample signs you up for Looper marketing emails about drops, deals and giveaways. Unsubscribe anytime.</li>
           <li><strong>Privacy:</strong> Information collected is used to fulfill your sample and, as described above, to send Looper marketing emails. See the <a href="https://looperverse.com/privacy-policy-2/" target="_blank" rel="noopener">Privacy Policy</a>.</li>
@@ -378,7 +380,7 @@ ${flavorCards}
 </div>
 
 <!-- ===== sticky claim bar (phones) ===== -->
-<div class="sticky" id="sticky">
+<div class="sticky" id="sticky" data-title="${esc(p.stickyTitle)}">
   <span class="thumb" style="--img:var(--group)" aria-hidden="true"></span>
   <div class="s-txt"><b>${esc(p.stickyTitle)}</b><span id="stickySub">Just cover shipping · 21+</span></div>
   <a class="cta" href="#claim" data-claim-link>Claim <span class="arr" aria-hidden="true">→</span></a>
@@ -406,13 +408,14 @@ ${checkoutLines}
   PASS_UTM: true,           // copy utm_* / fbclid / gclid from the ad onto the checkout link
 
   RETAIL: ${config.RETAIL},           // shown struck through next to "Free"
-  SUPPLY: ${config.SUPPLY},             // samples in this drop, the "of ${config.SUPPLY}" in "132 of ${config.SUPPLY} left"
+  SUPPLY: ${config.SUPPLY},              // samples in this drop (${p.perFlavor} per flavor), the "of ${config.SUPPLY}" in "38 of ${config.SUPPLY} left"
 
   // Live "X left" count from WooCommerce stock, refreshed every REFRESH_SECONDS while the page is open.
-  // Put the free-sample product's ID in PRODUCT_IDS (see README: Live inventory). Several IDs are added together.
+  // Put the free-sample product's ID in PRODUCT_IDS (see README: Live inventory). Each flavor's stock shows on
+  // its tile ("7 left"), a flavor at 0 can't be picked, and the page total is the sum of this page's flavors.
   // Empty = no live count; the page shows "Only ${config.SUPPLY} free ${p.unit}s in this drop" instead.
   STOCK: {
-    PRODUCT_IDS: [],                     // e.g. [24051]
+    PRODUCT_IDS: [],                     // e.g. [24051] (the free-sample product; its flavor variations are read automatically)
     ORIGIN: 'https://looperverse.com',   // store the IDs belong to
     URL: '',                             // optional instead of PRODUCT_IDS: any JSON endpoint returning {"remaining": 132}
     REFRESH_SECONDS: 30

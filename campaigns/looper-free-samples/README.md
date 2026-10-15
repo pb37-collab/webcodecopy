@@ -10,8 +10,8 @@ at checkout. Shipping can be a flat rate or vary by state without touching the p
 
 | Page | Product | Flavors | Samples |
 |---|---|---|---|
-| `free-duos/index.html` | Looper Duos Gummies (10 × 25mg THC + 5mg CBD) | 5 flavor pairs | 150 jars (any flavor) |
-| `free-fusion/index.html` | Looper Fusion 3G disposable (THCA + Delta-8 + THCP) | 6 flavors | 150 vapes (any flavor) |
+| `free-duos/index.html` | Looper Duos Gummies (10 × 25mg THC + 5mg CBD) | 5 flavor pairs | 50 jars (10 per flavor) |
+| `free-fusion/index.html` | Looper Fusion 3G disposable (THCA + Delta-8 + THCP) | 6 flavors | 60 vapes (10 per flavor) |
 
 As with the giveaway, **each page is one self-contained HTML file**: markup, CSS, JS and product images are
 all inside `index.html`. There's no build step for Looper and nothing else to upload.
@@ -23,11 +23,11 @@ onboarding doc.
 ## What's on each page (mobile first)
 
 1. **Hero:** product name with the giveaway's cyan/magenta glitch, the product group render,
-   "$0 / what you get / flavors" stats and the **live count** ("132 of 150 free jars left", with a meter).
-2. **Claim card:** flavor picker (photo tiles), email, ship-to state, one 21+ / email-consent checkbox,
-   a **live count** box ("● Live count · 132 of 150 left"), an order summary (~~$12.99~~ **Free**,
+   "$0 / what you get / flavors" stats and the **live count** ("38 of 50 free jars left", with a meter).
+2. **Claim card:** flavor picker (photo tiles, each with its live "7 left"), email, ship-to state, one 21+ / email-consent checkbox,
+   a **live count** box ("● Live count · 38 of 50 left"), an order summary (~~$12.99~~ **Free**,
    Shipping: *At checkout*) and the claim button.
-3. **Sticky claim bar** on phones, showing the count ("132 of 150 left"). It stays at the bottom of the
+3. **Sticky claim bar** on phones, showing the count ("38 of 50 left"). It stays at the bottom of the
    screen until the claim card is on screen.
 4. As Featured On strip, What You Get, flavor cards (each with a "Claim" button that selects that flavor),
    How It Works, FAQ, Offer Details and the same footer and disclaimers as the giveaway.
@@ -59,8 +59,8 @@ Everything lives in the `CONFIG` block near the bottom of each `index.html` (sea
 | `KLAVIYO_LIST_ID` | ⚠️ **blank** | The free-sample list. While blank, the page is in preview mode and **sends nothing** to Klaviyo. |
 | `KLAVIYO_COMPANY_ID` | ✅ `RwbMFF` | Looper's public Klaviyo key (same as the giveaway) |
 | `KLAVIYO_EVENT` | ✅ `Claimed Free Sample` | Event logged on every claim; use it to trigger flows |
-| `STOCK.PRODUCT_IDS` | ⚠️ **blank** | The free-sample product's WooCommerce ID, which turns on the live "X of 150 left" count. See **Live inventory** below. |
-| `SUPPLY` | ✅ `150` | Total samples on this page, across all flavors: the "of 150" |
+| `STOCK.PRODUCT_IDS` | ⚠️ **blank** | The free-sample product's WooCommerce ID, which turns on the live counts (per flavor and "X of 50 left"). See **Live inventory** below. |
+| `SUPPLY` | ✅ `50` Duos / `60` Fusion | Total samples on this page (10 per flavor): the "of 50" |
 | `RETAIL` | ✅ set | The struck-through retail price |
 | `LEFT` | optional | Manual fallback when there's no live count: e.g. `18` shows "Only 18 free jars left". Update it by hand. |
 | `SOLD_OUT_FLAVORS` | optional | e.g. `['blue-razz-grape']` greys out that flavor and marks it "Gone" |
@@ -88,46 +88,54 @@ A WooCommerce link has this shape: `https://looperverse.com/checkout/?add-to-car
 It needs a **$0 sample variation** (or a coupon applied automatically) plus a shipping rule for the sample.
 Using the retail variations as they are would charge full price.
 
-## 3. Live inventory ("132 of 150 left")
+## 3. Live inventory ("38 of 50 left", "7 left" per flavor)
 
-Each page shows how many free samples are left and updates on its own after every purchase. It reads the
-free-sample product's stock from WooCommerce's public Store API
-(`https://looperverse.com/wp-json/wc/store/v1/products/<id>`, the same API the store's own pages use):
-when the page loads, every 30 seconds while it's open, and whenever the visitor comes back to the tab.
+**Stock: 110 free samples in total, 10 of each flavor.** That's 50 on the Duos page (5 flavors) and 60 on the
+Fusion page (6 flavors).
+
+Each page shows how many are left and updates on its own after every purchase. It reads the free-sample
+product's stock from WooCommerce's public Store API (the same API the store's own pages use) when the page
+loads, every 30 seconds while it's open, and whenever the visitor comes back to the tab. One request
+returns every flavor's stock.
 
 - WooCommerce lowers stock when an order is placed (and can hold a unit while someone is paying), so
   the count drops right after each purchase. Form claims that never check out don't lower it.
-- The count appears in three places: the hero line, a "Live count" box in the claim card, and the
-  sticky bar on phones. When it goes down while someone is watching, the number pulses.
-- At **23 or fewer** (about 15% of 150) the wording switches to "Only 12 left!" in pink.
-- At **0** the page closes itself: the form is replaced by "All 150 free jars are claimed" and every
-  button points to the product page.
+- **Per flavor:** each flavor tile and flavor card shows "7 left", which turns pink at 3 or fewer
+  ("Only 2 left"). The picked flavor's count also shows under the tiles. At 0 the flavor greys out as
+  **Gone** and can't be picked. If someone's picked flavor sells out while they're on the page, it's
+  unselected and they're asked to pick another.
+- **Page total** (sum of the flavors): in the hero line, a "Live count" box in the claim card and the
+  sticky bar on phones, e.g. "38 of 50 left". At 10 or fewer it switches to "Only 8 left!" in pink.
+  Numbers pulse when they drop while someone is watching.
+- At **0 overall** the page closes itself: "All 50 free jars are claimed", and every button points to the
+  product page.
 - If the count can't be read (no product ID yet, or the API is down), the page shows
-  "Only 150 free jars in this drop" instead. It never shows an invented number.
+  "Only 50 free jars in this drop" and no per-flavor counts. It never shows an invented number.
 
-**Setup in WooCommerce:** one free-sample product per page (it's also what the checkout links add to the cart).
+**Setup in WooCommerce:**
 
 1. Create a variable product, e.g. *Free Sample: Duos*, hidden from the catalog, with a **$0 variation for
-   each flavor**.
-2. On the parent product's **Inventory** tab: tick **Manage stock**, set **Stock quantity = 150**, and set
-   **Allow backorders = Do not allow**. Leave **Manage stock** unticked on every variation, so all flavors
-   draw from the same 150 ("no matter which flavor").
-3. If you tick **Sold individually** (one per order), also set **Low stock threshold = 150**. For
-   sold-individually products the Store API only reports the exact count once stock is at or below that
+   each flavor**, using the same *Flavor* attribute and flavor names as the retail product. The checkout
+   links can add these variations to the cart.
+2. On **each variation**: tick **Manage stock**, set **Stock quantity = 10**, and set
+   **Allow backorders = Do not allow**.
+3. If you tick **Sold individually** (one per order), also set each variation's **Low stock threshold = 10**.
+   For sold-individually products the Store API only reports the exact count once stock is at or below that
    threshold. WooCommerce may then email low-stock alerts; you can turn those off under
    *WooCommerce → Settings → Products → Inventory*.
-4. Put the product ID in `CONFIG.STOCK.PRODUCT_IDS`, e.g. `PRODUCT_IDS: [24051]`.
-5. Check it: open `https://looperverse.com/wp-json/wc/store/v1/products/<id>` in a browser.
-   `add_to_cart.maximum` (or `low_stock_remaining`) should match the stock.
+4. Put the **parent product ID** in `CONFIG.STOCK.PRODUCT_IDS`, e.g. `PRODUCT_IDS: [24051]`. The page finds
+   the flavor variations itself, matching them by flavor name.
+5. Check it: open `https://looperverse.com/wp-json/wc/store/v1/products?type=variation&parent=<id>` in a
+   browser. Each variation's `add_to_cart.maximum` (or `low_stock_remaining`) should be 10.
 
-**One pool of 150 across both pages:** put all 11 flavors (5 Duos + 6 Fusion) in a single sample product and
-use its ID on both pages. Setting `SUPPLY: 150` on both pages keeps the "of 150" right.
+**One product for both lines works too:** if Looper puts all 11 flavors in a single sample product, use its ID
+on both pages. Each page counts only its own flavors (Duos 50, Fusion 60).
 
 **Server load:** each open page makes one small request every 30 seconds, and only while its tab is visible.
 If the site slows down under heavy ad traffic, raise `STOCK.REFRESH_SECONDS`.
 
-**Other sources:** `STOCK.URL` accepts any JSON endpoint that returns `{"remaining": 132}` (or a bare
-number), in place of `PRODUCT_IDS`.
+**Other sources:** `STOCK.URL` accepts any JSON endpoint in place of `PRODUCT_IDS`, returning
+`{"remaining": 38}` or per flavor `{"flavors": {"blue-razz-grape": 7, "green-apple-strawberry": 10}}`.
 
 ## 4. What Klaviyo receives
 

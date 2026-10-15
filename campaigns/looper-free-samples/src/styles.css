@@ -143,6 +143,13 @@
   .flav-grid input:disabled+label{cursor:not-allowed;opacity:.45;filter:grayscale(1)}
   .flav-grid input:disabled+label::before{content:"Gone";position:absolute;top:38%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);z-index:1;font-family:var(--f-wide);font-size:12px;letter-spacing:1px;text-transform:uppercase;background:#fff;color:#000;border-radius:30px;padding:4px 10px}
   .flav-grid.err label{border-color:rgba(255,77,125,.75)}
+  .fl-left{font-family:var(--f-cond);font-size:14px;letter-spacing:1.2px;text-transform:uppercase;color:var(--cyan);margin-top:-4px}
+  .fc-left{align-self:flex-start;font-family:var(--f-cond);font-size:16px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan)}
+  .fl-left.low,.fc-left.low,.pick-note i.low{color:#ff7aa8}
+  .fcard.is-gone,.fcard.is-gone.rv.in{opacity:.55;filter:grayscale(1)}
+  .fcard.is-gone .fc-left{color:var(--muted)}
+  .fcard.is-gone:hover{transform:none;box-shadow:none;border-color:var(--line);background:rgba(5,5,8,.88)}
+  .pick-note i{display:block;font-style:normal;font-family:var(--f-cond);font-size:16px;letter-spacing:1.2px;text-transform:uppercase;color:var(--cyan);margin-top:3px}
   .pick-note{min-height:42px;font-size:13.5px;line-height:1.45;color:#c8c8d0;margin:4px 2px 16px;text-align:center}
   .pick-note.err b{color:#ff7aa8}
   .pick-note b{display:block;font-family:var(--f-cond);font-weight:400;font-size:19px;letter-spacing:1px;text-transform:uppercase;color:#fff}

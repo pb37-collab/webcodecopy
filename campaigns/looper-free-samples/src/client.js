@@ -10,6 +10,8 @@ const STORE_KEY = 'looper_sample_' + PRODUCT.id;
 const offerEnd = CONFIG.END ? new Date(CONFIG.END).getTime() : 0;
 let soldOut = false;   // set when the live count reaches 0
 let stockLeft = null;  // last "X left" shown
+const flavorLeft = {}; // live count per flavor slug, when the store reports it
+let onFlavorStock = () => {};  // set by the claim form to react to flavors running out
 const isClosed = () => soldOut || CONFIG.SOLD_OUT === true || (offerEnd > 0 && Date.now() >= offerEnd);
 
 // UTM tags from the ad, kept for this tab so they survive a reload.
@@ -62,11 +64,8 @@ function checkoutUrl(slug, email, state){
     else if (m.textContent.startsWith("Sorry, we can't ship")) { m.textContent = ''; m.className = 'msg'; }
   });
 
-  // Sold-out flavors
-  (CONFIG.SOLD_OUT_FLAVORS || []).forEach(slug => {
-    const r = $('f-' + slug); if (r) { r.disabled = true; r.checked = false; }
-    document.querySelectorAll('[data-pick="' + slug + '"]').forEach(b => { b.textContent = 'All Gone'; b.setAttribute('aria-disabled', 'true'); });
-  });
+  // Sold-out flavors set by hand
+  (CONFIG.SOLD_OUT_FLAVORS || []).forEach(slug => setFlavorGone(slug, true));
 
   // "As featured on" logos, straight from the looperverse.com homepage strip
   const logos = [['laweekly3xWHITE-1.png',1],['cbdorigin3xWHITE-1.png',1],['candid3xWHITE-1.png',1.3],['TheBluntness-1.png',1.6],['logo-leaflywhite.png',1],['weed-republic-logo-large-1.png',1],['neonjoint3xWHITE-1.png',1.15]];
@@ -135,7 +134,35 @@ function closeOffer(){
 }
 if (isClosed()) closeOffer();
 
-/* ---------- "X of 150 left": hero line, claim card and sticky bar ---------- */
+/* ---------- per-flavor stock: "7 left" on tiles and cards; a flavor at 0 can't be picked ---------- */
+function setFlavorGone(slug, gone){
+  const r = $('f-' + slug);
+  if (r) { r.disabled = gone; if (gone) r.checked = false; }
+  document.querySelectorAll('[data-pick="' + slug + '"]').forEach(b => {
+    const card = b.closest('.fcard');
+    if (card) card.classList.toggle('is-gone', gone);
+    if (!b.dataset.label) b.dataset.label = b.innerHTML;
+    if (gone) { b.textContent = 'All Gone'; b.setAttribute('aria-disabled', 'true'); }
+    else if (b.getAttribute('aria-disabled') === 'true') { b.innerHTML = b.dataset.label; b.removeAttribute('aria-disabled'); }
+  });
+}
+function renderFlavorStock(counts){
+  Object.entries(counts).forEach(([slug, n]) => {
+    const prev = flavorLeft[slug];
+    flavorLeft[slug] = n;
+    const low = n > 0 && n <= 3;
+    document.querySelectorAll('[data-left-for="' + slug + '"]').forEach(e => {
+      e.hidden = false;
+      e.textContent = !n ? 'All gone' : low ? 'Only ' + n + ' left' : n + ' left';
+      e.classList.toggle('low', low);
+      if (prev !== undefined && n < prev) { e.classList.remove('tick'); void e.offsetWidth; e.classList.add('tick'); }
+    });
+    setFlavorGone(slug, !n || (CONFIG.SOLD_OUT_FLAVORS || []).includes(slug));
+  });
+  onFlavorStock();
+}
+
+/* ---------- "X of 50 left": hero line, claim card and sticky bar ---------- */
 function renderStock(left){
   const total = Math.max(Number(CONFIG.SUPPLY) || 0, left);
   const prev = stockLeft;
@@ -167,8 +194,16 @@ function renderStock(left){
   const ids = [].concat(S.PRODUCT_IDS || []).filter(Boolean);
   if (!S.URL && !ids.length) return;
   const origin = (S.ORIGIN || '').replace(/\/$/, '');
-  const urls = S.URL ? [S.URL] : ids.map(id => origin + '/wp-json/wc/store/v1/products/' + encodeURIComponent(id));
+  const api = origin + '/wp-json/wc/store/v1/products';
   const whole = n => Math.max(0, Math.floor(n));
+  // Match a variation ("Flavor: Blue Razz + Grape") to one of this page's flavors.
+  const norm = s => String(s || '').toLowerCase().replace(/&amp;|&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const flavorOf = text => { const t = norm(text); const f = PRODUCT.flavors.find(x => t.includes(x.slug)); return f ? f.slug : null; };
+  const getJSON = async u => {
+    const r = await fetch(u, {cache:'no-store', credentials:'omit', headers:{Accept:'application/json'}});
+    if (!r.ok) throw new Error(u + ' → HTTP ' + r.status);
+    return r.json();
+  };
   // Accepts a WooCommerce Store API product, {"remaining": n} or a bare number.
   const read = d => {
     if (typeof d === 'number') return whole(d);
@@ -180,18 +215,34 @@ function renderStock(left){
     if (!d.sold_individually && Number.isFinite(max) && max > 0 && max < 9999) return whole(max);
     return null;
   };
+  // Rows of {slug, left}: one per flavor variation, or one for a product without variations.
+  async function rowsFor(id){
+    // A variable product: one request returns every variation (flavor) with its own stock.
+    const vars = await getJSON(api + '?type=variation&per_page=100&parent=' + encodeURIComponent(id));
+    if (Array.isArray(vars) && vars.length) return vars.map(v => ({slug: flavorOf(v.variation || v.name), left: read(v)}));
+    const p = await getJSON(api + '/' + encodeURIComponent(id));
+    return [{slug: p.type === 'variation' ? flavorOf(p.variation) : null, left: read(p)}];
+  }
   let busy = false;
   async function load(){
     if (busy || soldOut) return;
     busy = true;
     try {
-      const counts = await Promise.all(urls.map(async u => {
-        const r = await fetch(u, {cache:'no-store', credentials:'omit', headers:{Accept:'application/json'}});
-        if (!r.ok) throw new Error(u + ' → HTTP ' + r.status);
-        return read(await r.json());
-      }));
-      if (counts.some(c => c === null)) console.warn('[free-sample] The stock source has no usable count (see README: Live inventory).');
-      else renderStock(counts.reduce((a, b) => a + b, 0));
+      let rows;
+      if (S.URL) {
+        // Custom endpoint: {"remaining": 38} and optionally {"flavors": {"blue-razz-grape": 7, ...}}
+        const d = await getJSON(S.URL);
+        rows = d && d.flavors && typeof d.flavors === 'object'
+          ? Object.entries(d.flavors).map(([k, n]) => ({slug: flavorOf(k), left: read(n)}))
+          : [{slug: null, left: read(d)}];
+      } else rows = (await Promise.all(ids.map(rowsFor))).flat();
+      if (!rows.length || rows.some(r => r.left === null)) { console.warn('[free-sample] The stock source has no usable count (see README: Live inventory).'); return; }
+      // Count only this page's flavors when the product holds both lines (Duos + Fusion).
+      const mine = rows.filter(r => r.slug);
+      const perFlavor = {};
+      mine.forEach(r => { perFlavor[r.slug] = (perFlavor[r.slug] || 0) + r.left; });
+      renderFlavorStock(perFlavor);
+      renderStock((mine.length ? mine : rows).reduce((a, r) => a + r.left, 0));
     } catch (ex) {
       console.warn('[free-sample] Live stock unavailable, showing the static count.', ex);
     } finally { busy = false; }
@@ -217,7 +268,9 @@ function renderStock(left){
     grid.classList.remove('err');
     $('pickNote').classList.remove('err');
     if (!f) return;
-    $('pickNote').innerHTML = '<b>' + f.name + (f.strain ? ' · ' + f.strain : '') + '</b>' + f.note;
+    const n = flavorLeft[slug];
+    $('pickNote').innerHTML = '<b>' + f.name + (f.strain ? ' · ' + f.strain : '') + '</b>' + f.note +
+      (n > 0 ? '<i' + (n <= 3 ? ' class="low"' : '') + '>' + (n <= 3 ? 'Only ' + n : n) + ' left in this flavor</i>' : '');
     $('sumFlavor').textContent = '· ' + f.name;
     const st = $('sticky');
     st.querySelector('.thumb').style.setProperty('--img', 'var(--f-' + slug + ')');
@@ -227,10 +280,27 @@ function renderStock(left){
   function pick(slug){
     const r = $('f-' + slug);
     if (!r || r.disabled) return false;
-    r.checked = true; showPick(slug);
+    r.checked = true; lastPick = slug; showPick(slug);
     return true;
   }
   radios.forEach(r => r.addEventListener('change', () => showPick(r.value)));
+
+  // Live stock changed: refresh the picked flavor's count, or ask for another pick if it ran out.
+  let lastPick = '';
+  radios.forEach(r => r.addEventListener('change', () => { lastPick = r.value; }));
+  onFlavorStock = () => {
+    const slug = selected();
+    if (slug) { lastPick = slug; showPick(slug); return; }
+    const f = flavorBy(lastPick);
+    if (f && flavorLeft[lastPick] === 0 && !claimed) {
+      $('pickNote').classList.add('err');
+      $('pickNote').innerHTML = '<b>' + f.name + ' is all gone</b>Pick another flavor to claim yours.';
+      $('sumFlavor').textContent = '';
+      $('sticky').querySelector('.thumb').style.setProperty('--img', 'var(--group)');
+      $('sticky').querySelector('.s-txt b').textContent = $('sticky').dataset.title;
+      lastPick = '';
+    }
+  };
 
   // Deep link from an ad: ?flavor=watermelon-punch
   const fromUrl = (new URLSearchParams(location.search).get('flavor') || '').toLowerCase().replace(/[^a-z0-9-]/g, '');

@@ -168,6 +168,13 @@
   .flav-grid input:disabled+label{cursor:not-allowed;opacity:.45;filter:grayscale(1)}
   .flav-grid input:disabled+label::before{content:"Gone";position:absolute;top:38%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);z-index:1;font-family:var(--f-wide);font-size:12px;letter-spacing:1px;text-transform:uppercase;background:#fff;color:#000;border-radius:30px;padding:4px 10px}
   .flav-grid.err label{border-color:rgba(255,77,125,.75)}
+  .fl-left{font-family:var(--f-cond);font-size:14px;letter-spacing:1.2px;text-transform:uppercase;color:var(--cyan);margin-top:-4px}
+  .fc-left{align-self:flex-start;font-family:var(--f-cond);font-size:16px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan)}
+  .fl-left.low,.fc-left.low,.pick-note i.low{color:#ff7aa8}
+  .fcard.is-gone,.fcard.is-gone.rv.in{opacity:.55;filter:grayscale(1)}
+  .fcard.is-gone .fc-left{color:var(--muted)}
+  .fcard.is-gone:hover{transform:none;box-shadow:none;border-color:var(--line);background:rgba(5,5,8,.88)}
+  .pick-note i{display:block;font-style:normal;font-family:var(--f-cond);font-size:16px;letter-spacing:1.2px;text-transform:uppercase;color:var(--cyan);margin-top:3px}
   .pick-note{min-height:42px;font-size:13.5px;line-height:1.45;color:#c8c8d0;margin:4px 2px 16px;text-align:center}
   .pick-note.err b{color:#ff7aa8}
   .pick-note b{display:block;font-family:var(--f-cond);font-weight:400;font-size:19px;letter-spacing:1px;text-transform:uppercase;color:#fff}
@@ -398,8 +405,8 @@
   <div class="ann" role="region" aria-label="Announcement">
     <span class="ann-tag">Free Sample</span>
     <div class="ann-track"><div class="ann-run" aria-hidden="true">
-      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>150</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
-      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>150</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
+      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>60</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
+      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>60</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
     </div></div>
   </div>
 
@@ -429,7 +436,7 @@
           <div class="stat"><b>6</b><span>Flavors</span></div>
         </div>
         <div class="supply">
-          <span class="supply-line" id="supplyLine">Only <b data-supply>150</b>&nbsp;free vapes in this drop · 1 per person</span>
+          <span class="supply-line" id="supplyLine">Only <b data-supply>60</b>&nbsp;free vapes in this drop · 1 per person</span>
           <span class="meter" id="supplyMeter" hidden><i></i></span>
         </div>
         <div class="cd-wrap" id="cdWrap" hidden>
@@ -457,17 +464,17 @@
           <div class="lbl" id="flavLbl">Choose your flavor</div>
           <div class="flav-grid" id="flavGrid" role="radiogroup" aria-labelledby="flavLbl">
             <input type="radio" name="flavor" id="f-hard-strawberry" value="hard-strawberry">
-            <label for="f-hard-strawberry" style="--img:var(--f-hard-strawberry);--glow:#ff3b6b99"><span class="ph" aria-hidden="true"></span><b>Hard Strawberry</b><em>Hybrid</em></label>
+            <label for="f-hard-strawberry" style="--img:var(--f-hard-strawberry);--glow:#ff3b6b99"><span class="ph" aria-hidden="true"></span><b>Hard Strawberry</b><em>Hybrid</em><span class="fl-left" data-left-for="hard-strawberry" hidden></span></label>
             <input type="radio" name="flavor" id="f-watermelon-burst" value="watermelon-burst">
-            <label for="f-watermelon-burst" style="--img:var(--f-watermelon-burst);--glow:#3ddc6a99"><span class="ph" aria-hidden="true"></span><b>Watermelon Burst</b><em>Sativa</em></label>
+            <label for="f-watermelon-burst" style="--img:var(--f-watermelon-burst);--glow:#3ddc6a99"><span class="ph" aria-hidden="true"></span><b>Watermelon Burst</b><em>Sativa</em><span class="fl-left" data-left-for="watermelon-burst" hidden></span></label>
             <input type="radio" name="flavor" id="f-berry-blast" value="berry-blast">
-            <label for="f-berry-blast" style="--img:var(--f-berry-blast);--glow:#5b8cff99"><span class="ph" aria-hidden="true"></span><b>Berry Blast</b><em>Sativa</em></label>
+            <label for="f-berry-blast" style="--img:var(--f-berry-blast);--glow:#5b8cff99"><span class="ph" aria-hidden="true"></span><b>Berry Blast</b><em>Sativa</em><span class="fl-left" data-left-for="berry-blast" hidden></span></label>
             <input type="radio" name="flavor" id="f-apple-jelly" value="apple-jelly">
-            <label for="f-apple-jelly" style="--img:var(--f-apple-jelly);--glow:#ff7a2f99"><span class="ph" aria-hidden="true"></span><b>Apple Jelly</b><em>Hybrid</em></label>
+            <label for="f-apple-jelly" style="--img:var(--f-apple-jelly);--glow:#ff7a2f99"><span class="ph" aria-hidden="true"></span><b>Apple Jelly</b><em>Hybrid</em><span class="fl-left" data-left-for="apple-jelly" hidden></span></label>
             <input type="radio" name="flavor" id="f-twisted-lime" value="twisted-lime">
-            <label for="f-twisted-lime" style="--img:var(--f-twisted-lime);--glow:#2fd5c899"><span class="ph" aria-hidden="true"></span><b>Twisted Lime</b><em>Indica</em></label>
+            <label for="f-twisted-lime" style="--img:var(--f-twisted-lime);--glow:#2fd5c899"><span class="ph" aria-hidden="true"></span><b>Twisted Lime</b><em>Indica</em><span class="fl-left" data-left-for="twisted-lime" hidden></span></label>
             <input type="radio" name="flavor" id="f-tropical-gummy" value="tropical-gummy">
-            <label for="f-tropical-gummy" style="--img:var(--f-tropical-gummy);--glow:#ffb02e99"><span class="ph" aria-hidden="true"></span><b>Tropical Gummy</b><em>Hybrid</em></label>
+            <label for="f-tropical-gummy" style="--img:var(--f-tropical-gummy);--glow:#ffb02e99"><span class="ph" aria-hidden="true"></span><b>Tropical Gummy</b><em>Hybrid</em><span class="fl-left" data-left-for="tropical-gummy" hidden></span></label>
           </div>
           <p class="pick-note" id="pickNote" aria-live="polite">Six fruit-forward flavors. Tap one to lock it in.</p>
 
@@ -490,7 +497,7 @@
           </label>
 
           <div class="stock" id="cardStock" aria-live="polite" hidden>
-            <div class="stock-top"><span class="stock-live">Live count</span><span class="stock-num"><b id="stockCount">150</b> <span id="stockOf">of 150 left</span></span></div>
+            <div class="stock-top"><span class="stock-live">Live count</span><span class="stock-num"><b id="stockCount">60</b> <span id="stockOf">of 60 left</span></span></div>
             <span class="meter"><i></i></span>
           </div>
           <div class="summary" aria-label="What you pay">
@@ -518,7 +525,7 @@
         <!-- ===== closed: sold out or past CONFIG.END ===== -->
         <div class="closed" id="closedBox" hidden>
           <div class="welcome">Drop closed</div>
-          <h3>All <span data-supply>150</span> free vapes are claimed//</h3>
+          <h3>All <span data-supply>60</span> free vapes are claimed//</h3>
           <p>Thanks for the love. Fusion is still in the shop, and Looper drops new deals by email all the time.</p>
           <a class="cta" href="https://looperverse.com/product/fusion-3g/">Shop Fusion <span class="arr" aria-hidden="true">→</span></a>
         </div>
@@ -566,6 +573,7 @@
           <div class="txt">
             <h3>Hard Strawberry</h3>
             <span class="strain">Hybrid</span>
+            <span class="fc-left" data-left-for="hard-strawberry" hidden></span>
             <p>Ripe, jammy strawberry with a bold, juicy finish.</p>
             <a class="pill" href="#claim" data-pick="hard-strawberry">Claim<span class="xs-hide">&nbsp;This Flavor</span> <span aria-hidden="true">→</span></a>
           </div>
@@ -575,6 +583,7 @@
           <div class="txt">
             <h3>Watermelon Burst</h3>
             <span class="strain">Sativa</span>
+            <span class="fc-left" data-left-for="watermelon-burst" hidden></span>
             <p>Crisp summer watermelon, sweet and refreshing.</p>
             <a class="pill" href="#claim" data-pick="watermelon-burst">Claim<span class="xs-hide">&nbsp;This Flavor</span> <span aria-hidden="true">→</span></a>
           </div>
@@ -584,6 +593,7 @@
           <div class="txt">
             <h3>Berry Blast</h3>
             <span class="strain">Sativa</span>
+            <span class="fc-left" data-left-for="berry-blast" hidden></span>
             <p>A deep mix of dark berries with a tart edge.</p>
             <a class="pill" href="#claim" data-pick="berry-blast">Claim<span class="xs-hide">&nbsp;This Flavor</span> <span aria-hidden="true">→</span></a>
           </div>
@@ -593,6 +603,7 @@
           <div class="txt">
             <h3>Apple Jelly</h3>
             <span class="strain">Hybrid</span>
+            <span class="fc-left" data-left-for="apple-jelly" hidden></span>
             <p>Sweet green apple with a smooth, candied finish.</p>
             <a class="pill" href="#claim" data-pick="apple-jelly">Claim<span class="xs-hide">&nbsp;This Flavor</span> <span aria-hidden="true">→</span></a>
           </div>
@@ -602,6 +613,7 @@
           <div class="txt">
             <h3>Twisted Lime</h3>
             <span class="strain">Indica</span>
+            <span class="fc-left" data-left-for="twisted-lime" hidden></span>
             <p>Zesty lime with a sharp citrus twist.</p>
             <a class="pill" href="#claim" data-pick="twisted-lime">Claim<span class="xs-hide">&nbsp;This Flavor</span> <span aria-hidden="true">→</span></a>
           </div>
@@ -611,6 +623,7 @@
           <div class="txt">
             <h3>Tropical Gummy</h3>
             <span class="strain">Hybrid</span>
+            <span class="fc-left" data-left-for="tropical-gummy" hidden></span>
             <p>Mango, pineapple and passion fruit in a sweet tropical mix.</p>
             <a class="pill" href="#claim" data-pick="tropical-gummy">Claim<span class="xs-hide">&nbsp;This Flavor</span> <span aria-hidden="true">→</span></a>
           </div>
@@ -641,7 +654,7 @@
       <div class="faq">
         <details class="rv"><summary>Is it really free?</summary><p>Yes. The Fusion 3G is $0. The only thing you pay is shipping, and you'll see the exact shipping cost at checkout before you pay anything.</p></details>
         <details class="rv"><summary>What's in a Fusion?</summary><p>3 grams of a THCA, Delta-8 and THCP blend in a pre-filled, pre-charged, draw-activated disposable. Each flavor is marked Sativa, Indica or Hybrid on the box. New to it? Start with one small pull and give it time.</p></details>
-        <details class="rv"><summary>How many can I claim?</summary><p>One free sample per person and household, and there are only <span data-supply>150</span> vapes in this drop. Want another flavor after you try it? They're in the shop.</p></details>
+        <details class="rv"><summary>How many can I claim?</summary><p>One free sample per person and household, and there are only <span data-supply>60</span> vapes in this drop (10 of each flavor). Want another flavor after you try it? They're in the shop.</p></details>
         <details class="rv"><summary>Where do you ship?</summary><p>We can ship to <span data-state-count>20</span> states: <span data-ship-states>California, Florida, Georgia, Illinois, Indiana, Kentucky, Maine, Maryland, Massachusetts, Missouri, Nebraska, New Jersey, New Mexico, North Carolina, Ohio, Pennsylvania, Tennessee, Texas, Wisconsin, Wyoming</span>. If yours isn't listed, we can't send a sample there yet.</p></details>
         <details class="rv"><summary>Is it lab tested?</summary><p>Yes. Fusion is third-party tested with a Certificate of Analysis for every batch, and you can see Looper's lab reports any time.</p></details>
       </div>
@@ -654,7 +667,7 @@
         <ol>
           <li><strong>The offer:</strong> One (1) free Looper Fusion 3G disposable vape in the flavor you choose. The product is free; you just cover shipping, which is shown at checkout before you pay.</li>
           <li><strong>Limit:</strong> One (1) free sample per person, household and shipping address. Duplicate or fraudulent claims may be canceled.</li>
-          <li><strong>While supplies last:</strong> This drop is limited to <span data-supply>150</span> vapes. Flavors are subject to availability.</li>
+          <li><strong>While supplies last:</strong> This drop is limited to <span data-supply>60</span> vapes, 10 of each flavor. When a flavor runs out it can't be claimed.</li>
           <li><strong>Eligibility:</strong> You must be 21 years of age or older. Samples ship only to U.S. addresses in these states: <span data-ship-states>California, Florida, Georgia, Illinois, Indiana, Kentucky, Maine, Maryland, Massachusetts, Missouri, Nebraska, New Jersey, New Mexico, North Carolina, Ohio, Pennsylvania, Tennessee, Texas, Wisconsin, Wyoming</span>.</li>
           <li><strong>Emails:</strong> Claiming a sample signs you up for Looper marketing emails about drops, deals and giveaways. Unsubscribe anytime.</li>
           <li><strong>Privacy:</strong> Information collected is used to fulfill your sample and, as described above, to send Looper marketing emails. See the <a href="https://looperverse.com/privacy-policy-2/" target="_blank" rel="noopener">Privacy Policy</a>.</li>
@@ -685,7 +698,7 @@
 </div>
 
 <!-- ===== sticky claim bar (phones) ===== -->
-<div class="sticky" id="sticky">
+<div class="sticky" id="sticky" data-title="Free Fusion 3G">
   <span class="thumb" style="--img:var(--group)" aria-hidden="true"></span>
   <div class="s-txt"><b>Free Fusion 3G</b><span id="stickySub">Just cover shipping · 21+</span></div>
   <a class="cta" href="#claim" data-claim-link>Claim <span class="arr" aria-hidden="true">→</span></a>
@@ -718,13 +731,14 @@ const CONFIG = {
   PASS_UTM: true,           // copy utm_* / fbclid / gclid from the ad onto the checkout link
 
   RETAIL: 25.99,           // shown struck through next to "Free"
-  SUPPLY: 150,             // samples in this drop, the "of 150" in "132 of 150 left"
+  SUPPLY: 60,              // samples in this drop (10 per flavor), the "of 60" in "38 of 60 left"
 
   // Live "X left" count from WooCommerce stock, refreshed every REFRESH_SECONDS while the page is open.
-  // Put the free-sample product's ID in PRODUCT_IDS (see README: Live inventory). Several IDs are added together.
-  // Empty = no live count; the page shows "Only 150 free vapes in this drop" instead.
+  // Put the free-sample product's ID in PRODUCT_IDS (see README: Live inventory). Each flavor's stock shows on
+  // its tile ("7 left"), a flavor at 0 can't be picked, and the page total is the sum of this page's flavors.
+  // Empty = no live count; the page shows "Only 60 free vapes in this drop" instead.
   STOCK: {
-    PRODUCT_IDS: [],                     // e.g. [24051]
+    PRODUCT_IDS: [],                     // e.g. [24051] (the free-sample product; its flavor variations are read automatically)
     ORIGIN: 'https://looperverse.com',   // store the IDs belong to
     URL: '',                             // optional instead of PRODUCT_IDS: any JSON endpoint returning {"remaining": 132}
     REFRESH_SECONDS: 30
@@ -755,6 +769,8 @@ const STORE_KEY = 'looper_sample_' + PRODUCT.id;
 const offerEnd = CONFIG.END ? new Date(CONFIG.END).getTime() : 0;
 let soldOut = false;   // set when the live count reaches 0
 let stockLeft = null;  // last "X left" shown
+const flavorLeft = {}; // live count per flavor slug, when the store reports it
+let onFlavorStock = () => {};  // set by the claim form to react to flavors running out
 const isClosed = () => soldOut || CONFIG.SOLD_OUT === true || (offerEnd > 0 && Date.now() >= offerEnd);
 
 // UTM tags from the ad, kept for this tab so they survive a reload.
@@ -807,11 +823,8 @@ function checkoutUrl(slug, email, state){
     else if (m.textContent.startsWith("Sorry, we can't ship")) { m.textContent = ''; m.className = 'msg'; }
   });
 
-  // Sold-out flavors
-  (CONFIG.SOLD_OUT_FLAVORS || []).forEach(slug => {
-    const r = $('f-' + slug); if (r) { r.disabled = true; r.checked = false; }
-    document.querySelectorAll('[data-pick="' + slug + '"]').forEach(b => { b.textContent = 'All Gone'; b.setAttribute('aria-disabled', 'true'); });
-  });
+  // Sold-out flavors set by hand
+  (CONFIG.SOLD_OUT_FLAVORS || []).forEach(slug => setFlavorGone(slug, true));
 
   // "As featured on" logos, straight from the looperverse.com homepage strip
   const logos = [['laweekly3xWHITE-1.png',1],['cbdorigin3xWHITE-1.png',1],['candid3xWHITE-1.png',1.3],['TheBluntness-1.png',1.6],['logo-leaflywhite.png',1],['weed-republic-logo-large-1.png',1],['neonjoint3xWHITE-1.png',1.15]];
@@ -880,7 +893,35 @@ function closeOffer(){
 }
 if (isClosed()) closeOffer();
 
-/* ---------- "X of 150 left": hero line, claim card and sticky bar ---------- */
+/* ---------- per-flavor stock: "7 left" on tiles and cards; a flavor at 0 can't be picked ---------- */
+function setFlavorGone(slug, gone){
+  const r = $('f-' + slug);
+  if (r) { r.disabled = gone; if (gone) r.checked = false; }
+  document.querySelectorAll('[data-pick="' + slug + '"]').forEach(b => {
+    const card = b.closest('.fcard');
+    if (card) card.classList.toggle('is-gone', gone);
+    if (!b.dataset.label) b.dataset.label = b.innerHTML;
+    if (gone) { b.textContent = 'All Gone'; b.setAttribute('aria-disabled', 'true'); }
+    else if (b.getAttribute('aria-disabled') === 'true') { b.innerHTML = b.dataset.label; b.removeAttribute('aria-disabled'); }
+  });
+}
+function renderFlavorStock(counts){
+  Object.entries(counts).forEach(([slug, n]) => {
+    const prev = flavorLeft[slug];
+    flavorLeft[slug] = n;
+    const low = n > 0 && n <= 3;
+    document.querySelectorAll('[data-left-for="' + slug + '"]').forEach(e => {
+      e.hidden = false;
+      e.textContent = !n ? 'All gone' : low ? 'Only ' + n + ' left' : n + ' left';
+      e.classList.toggle('low', low);
+      if (prev !== undefined && n < prev) { e.classList.remove('tick'); void e.offsetWidth; e.classList.add('tick'); }
+    });
+    setFlavorGone(slug, !n || (CONFIG.SOLD_OUT_FLAVORS || []).includes(slug));
+  });
+  onFlavorStock();
+}
+
+/* ---------- "X of 50 left": hero line, claim card and sticky bar ---------- */
 function renderStock(left){
   const total = Math.max(Number(CONFIG.SUPPLY) || 0, left);
   const prev = stockLeft;
@@ -912,8 +953,16 @@ function renderStock(left){
   const ids = [].concat(S.PRODUCT_IDS || []).filter(Boolean);
   if (!S.URL && !ids.length) return;
   const origin = (S.ORIGIN || '').replace(/\/$/, '');
-  const urls = S.URL ? [S.URL] : ids.map(id => origin + '/wp-json/wc/store/v1/products/' + encodeURIComponent(id));
+  const api = origin + '/wp-json/wc/store/v1/products';
   const whole = n => Math.max(0, Math.floor(n));
+  // Match a variation ("Flavor: Blue Razz + Grape") to one of this page's flavors.
+  const norm = s => String(s || '').toLowerCase().replace(/&amp;|&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const flavorOf = text => { const t = norm(text); const f = PRODUCT.flavors.find(x => t.includes(x.slug)); return f ? f.slug : null; };
+  const getJSON = async u => {
+    const r = await fetch(u, {cache:'no-store', credentials:'omit', headers:{Accept:'application/json'}});
+    if (!r.ok) throw new Error(u + ' → HTTP ' + r.status);
+    return r.json();
+  };
   // Accepts a WooCommerce Store API product, {"remaining": n} or a bare number.
   const read = d => {
     if (typeof d === 'number') return whole(d);
@@ -925,18 +974,34 @@ function renderStock(left){
     if (!d.sold_individually && Number.isFinite(max) && max > 0 && max < 9999) return whole(max);
     return null;
   };
+  // Rows of {slug, left}: one per flavor variation, or one for a product without variations.
+  async function rowsFor(id){
+    // A variable product: one request returns every variation (flavor) with its own stock.
+    const vars = await getJSON(api + '?type=variation&per_page=100&parent=' + encodeURIComponent(id));
+    if (Array.isArray(vars) && vars.length) return vars.map(v => ({slug: flavorOf(v.variation || v.name), left: read(v)}));
+    const p = await getJSON(api + '/' + encodeURIComponent(id));
+    return [{slug: p.type === 'variation' ? flavorOf(p.variation) : null, left: read(p)}];
+  }
   let busy = false;
   async function load(){
     if (busy || soldOut) return;
     busy = true;
     try {
-      const counts = await Promise.all(urls.map(async u => {
-        const r = await fetch(u, {cache:'no-store', credentials:'omit', headers:{Accept:'application/json'}});
-        if (!r.ok) throw new Error(u + ' → HTTP ' + r.status);
-        return read(await r.json());
-      }));
-      if (counts.some(c => c === null)) console.warn('[free-sample] The stock source has no usable count (see README: Live inventory).');
-      else renderStock(counts.reduce((a, b) => a + b, 0));
+      let rows;
+      if (S.URL) {
+        // Custom endpoint: {"remaining": 38} and optionally {"flavors": {"blue-razz-grape": 7, ...}}
+        const d = await getJSON(S.URL);
+        rows = d && d.flavors && typeof d.flavors === 'object'
+          ? Object.entries(d.flavors).map(([k, n]) => ({slug: flavorOf(k), left: read(n)}))
+          : [{slug: null, left: read(d)}];
+      } else rows = (await Promise.all(ids.map(rowsFor))).flat();
+      if (!rows.length || rows.some(r => r.left === null)) { console.warn('[free-sample] The stock source has no usable count (see README: Live inventory).'); return; }
+      // Count only this page's flavors when the product holds both lines (Duos + Fusion).
+      const mine = rows.filter(r => r.slug);
+      const perFlavor = {};
+      mine.forEach(r => { perFlavor[r.slug] = (perFlavor[r.slug] || 0) + r.left; });
+      renderFlavorStock(perFlavor);
+      renderStock((mine.length ? mine : rows).reduce((a, r) => a + r.left, 0));
     } catch (ex) {
       console.warn('[free-sample] Live stock unavailable, showing the static count.', ex);
     } finally { busy = false; }
@@ -962,7 +1027,9 @@ function renderStock(left){
     grid.classList.remove('err');
     $('pickNote').classList.remove('err');
     if (!f) return;
-    $('pickNote').innerHTML = '<b>' + f.name + (f.strain ? ' · ' + f.strain : '') + '</b>' + f.note;
+    const n = flavorLeft[slug];
+    $('pickNote').innerHTML = '<b>' + f.name + (f.strain ? ' · ' + f.strain : '') + '</b>' + f.note +
+      (n > 0 ? '<i' + (n <= 3 ? ' class="low"' : '') + '>' + (n <= 3 ? 'Only ' + n : n) + ' left in this flavor</i>' : '');
     $('sumFlavor').textContent = '· ' + f.name;
     const st = $('sticky');
     st.querySelector('.thumb').style.setProperty('--img', 'var(--f-' + slug + ')');
@@ -972,10 +1039,27 @@ function renderStock(left){
   function pick(slug){
     const r = $('f-' + slug);
     if (!r || r.disabled) return false;
-    r.checked = true; showPick(slug);
+    r.checked = true; lastPick = slug; showPick(slug);
     return true;
   }
   radios.forEach(r => r.addEventListener('change', () => showPick(r.value)));
+
+  // Live stock changed: refresh the picked flavor's count, or ask for another pick if it ran out.
+  let lastPick = '';
+  radios.forEach(r => r.addEventListener('change', () => { lastPick = r.value; }));
+  onFlavorStock = () => {
+    const slug = selected();
+    if (slug) { lastPick = slug; showPick(slug); return; }
+    const f = flavorBy(lastPick);
+    if (f && flavorLeft[lastPick] === 0 && !claimed) {
+      $('pickNote').classList.add('err');
+      $('pickNote').innerHTML = '<b>' + f.name + ' is all gone</b>Pick another flavor to claim yours.';
+      $('sumFlavor').textContent = '';
+      $('sticky').querySelector('.thumb').style.setProperty('--img', 'var(--group)');
+      $('sticky').querySelector('.s-txt b').textContent = $('sticky').dataset.title;
+      lastPick = '';
+    }
+  };
 
   // Deep link from an ad: ?flavor=watermelon-punch
   const fromUrl = (new URLSearchParams(location.search).get('flavor') || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
