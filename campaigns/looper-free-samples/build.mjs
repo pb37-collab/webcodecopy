@@ -241,6 +241,10 @@ ${tiles}
             <span><strong>I'm 21 or older</strong> and I'm in for Looper emails about drops and deals (unsubscribe anytime). I agree to the <a href="https://looperverse.com/terms-of-service/" target="_blank" rel="noopener">Terms</a>, <a href="https://looperverse.com/privacy-policy-2/" target="_blank" rel="noopener">Privacy Policy</a> and <a href="#details">Offer Details</a>.</span>
           </label>
 
+          <div class="stock" id="cardStock" aria-live="polite" hidden>
+            <div class="stock-top"><span class="stock-live">Live count</span><span class="stock-num"><b id="stockCount">${p.supply}</b> <span id="stockOf">of ${p.supply} left</span></span></div>
+            <span class="meter"><i></i></span>
+          </div>
           <div class="summary" aria-label="What you pay">
             <div><span>${esc(p.shortName)} ${esc(p.unit)} <i id="sumFlavor"></i></span><span><s data-retail>${money(p.retail)}</s><b class="free">Free</b></span></div>
             <div><span>Shipping</span><span class="ship">At checkout</span></div>
@@ -376,7 +380,7 @@ ${flavorCards}
 <!-- ===== sticky claim bar (phones) ===== -->
 <div class="sticky" id="sticky">
   <span class="thumb" style="--img:var(--group)" aria-hidden="true"></span>
-  <div class="s-txt"><b>${esc(p.stickyTitle)}</b><span>Just cover shipping · 21+</span></div>
+  <div class="s-txt"><b>${esc(p.stickyTitle)}</b><span id="stickySub">Just cover shipping · 21+</span></div>
   <a class="cta" href="#claim" data-claim-link>Claim <span class="arr" aria-hidden="true">→</span></a>
 </div>
 
@@ -402,8 +406,18 @@ ${checkoutLines}
   PASS_UTM: true,           // copy utm_* / fbclid / gclid from the ad onto the checkout link
 
   RETAIL: ${config.RETAIL},           // shown struck through next to "Free"
-  SUPPLY: ${config.SUPPLY},              // samples in this drop
-  LEFT: null,              // optional: set a number (e.g. 18) to show "18 of ${config.SUPPLY} left" with a meter
+  SUPPLY: ${config.SUPPLY},             // samples in this drop, the "of ${config.SUPPLY}" in "132 of ${config.SUPPLY} left"
+
+  // Live "X left" count from WooCommerce stock, refreshed every REFRESH_SECONDS while the page is open.
+  // Put the free-sample product's ID in PRODUCT_IDS (see README: Live inventory). Several IDs are added together.
+  // Empty = no live count; the page shows "Only ${config.SUPPLY} free ${p.unit}s in this drop" instead.
+  STOCK: {
+    PRODUCT_IDS: [],                     // e.g. [24051]
+    ORIGIN: 'https://looperverse.com',   // store the IDs belong to
+    URL: '',                             // optional instead of PRODUCT_IDS: any JSON endpoint returning {"remaining": 132}
+    REFRESH_SECONDS: 30
+  },
+  LEFT: null,              // manual fallback when there's no live count: e.g. 18 shows "Only 18 left"
   SOLD_OUT: false,         // true closes the offer and points everyone to the shop
   SOLD_OUT_FLAVORS: [],    // e.g. ['${first.slug}'] greys out a flavor
   END: '',                 // optional end time, e.g. '2026-11-01T23:59:00-04:00' (shows a countdown)

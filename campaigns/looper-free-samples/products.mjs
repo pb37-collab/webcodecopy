@@ -5,8 +5,8 @@
  * product pages and WooCommerce store API on looperverse.com (Oct 2026):
  *   /product/duos-gummies/  (product 23659)
  *   /product/fusion-3g/     (product 23678)
- * Sample counts come from the Looper x Canna Connect onboarding doc (50 Duos,
- * 60 Fusion). The pages never show a shipping price: the customer sees the
+ * Each page allows 150 free samples across all of its flavors (set Oct 2026;
+ * the onboarding doc's first numbers were 50 Duos / 60 Fusion). The pages never show a shipping price: the customer sees the
  * shipping cost for the first time at checkout.
  * Fusion strain types are printed on each flavor's box.
  *
@@ -41,7 +41,7 @@ export const products = {
     claimUnit: "Free Jar",
     stickyTitle: "Free Duos Jar",
     retail: 12.99,
-    supply: 50,
+    supply: 150,
     eventName: "Claimed Free Sample",
     sampleKey: "duos_gummies",
     welcome: "Your first jar's on us",
@@ -112,7 +112,7 @@ export const products = {
     claimUnit: "Free Vape",
     stickyTitle: "Free Fusion 3G",
     retail: 25.99,
-    supply: 60,
+    supply: 150,
     eventName: "Claimed Free Sample",
     sampleKey: "fusion_3g",
     welcome: "Your first 3G's on us",

@@ -8,7 +8,9 @@ const isPlaceholder = u => !u || /PLACEHOLDER/i.test(u);
 const isLive = () => Boolean(CONFIG.KLAVIYO_COMPANY_ID && CONFIG.KLAVIYO_LIST_ID);
 const STORE_KEY = 'looper_sample_' + PRODUCT.id;
 const offerEnd = CONFIG.END ? new Date(CONFIG.END).getTime() : 0;
-const isClosed = () => CONFIG.SOLD_OUT === true || (offerEnd > 0 && Date.now() >= offerEnd);
+let soldOut = false;   // set when the live count reaches 0
+let stockLeft = null;  // last "X left" shown
+const isClosed = () => soldOut || CONFIG.SOLD_OUT === true || (offerEnd > 0 && Date.now() >= offerEnd);
 
 // UTM tags from the ad, kept for this tab so they survive a reload.
 const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','gclid','ttclid'];
@@ -46,13 +48,9 @@ function checkoutUrl(slug, email, state){
   document.querySelectorAll('[data-state-count]').forEach(e => e.textContent = SHIP_STATES.length);
   $('year').textContent = new Date().getFullYear();
 
-  // Optional "X left" meter, only when the team sets CONFIG.LEFT by hand.
+  // Manual "X left" count, used only when there's no live count (CONFIG.STOCK).
   const left = Number(CONFIG.LEFT);
-  if (CONFIG.LEFT !== null && CONFIG.LEFT !== '' && Number.isFinite(left) && left >= 0 && CONFIG.SUPPLY > 0) {
-    $('supplyLine').innerHTML = 'Only <b>' + left + '</b> of ' + CONFIG.SUPPLY + ' free ' + PRODUCT.unitPlural + ' left';
-    const m = $('supplyMeter'); m.hidden = false;
-    m.firstElementChild.style.setProperty('--p', Math.max(3, Math.min(100, left / CONFIG.SUPPLY * 100)) + '%');
-  }
+  if (CONFIG.LEFT !== null && CONFIG.LEFT !== '' && Number.isFinite(left) && left >= 0 && CONFIG.SUPPLY > 0) renderStock(Math.floor(left));
 
   const sel = $('state');
   SHIP_STATES.forEach(s => sel.add(new Option(s, s)));
@@ -136,6 +134,72 @@ function closeOffer(){
   document.body.classList.add('is-closed');
 }
 if (isClosed()) closeOffer();
+
+/* ---------- "X of 150 left": hero line, claim card and sticky bar ---------- */
+function renderStock(left){
+  const total = Math.max(Number(CONFIG.SUPPLY) || 0, left);
+  const prev = stockLeft;
+  stockLeft = left;
+  const unit = left === 1 ? PRODUCT.unit : PRODUCT.unitPlural;
+  const low = left <= Math.max(10, Math.round(total * 0.15));
+  const pct = total ? Math.min(100, left / total * 100) : 0;
+  $('supplyLine').innerHTML = !left
+    ? 'All <b>' + total + '</b> free ' + PRODUCT.unitPlural + ' are claimed'
+    : low
+      ? 'Only <b>' + left + '</b> free ' + unit + ' left · 1 per person'
+      : '<b>' + left + '</b> of ' + total + ' free ' + unit + ' left · 1 per person';
+  document.querySelectorAll('.meter').forEach(m => { m.hidden = false; m.firstElementChild.style.setProperty('--p', (left ? Math.max(3, pct) : 0) + '%'); });
+  $('cardStock').hidden = false;
+  $('stockCount').textContent = left;
+  $('stockOf').textContent = low ? (left === 1 ? 'left · Last one!' : 'left · Almost gone') : 'of ' + total + ' left';
+  $('stickySub').textContent = !left ? 'All claimed' : low ? 'Only ' + left + ' left!' : left + ' of ' + total + ' left';
+  document.body.classList.toggle('stock-low', low);
+  if (prev !== null && left < prev) {
+    // A sample was just claimed somewhere: pulse the numbers.
+    document.querySelectorAll('#stockCount,#supplyLine b').forEach(e => { e.classList.remove('tick'); void e.offsetWidth; e.classList.add('tick'); });
+  }
+  if (left <= 0 && !document.body.classList.contains('is-claimed')) { soldOut = true; closeOffer(); }
+}
+
+/* ---------- live inventory from WooCommerce (CONFIG.STOCK) ---------- */
+(function(){
+  const S = CONFIG.STOCK || {};
+  const ids = [].concat(S.PRODUCT_IDS || []).filter(Boolean);
+  if (!S.URL && !ids.length) return;
+  const origin = (S.ORIGIN || '').replace(/\/$/, '');
+  const urls = S.URL ? [S.URL] : ids.map(id => origin + '/wp-json/wc/store/v1/products/' + encodeURIComponent(id));
+  const whole = n => Math.max(0, Math.floor(n));
+  // Accepts a WooCommerce Store API product, {"remaining": n} or a bare number.
+  const read = d => {
+    if (typeof d === 'number') return whole(d);
+    if (!d || typeof d !== 'object') return null;
+    if (typeof d.remaining === 'number') return whole(d.remaining);
+    if (d.is_in_stock === false) return 0;
+    if (typeof d.low_stock_remaining === 'number') return whole(d.low_stock_remaining);
+    const max = Number(d.add_to_cart && d.add_to_cart.maximum);
+    if (!d.sold_individually && Number.isFinite(max) && max > 0 && max < 9999) return whole(max);
+    return null;
+  };
+  let busy = false;
+  async function load(){
+    if (busy || soldOut) return;
+    busy = true;
+    try {
+      const counts = await Promise.all(urls.map(async u => {
+        const r = await fetch(u, {cache:'no-store', credentials:'omit', headers:{Accept:'application/json'}});
+        if (!r.ok) throw new Error(u + ' → HTTP ' + r.status);
+        return read(await r.json());
+      }));
+      if (counts.some(c => c === null)) console.warn('[free-sample] The stock source has no usable count (see README: Live inventory).');
+      else renderStock(counts.reduce((a, b) => a + b, 0));
+    } catch (ex) {
+      console.warn('[free-sample] Live stock unavailable, showing the static count.', ex);
+    } finally { busy = false; }
+  }
+  load();
+  setInterval(() => { if (!document.hidden) load(); }, Math.max(10, Number(S.REFRESH_SECONDS) || 30) * 1000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+})();
 
 /* ---------- claim form ---------- */
 (function(){

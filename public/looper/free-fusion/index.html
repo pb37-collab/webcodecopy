@@ -181,6 +181,18 @@
   .check a{color:var(--cyan)}
   .check strong{color:#fff}
 
+  /* live stock count */
+  .stock{display:grid;gap:8px;margin-bottom:10px;padding:11px 14px 12px;border-radius:12px;border:1px solid rgba(231,9,128,.45);background:linear-gradient(90deg,rgba(2,169,225,.08),rgba(231,9,128,.1))}
+  .stock-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 10px}
+  .stock-live{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-wide-b);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#fff}
+  .stock-live::before{content:"";width:8px;height:8px;border-radius:50%;background:#ff2d55;box-shadow:0 0 10px #ff2d55;animation:blink 1.2s infinite}
+  .stock-num{font-family:var(--f-cond);font-size:19px;letter-spacing:1px;text-transform:uppercase;color:#d8d8de;white-space:nowrap}
+  .stock-num b{display:inline-block;font-family:var(--f-wide);font-weight:400;font-size:22px;letter-spacing:0;color:#fff;text-shadow:-2px 0 var(--cyan),2px 0 var(--magenta);vertical-align:-1px}
+  .stock-low .stock-num span,.stock-low .supply-line{color:#ff7aa8}
+  .stock-low .stock{border-color:#ff4d7d;box-shadow:0 0 22px rgba(231,9,128,.3)}
+  .tick{animation:tick .9s ease-out}
+  @keyframes tick{0%{transform:scale(1)}25%{transform:scale(1.35);color:var(--magenta)}100%{transform:scale(1)}}
+
   /* order summary */
   .summary{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:6px;background:rgba(255,255,255,.03)}
   .summary div{min-width:0;display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:var(--f-cond);font-size:18px;letter-spacing:1px;text-transform:uppercase;color:#d8d8de}
@@ -386,8 +398,8 @@
   <div class="ann" role="region" aria-label="Announcement">
     <span class="ann-tag">Free Sample</span>
     <div class="ann-track"><div class="ann-run" aria-hidden="true">
-      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>60</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
-      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>60</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
+      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>150</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
+      <span><span>Free Fusion 3G</span> <i>✦</i> <span>You Just Cover Shipping</span> <i>✦</i> <span>THCA + Delta-8 + THCP</span> <i>✦</i> <span>6 Flavors</span> <i>✦</i> <span>Only <span data-supply>150</span> Vapes</span> <i>✦</i> <span>21+ Only</span> <i>✦</i></span>
     </div></div>
   </div>
 
@@ -417,7 +429,7 @@
           <div class="stat"><b>6</b><span>Flavors</span></div>
         </div>
         <div class="supply">
-          <span class="supply-line" id="supplyLine">Only <b data-supply>60</b>&nbsp;free vapes in this drop · 1 per person</span>
+          <span class="supply-line" id="supplyLine">Only <b data-supply>150</b>&nbsp;free vapes in this drop · 1 per person</span>
           <span class="meter" id="supplyMeter" hidden><i></i></span>
         </div>
         <div class="cd-wrap" id="cdWrap" hidden>
@@ -477,6 +489,10 @@
             <span><strong>I'm 21 or older</strong> and I'm in for Looper emails about drops and deals (unsubscribe anytime). I agree to the <a href="https://looperverse.com/terms-of-service/" target="_blank" rel="noopener">Terms</a>, <a href="https://looperverse.com/privacy-policy-2/" target="_blank" rel="noopener">Privacy Policy</a> and <a href="#details">Offer Details</a>.</span>
           </label>
 
+          <div class="stock" id="cardStock" aria-live="polite" hidden>
+            <div class="stock-top"><span class="stock-live">Live count</span><span class="stock-num"><b id="stockCount">150</b> <span id="stockOf">of 150 left</span></span></div>
+            <span class="meter"><i></i></span>
+          </div>
           <div class="summary" aria-label="What you pay">
             <div><span>Fusion vape <i id="sumFlavor"></i></span><span><s data-retail>$25.99</s><b class="free">Free</b></span></div>
             <div><span>Shipping</span><span class="ship">At checkout</span></div>
@@ -502,7 +518,7 @@
         <!-- ===== closed: sold out or past CONFIG.END ===== -->
         <div class="closed" id="closedBox" hidden>
           <div class="welcome">Drop closed</div>
-          <h3>All <span data-supply>60</span> free vapes are claimed//</h3>
+          <h3>All <span data-supply>150</span> free vapes are claimed//</h3>
           <p>Thanks for the love. Fusion is still in the shop, and Looper drops new deals by email all the time.</p>
           <a class="cta" href="https://looperverse.com/product/fusion-3g/">Shop Fusion <span class="arr" aria-hidden="true">→</span></a>
         </div>
@@ -625,7 +641,7 @@
       <div class="faq">
         <details class="rv"><summary>Is it really free?</summary><p>Yes. The Fusion 3G is $0. The only thing you pay is shipping, and you'll see the exact shipping cost at checkout before you pay anything.</p></details>
         <details class="rv"><summary>What's in a Fusion?</summary><p>3 grams of a THCA, Delta-8 and THCP blend in a pre-filled, pre-charged, draw-activated disposable. Each flavor is marked Sativa, Indica or Hybrid on the box. New to it? Start with one small pull and give it time.</p></details>
-        <details class="rv"><summary>How many can I claim?</summary><p>One free sample per person and household, and there are only <span data-supply>60</span> vapes in this drop. Want another flavor after you try it? They're in the shop.</p></details>
+        <details class="rv"><summary>How many can I claim?</summary><p>One free sample per person and household, and there are only <span data-supply>150</span> vapes in this drop. Want another flavor after you try it? They're in the shop.</p></details>
         <details class="rv"><summary>Where do you ship?</summary><p>We can ship to <span data-state-count>20</span> states: <span data-ship-states>California, Florida, Georgia, Illinois, Indiana, Kentucky, Maine, Maryland, Massachusetts, Missouri, Nebraska, New Jersey, New Mexico, North Carolina, Ohio, Pennsylvania, Tennessee, Texas, Wisconsin, Wyoming</span>. If yours isn't listed, we can't send a sample there yet.</p></details>
         <details class="rv"><summary>Is it lab tested?</summary><p>Yes. Fusion is third-party tested with a Certificate of Analysis for every batch, and you can see Looper's lab reports any time.</p></details>
       </div>
@@ -638,7 +654,7 @@
         <ol>
           <li><strong>The offer:</strong> One (1) free Looper Fusion 3G disposable vape in the flavor you choose. The product is free; you just cover shipping, which is shown at checkout before you pay.</li>
           <li><strong>Limit:</strong> One (1) free sample per person, household and shipping address. Duplicate or fraudulent claims may be canceled.</li>
-          <li><strong>While supplies last:</strong> This drop is limited to <span data-supply>60</span> vapes. Flavors are subject to availability.</li>
+          <li><strong>While supplies last:</strong> This drop is limited to <span data-supply>150</span> vapes. Flavors are subject to availability.</li>
           <li><strong>Eligibility:</strong> You must be 21 years of age or older. Samples ship only to U.S. addresses in these states: <span data-ship-states>California, Florida, Georgia, Illinois, Indiana, Kentucky, Maine, Maryland, Massachusetts, Missouri, Nebraska, New Jersey, New Mexico, North Carolina, Ohio, Pennsylvania, Tennessee, Texas, Wisconsin, Wyoming</span>.</li>
           <li><strong>Emails:</strong> Claiming a sample signs you up for Looper marketing emails about drops, deals and giveaways. Unsubscribe anytime.</li>
           <li><strong>Privacy:</strong> Information collected is used to fulfill your sample and, as described above, to send Looper marketing emails. See the <a href="https://looperverse.com/privacy-policy-2/" target="_blank" rel="noopener">Privacy Policy</a>.</li>
@@ -671,7 +687,7 @@
 <!-- ===== sticky claim bar (phones) ===== -->
 <div class="sticky" id="sticky">
   <span class="thumb" style="--img:var(--group)" aria-hidden="true"></span>
-  <div class="s-txt"><b>Free Fusion 3G</b><span>Just cover shipping · 21+</span></div>
+  <div class="s-txt"><b>Free Fusion 3G</b><span id="stickySub">Just cover shipping · 21+</span></div>
   <a class="cta" href="#claim" data-claim-link>Claim <span class="arr" aria-hidden="true">→</span></a>
 </div>
 
@@ -702,8 +718,18 @@ const CONFIG = {
   PASS_UTM: true,           // copy utm_* / fbclid / gclid from the ad onto the checkout link
 
   RETAIL: 25.99,           // shown struck through next to "Free"
-  SUPPLY: 60,              // samples in this drop
-  LEFT: null,              // optional: set a number (e.g. 18) to show "18 of 60 left" with a meter
+  SUPPLY: 150,             // samples in this drop, the "of 150" in "132 of 150 left"
+
+  // Live "X left" count from WooCommerce stock, refreshed every REFRESH_SECONDS while the page is open.
+  // Put the free-sample product's ID in PRODUCT_IDS (see README: Live inventory). Several IDs are added together.
+  // Empty = no live count; the page shows "Only 150 free vapes in this drop" instead.
+  STOCK: {
+    PRODUCT_IDS: [],                     // e.g. [24051]
+    ORIGIN: 'https://looperverse.com',   // store the IDs belong to
+    URL: '',                             // optional instead of PRODUCT_IDS: any JSON endpoint returning {"remaining": 132}
+    REFRESH_SECONDS: 30
+  },
+  LEFT: null,              // manual fallback when there's no live count: e.g. 18 shows "Only 18 left"
   SOLD_OUT: false,         // true closes the offer and points everyone to the shop
   SOLD_OUT_FLAVORS: [],    // e.g. ['hard-strawberry'] greys out a flavor
   END: '',                 // optional end time, e.g. '2026-11-01T23:59:00-04:00' (shows a countdown)
@@ -727,7 +753,9 @@ const isPlaceholder = u => !u || /PLACEHOLDER/i.test(u);
 const isLive = () => Boolean(CONFIG.KLAVIYO_COMPANY_ID && CONFIG.KLAVIYO_LIST_ID);
 const STORE_KEY = 'looper_sample_' + PRODUCT.id;
 const offerEnd = CONFIG.END ? new Date(CONFIG.END).getTime() : 0;
-const isClosed = () => CONFIG.SOLD_OUT === true || (offerEnd > 0 && Date.now() >= offerEnd);
+let soldOut = false;   // set when the live count reaches 0
+let stockLeft = null;  // last "X left" shown
+const isClosed = () => soldOut || CONFIG.SOLD_OUT === true || (offerEnd > 0 && Date.now() >= offerEnd);
 
 // UTM tags from the ad, kept for this tab so they survive a reload.
 const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','gclid','ttclid'];
@@ -765,13 +793,9 @@ function checkoutUrl(slug, email, state){
   document.querySelectorAll('[data-state-count]').forEach(e => e.textContent = SHIP_STATES.length);
   $('year').textContent = new Date().getFullYear();
 
-  // Optional "X left" meter, only when the team sets CONFIG.LEFT by hand.
+  // Manual "X left" count, used only when there's no live count (CONFIG.STOCK).
   const left = Number(CONFIG.LEFT);
-  if (CONFIG.LEFT !== null && CONFIG.LEFT !== '' && Number.isFinite(left) && left >= 0 && CONFIG.SUPPLY > 0) {
-    $('supplyLine').innerHTML = 'Only <b>' + left + '</b> of ' + CONFIG.SUPPLY + ' free ' + PRODUCT.unitPlural + ' left';
-    const m = $('supplyMeter'); m.hidden = false;
-    m.firstElementChild.style.setProperty('--p', Math.max(3, Math.min(100, left / CONFIG.SUPPLY * 100)) + '%');
-  }
+  if (CONFIG.LEFT !== null && CONFIG.LEFT !== '' && Number.isFinite(left) && left >= 0 && CONFIG.SUPPLY > 0) renderStock(Math.floor(left));
 
   const sel = $('state');
   SHIP_STATES.forEach(s => sel.add(new Option(s, s)));
@@ -855,6 +879,72 @@ function closeOffer(){
   document.body.classList.add('is-closed');
 }
 if (isClosed()) closeOffer();
+
+/* ---------- "X of 150 left": hero line, claim card and sticky bar ---------- */
+function renderStock(left){
+  const total = Math.max(Number(CONFIG.SUPPLY) || 0, left);
+  const prev = stockLeft;
+  stockLeft = left;
+  const unit = left === 1 ? PRODUCT.unit : PRODUCT.unitPlural;
+  const low = left <= Math.max(10, Math.round(total * 0.15));
+  const pct = total ? Math.min(100, left / total * 100) : 0;
+  $('supplyLine').innerHTML = !left
+    ? 'All <b>' + total + '</b> free ' + PRODUCT.unitPlural + ' are claimed'
+    : low
+      ? 'Only <b>' + left + '</b> free ' + unit + ' left · 1 per person'
+      : '<b>' + left + '</b> of ' + total + ' free ' + unit + ' left · 1 per person';
+  document.querySelectorAll('.meter').forEach(m => { m.hidden = false; m.firstElementChild.style.setProperty('--p', (left ? Math.max(3, pct) : 0) + '%'); });
+  $('cardStock').hidden = false;
+  $('stockCount').textContent = left;
+  $('stockOf').textContent = low ? (left === 1 ? 'left · Last one!' : 'left · Almost gone') : 'of ' + total + ' left';
+  $('stickySub').textContent = !left ? 'All claimed' : low ? 'Only ' + left + ' left!' : left + ' of ' + total + ' left';
+  document.body.classList.toggle('stock-low', low);
+  if (prev !== null && left < prev) {
+    // A sample was just claimed somewhere: pulse the numbers.
+    document.querySelectorAll('#stockCount,#supplyLine b').forEach(e => { e.classList.remove('tick'); void e.offsetWidth; e.classList.add('tick'); });
+  }
+  if (left <= 0 && !document.body.classList.contains('is-claimed')) { soldOut = true; closeOffer(); }
+}
+
+/* ---------- live inventory from WooCommerce (CONFIG.STOCK) ---------- */
+(function(){
+  const S = CONFIG.STOCK || {};
+  const ids = [].concat(S.PRODUCT_IDS || []).filter(Boolean);
+  if (!S.URL && !ids.length) return;
+  const origin = (S.ORIGIN || '').replace(/\/$/, '');
+  const urls = S.URL ? [S.URL] : ids.map(id => origin + '/wp-json/wc/store/v1/products/' + encodeURIComponent(id));
+  const whole = n => Math.max(0, Math.floor(n));
+  // Accepts a WooCommerce Store API product, {"remaining": n} or a bare number.
+  const read = d => {
+    if (typeof d === 'number') return whole(d);
+    if (!d || typeof d !== 'object') return null;
+    if (typeof d.remaining === 'number') return whole(d.remaining);
+    if (d.is_in_stock === false) return 0;
+    if (typeof d.low_stock_remaining === 'number') return whole(d.low_stock_remaining);
+    const max = Number(d.add_to_cart && d.add_to_cart.maximum);
+    if (!d.sold_individually && Number.isFinite(max) && max > 0 && max < 9999) return whole(max);
+    return null;
+  };
+  let busy = false;
+  async function load(){
+    if (busy || soldOut) return;
+    busy = true;
+    try {
+      const counts = await Promise.all(urls.map(async u => {
+        const r = await fetch(u, {cache:'no-store', credentials:'omit', headers:{Accept:'application/json'}});
+        if (!r.ok) throw new Error(u + ' → HTTP ' + r.status);
+        return read(await r.json());
+      }));
+      if (counts.some(c => c === null)) console.warn('[free-sample] The stock source has no usable count (see README: Live inventory).');
+      else renderStock(counts.reduce((a, b) => a + b, 0));
+    } catch (ex) {
+      console.warn('[free-sample] Live stock unavailable, showing the static count.', ex);
+    } finally { busy = false; }
+  }
+  load();
+  setInterval(() => { if (!document.hidden) load(); }, Math.max(10, Number(S.REFRESH_SECONDS) || 30) * 1000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+})();
 
 /* ---------- claim form ---------- */
 (function(){

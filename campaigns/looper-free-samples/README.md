@@ -10,8 +10,8 @@ at checkout. Shipping can be a flat rate or vary by state without touching the p
 
 | Page | Product | Flavors | Samples |
 |---|---|---|---|
-| `free-duos/index.html` | Looper Duos Gummies (10 × 25mg THC + 5mg CBD) | 5 flavor pairs | 50 jars |
-| `free-fusion/index.html` | Looper Fusion 3G disposable (THCA + Delta-8 + THCP) | 6 flavors | 60 vapes |
+| `free-duos/index.html` | Looper Duos Gummies (10 × 25mg THC + 5mg CBD) | 5 flavor pairs | 150 jars (any flavor) |
+| `free-fusion/index.html` | Looper Fusion 3G disposable (THCA + Delta-8 + THCP) | 6 flavors | 150 vapes (any flavor) |
 
 As with the giveaway, **each page is one self-contained HTML file**: markup, CSS, JS and product images are
 all inside `index.html`. There's no build step for Looper and nothing else to upload.
@@ -23,10 +23,12 @@ onboarding doc.
 ## What's on each page (mobile first)
 
 1. **Hero:** product name with the giveaway's cyan/magenta glitch, the product group render,
-   "$0 / what you get / flavors" stats and the sample count ("Only 50 free jars in this drop").
+   "$0 / what you get / flavors" stats and the **live count** ("132 of 150 free jars left", with a meter).
 2. **Claim card:** flavor picker (photo tiles), email, ship-to state, one 21+ / email-consent checkbox,
-   an order summary (~~$12.99~~ **Free**, Shipping: *At checkout*) and the claim button.
-3. **Sticky claim bar** on phones. It stays at the bottom of the screen until the claim card is on screen.
+   a **live count** box ("● Live count · 132 of 150 left"), an order summary (~~$12.99~~ **Free**,
+   Shipping: *At checkout*) and the claim button.
+3. **Sticky claim bar** on phones, showing the count ("132 of 150 left"). It stays at the bottom of the
+   screen until the claim card is on screen.
 4. As Featured On strip, What You Get, flavor cards (each with a "Claim" button that selects that flavor),
    How It Works, FAQ, Offer Details and the same footer and disclaimers as the giveaway.
 
@@ -57,8 +59,10 @@ Everything lives in the `CONFIG` block near the bottom of each `index.html` (sea
 | `KLAVIYO_LIST_ID` | ⚠️ **blank** | The free-sample list. While blank, the page is in preview mode and **sends nothing** to Klaviyo. |
 | `KLAVIYO_COMPANY_ID` | ✅ `RwbMFF` | Looper's public Klaviyo key (same as the giveaway) |
 | `KLAVIYO_EVENT` | ✅ `Claimed Free Sample` | Event logged on every claim; use it to trigger flows |
-| `RETAIL` / `SUPPLY` | ✅ set | The struck-through retail price and the sample count update from these |
-| `LEFT` | optional | Set a number (e.g. `18`) to show "Only 18 of 50 free jars left" with a meter. Update it by hand. |
+| `STOCK.PRODUCT_IDS` | ⚠️ **blank** | The free-sample product's WooCommerce ID, which turns on the live "X of 150 left" count. See **Live inventory** below. |
+| `SUPPLY` | ✅ `150` | Total samples on this page, across all flavors: the "of 150" |
+| `RETAIL` | ✅ set | The struck-through retail price |
+| `LEFT` | optional | Manual fallback when there's no live count: e.g. `18` shows "Only 18 free jars left". Update it by hand. |
 | `SOLD_OUT_FLAVORS` | optional | e.g. `['blue-razz-grape']` greys out that flavor and marks it "Gone" |
 | `SOLD_OUT` | optional | `true` closes the offer and points every button to the product page |
 | `END` | optional | e.g. `'2026-11-01T23:59:00-04:00'` shows an "Offer ends in" countdown and closes the offer at that time |
@@ -84,7 +88,48 @@ A WooCommerce link has this shape: `https://looperverse.com/checkout/?add-to-car
 It needs a **$0 sample variation** (or a coupon applied automatically) plus a shipping rule for the sample.
 Using the retail variations as they are would charge full price.
 
-## 3. What Klaviyo receives
+## 3. Live inventory ("132 of 150 left")
+
+Each page shows how many free samples are left and updates on its own after every purchase. It reads the
+free-sample product's stock from WooCommerce's public Store API
+(`https://looperverse.com/wp-json/wc/store/v1/products/<id>`, the same API the store's own pages use):
+when the page loads, every 30 seconds while it's open, and whenever the visitor comes back to the tab.
+
+- WooCommerce lowers stock when an order is placed (and can hold a unit while someone is paying), so
+  the count drops right after each purchase. Form claims that never check out don't lower it.
+- The count appears in three places: the hero line, a "Live count" box in the claim card, and the
+  sticky bar on phones. When it goes down while someone is watching, the number pulses.
+- At **23 or fewer** (about 15% of 150) the wording switches to "Only 12 left!" in pink.
+- At **0** the page closes itself: the form is replaced by "All 150 free jars are claimed" and every
+  button points to the product page.
+- If the count can't be read (no product ID yet, or the API is down), the page shows
+  "Only 150 free jars in this drop" instead. It never shows an invented number.
+
+**Setup in WooCommerce:** one free-sample product per page (it's also what the checkout links add to the cart).
+
+1. Create a variable product, e.g. *Free Sample: Duos*, hidden from the catalog, with a **$0 variation for
+   each flavor**.
+2. On the parent product's **Inventory** tab: tick **Manage stock**, set **Stock quantity = 150**, and set
+   **Allow backorders = Do not allow**. Leave **Manage stock** unticked on every variation, so all flavors
+   draw from the same 150 ("no matter which flavor").
+3. If you tick **Sold individually** (one per order), also set **Low stock threshold = 150**. For
+   sold-individually products the Store API only reports the exact count once stock is at or below that
+   threshold. WooCommerce may then email low-stock alerts; you can turn those off under
+   *WooCommerce → Settings → Products → Inventory*.
+4. Put the product ID in `CONFIG.STOCK.PRODUCT_IDS`, e.g. `PRODUCT_IDS: [24051]`.
+5. Check it: open `https://looperverse.com/wp-json/wc/store/v1/products/<id>` in a browser.
+   `add_to_cart.maximum` (or `low_stock_remaining`) should match the stock.
+
+**One pool of 150 across both pages:** put all 11 flavors (5 Duos + 6 Fusion) in a single sample product and
+use its ID on both pages. Setting `SUPPLY: 150` on both pages keeps the "of 150" right.
+
+**Server load:** each open page makes one small request every 30 seconds, and only while its tab is visible.
+If the site slows down under heavy ad traffic, raise `STOCK.REFRESH_SECONDS`.
+
+**Other sources:** `STOCK.URL` accepts any JSON endpoint that returns `{"remaining": 132}` (or a bare
+number), in place of `PRODUCT_IDS`.
+
+## 4. What Klaviyo receives
 
 Each claim calls Klaviyo's client APIs (public key only, no server or secret needed):
 
@@ -111,7 +156,7 @@ the flow, send "Your free jar is waiting" with the `checkout_url` event property
 The page waits at most 2.5 seconds for Klaviyo and then goes to checkout anyway, so a slow or failed
 signup never blocks a claim.
 
-## 4. Eligibility and limits
+## 5. Eligibility and limits
 
 - The state dropdown lists the same 20 shipping states as the giveaway, plus "My state isn't listed",
   which shows a message and blocks the claim. Edit `SHIP_STATES` in the script to change it; the FAQ and
@@ -123,7 +168,7 @@ signup never blocks a claim.
 - The Offer Details text is a draft: one per person/household/address, while supplies last, 21+, the 20
   states, and the email signup. **Have Looper approve it before launch.**
 
-## 5. Tracking (optional)
+## 6. Tracking (optional)
 
 On each claim the page fires these, if they exist on the page:
 - Meta Pixel: `fbq('track', 'Lead', …)`
@@ -132,14 +177,15 @@ On each claim the page fires these, if they exist on the page:
 
 Neither pixel is included in the file. Add your snippets to `<head>`.
 
-## 6. Pre-launch QA checklist
+## 7. Pre-launch QA checklist
 
-1. Set `KLAVIYO_LIST_ID` and all `CHECKOUT` links on both pages (search each file for `PLACEHOLDER`: none should be left).
+1. Set `KLAVIYO_LIST_ID`, `STOCK.PRODUCT_IDS` and all `CHECKOUT` links on both pages (search each file for `PLACEHOLDER`: none should be left).
 2. Load both pages on a phone from looperverse.com and confirm the Akira fonts render.
 3. Claim with a test email for one flavor on each page: you should land on checkout with that flavor at
    $0 and the right shipping. Confirm the profile and the *Claimed Free Sample* event in Klaviyo.
-4. Try `?flavor=<slug>` links for the ads you're running.
-5. Delete the test profiles from Klaviyo.
+4. Confirm the live count matches the product's stock, and drops by one after your test order.
+5. Try `?flavor=<slug>` links for the ads you're running.
+6. Delete the test profiles from Klaviyo, and restore the stock your test orders used.
 
 ## Editing the source (for developers)
 
