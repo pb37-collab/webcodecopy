@@ -112,21 +112,31 @@ returns every flavor's stock.
 - If the count can't be read (no product ID yet, or the API is down), the page shows
   "Only 50 free jars in this drop" and no per-flavor counts. It never shows an invented number.
 
-**Setup in WooCommerce:**
+**Setup in WooCommerce** (about 10 minutes). Make **two products**: *Free Sample: Duos Gummies* (5 flavors)
+and *Free Sample: Fusion 3G* (6 flavors). Every flavor is **$0** with **10 in stock**. For each product:
 
-1. Create a variable product, e.g. *Free Sample: Duos*, hidden from the catalog, with a **$0 variation for
-   each flavor**, using the same *Flavor* attribute and flavor names as the retail product. The checkout
-   links can add these variations to the cart.
-2. On **each variation**: tick **Manage stock**, set **Stock quantity = 10**, and set
-   **Allow backorders = Do not allow**.
-3. If you tick **Sold individually** (one per order), also set each variation's **Low stock threshold = 10**.
-   For sold-individually products the Store API only reports the exact count once stock is at or below that
-   threshold. WooCommerce may then email low-stock alerts; you can turn those off under
-   *WooCommerce → Settings → Products → Inventory*.
-4. Put the **parent product ID** in `CONFIG.STOCK.PRODUCT_IDS`, e.g. `PRODUCT_IDS: [24051]`. The page finds
-   the flavor variations itself, matching them by flavor name.
-5. Check it: open `https://looperverse.com/wp-json/wc/store/v1/products?type=variation&parent=<id>` in a
-   browser. Each variation's `add_to_cart.maximum` (or `low_stock_remaining`) should be 10.
+1. **Products → Add New**, and name it (e.g. *Free Sample: Duos Gummies*).
+2. In the **Product data** box, change the dropdown to **Variable product**.
+3. **Inventory** tab: tick **Sold individually** (limits it to 1 per order).
+4. **Attributes** tab: add the existing **Flavor** attribute, select that product's flavors, tick
+   **Used for variations**, then click **Save attributes**.
+5. **Variations** tab: click **Generate variations**, then open each flavor and set
+   **Regular price** `0`, tick **Manage stock?**, **Stock quantity** `10`,
+   **Allow backorders?** *Do not allow*, and **Low stock threshold** `10`. Click **Save changes**.
+6. In the **Publish** box, set **Catalog visibility** to **Hidden** (so it isn't listed in the shop), then
+   click **Publish**.
+7. Send us the **product ID**: in the Products list, hover over the product name to see *ID: 12345*.
+
+We then put the IDs into `CONFIG.STOCK.PRODUCT_IDS`, build the checkout links from the flavor variations,
+and test both pages.
+
+**Why "Low stock threshold 10"?** Because the product is *Sold individually*, WooCommerce only shares the
+exact stock number once it's at or below that threshold. 10 makes the live count exact from the start.
+WooCommerce may then send low-stock emails; you can turn them off (store-wide) at
+*WooCommerce → Settings → Products → Inventory → Enable low stock notifications*.
+
+**Check it:** `https://looperverse.com/wp-json/wc/store/v1/products?type=variation&parent=<id>` lists each
+flavor; its `low_stock_remaining` should be 10.
 
 **One product for both lines works too:** if Looper puts all 11 flavors in a single sample product, use its ID
 on both pages. Each page counts only its own flavors (Duos 50, Fusion 60).
