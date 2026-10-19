@@ -56,7 +56,7 @@ Everything lives in the `CONFIG` block near the bottom of each `index.html` (sea
 | Key | Status | Notes |
 |---|---|---|
 | `CHECKOUT` | ⚠️ **placeholders** | One link per flavor. While a link contains `PLACEHOLDER`, the page shows a "preview mode" screen instead of redirecting. |
-| `KLAVIYO_LIST_ID` | ⚠️ **blank** | The free-sample list. While blank, the page is in preview mode and **sends nothing** to Klaviyo. |
+| `KLAVIYO_LIST_ID` | ✅ Duos `Xx2i6v` / Fusion `XPjk6T` | The free-sample lists, from Looper. Claims are subscribed to the page's list. (If blank, the page sends nothing to Klaviyo.) |
 | `KLAVIYO_COMPANY_ID` | ✅ `RwbMFF` | Looper's public Klaviyo key (same as the giveaway) |
 | `KLAVIYO_EVENT` | ✅ `Claimed Free Sample` | Event logged on every claim; use it to trigger flows |
 | `STOCK.PRODUCT_IDS` | ⚠️ **blank** | The free-sample product's WooCommerce ID, which turns on the live counts (per flavor and "X of 50 left"). See **Live inventory** below. |
@@ -197,7 +197,7 @@ Neither pixel is included in the file. Add your snippets to `<head>`.
 
 ## 7. Pre-launch QA checklist
 
-1. Set `KLAVIYO_LIST_ID`, `STOCK.PRODUCT_IDS` and all `CHECKOUT` links on both pages (search each file for `PLACEHOLDER`: none should be left).
+1. Set `STOCK.PRODUCT_IDS` and all `CHECKOUT` links on both pages (the Klaviyo lists are already set) (search each file for `PLACEHOLDER`: none should be left).
 2. Load both pages on a phone from looperverse.com and confirm the Akira fonts render.
 3. Claim with a test email for one flavor on each page: you should land on checkout with that flavor at
    $0 and the right shipping. Confirm the profile and the *Claimed Free Sample* event in Klaviyo.

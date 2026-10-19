@@ -63,7 +63,7 @@ async function render(p) {
 
   const config = {
     KLAVIYO_COMPANY_ID: "RwbMFF",
-    KLAVIYO_LIST_ID: "",
+    KLAVIYO_LIST_ID: p.klaviyoListId || "",
     KLAVIYO_EVENT: p.eventName,
     KLAVIYO_SOURCE: `Looper Free Sample LP: ${p.shortName}`,
     CHECKOUT: Object.fromEntries(
@@ -393,8 +393,8 @@ ${flavorCards}
 const CONFIG = {
   // Klaviyo public key, from looperverse.com's live Klaviyo snippet (same as the giveaway).
   KLAVIYO_COMPANY_ID: '${config.KLAVIYO_COMPANY_ID}',
-  // Klaviyo list for free-sample claimers. While blank, the page runs in preview mode and sends nothing.
-  KLAVIYO_LIST_ID: '',
+  // Klaviyo list for ${p.shortName} free-sample claimers (from Looper). Blank = preview mode, nothing sent.
+  KLAVIYO_LIST_ID: '${config.KLAVIYO_LIST_ID}',
   // Event logged on every claim, to trigger flows (e.g. "finish your checkout" reminders).
   KLAVIYO_EVENT: '${config.KLAVIYO_EVENT}',
   KLAVIYO_SOURCE: '${config.KLAVIYO_SOURCE}',

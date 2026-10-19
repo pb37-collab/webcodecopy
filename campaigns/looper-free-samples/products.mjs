@@ -44,6 +44,7 @@ export const products = {
     supply: 50,
     perFlavor: 10,
     eventName: "Claimed Free Sample",
+    klaviyoListId: "Xx2i6v", // free-sample list for the edibles, from Looper (Oct 2026)
     sampleKey: "duos_gummies",
     welcome: "Your first jar's on us",
     marquee: ["Free Duos Jar", "You Just Cover Shipping", "25mg THC + 5mg CBD", "5 Flavor Pairs", "Only {supply} Jars", "21+ Only"],
@@ -116,6 +117,7 @@ export const products = {
     supply: 60,
     perFlavor: 10,
     eventName: "Claimed Free Sample",
+    klaviyoListId: "XPjk6T", // free-sample list for the vapes, from Looper (Oct 2026)
     sampleKey: "fusion_3g",
     welcome: "Your first 3G's on us",
     marquee: ["Free Fusion 3G", "You Just Cover Shipping", "THCA + Delta-8 + THCP", "6 Flavors", "Only {supply} Vapes", "21+ Only"],
