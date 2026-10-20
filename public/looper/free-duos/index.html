@@ -705,15 +705,15 @@ const CONFIG = {
   KLAVIYO_EVENT: 'Claimed Free Sample',
   KLAVIYO_SOURCE: 'Looper Free Sample LP: Duos',
 
-  // Checkout link for each flavor's free sample. PLACEHOLDERS for now: while a link
-  // contains "PLACEHOLDER" the page shows a preview screen instead of redirecting.
-  // Optional tokens: {email} {flavor} {state}, e.g. '...&billing_email={email}'
+  // Checkout link for each flavor: adds that flavor's $0 free-sample variation (1 per order) to the
+  // cart and opens checkout, where shipping is charged. A link containing "PLACEHOLDER" shows a
+  // preview screen instead. Optional tokens: {email} {flavor} {state}.
   CHECKOUT: {
-    'blue-razz-grape': 'https://looperverse.com/checkout/?PLACEHOLDER=duos-blue-razz-grape',   // Blue Razz + Grape (retail variation 23662)
-    'green-apple-strawberry': 'https://looperverse.com/checkout/?PLACEHOLDER=duos-green-apple-strawberry',   // Green Apple + Strawberry (retail variation 23668)
-    'lemon-tropical-blast': 'https://looperverse.com/checkout/?PLACEHOLDER=duos-lemon-tropical-blast',   // Lemon + Tropical Blast (retail variation 23672)
-    'pineapple-lemonade': 'https://looperverse.com/checkout/?PLACEHOLDER=duos-pineapple-lemonade',   // Pineapple + Lemonade (retail variation 23676)
-    'watermelon-punch': 'https://looperverse.com/checkout/?PLACEHOLDER=duos-watermelon-punch',   // Watermelon + Punch (retail variation 23664)
+    'blue-razz-grape': 'https://looperverse.com/checkout/?add-to-cart=24206',   // Blue Razz + Grape (free-sample variation 24206)
+    'green-apple-strawberry': 'https://looperverse.com/checkout/?add-to-cart=24208',   // Green Apple + Strawberry (free-sample variation 24208)
+    'lemon-tropical-blast': 'https://looperverse.com/checkout/?add-to-cart=24209',   // Lemon + Tropical Blast (free-sample variation 24209)
+    'pineapple-lemonade': 'https://looperverse.com/checkout/?add-to-cart=24210',   // Pineapple + Lemonade (free-sample variation 24210)
+    'watermelon-punch': 'https://looperverse.com/checkout/?add-to-cart=24207',   // Watermelon + Punch (free-sample variation 24207)
   },
   PASS_UTM: true,           // copy utm_* / fbclid / gclid from the ad onto the checkout link
 
@@ -725,7 +725,7 @@ const CONFIG = {
   // its tile ("7 left"), a flavor at 0 can't be picked, and the page total is the sum of this page's flavors.
   // Empty = no live count; the page shows "Only 50 free jars in this drop" instead.
   STOCK: {
-    PRODUCT_IDS: [],                     // e.g. [24051] (the free-sample product; its flavor variations are read automatically)
+    PRODUCT_IDS: [24205],                // the free-sample product; its flavor variations are read automatically
     ORIGIN: 'https://looperverse.com',   // store the IDs belong to
     URL: '',                             // optional instead of PRODUCT_IDS: any JSON endpoint returning {"remaining": 132}
     REFRESH_SECONDS: 30

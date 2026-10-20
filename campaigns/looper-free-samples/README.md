@@ -55,11 +55,11 @@ Everything lives in the `CONFIG` block near the bottom of each `index.html` (sea
 
 | Key | Status | Notes |
 |---|---|---|
-| `CHECKOUT` | ⚠️ **placeholders** | One link per flavor. While a link contains `PLACEHOLDER`, the page shows a "preview mode" screen instead of redirecting. |
+| `CHECKOUT` | ✅ set | One link per flavor, to its $0 free-sample variation (see **Checkout links**). A link containing `PLACEHOLDER` would show a "preview mode" screen instead. |
 | `KLAVIYO_LIST_ID` | ✅ Duos `Xx2i6v` / Fusion `XPjk6T` | The free-sample lists, from Looper. Claims are subscribed to the page's list. (If blank, the page sends nothing to Klaviyo.) |
 | `KLAVIYO_COMPANY_ID` | ✅ `RwbMFF` | Looper's public Klaviyo key (same as the giveaway) |
 | `KLAVIYO_EVENT` | ✅ `Claimed Free Sample` | Event logged on every claim; use it to trigger flows |
-| `STOCK.PRODUCT_IDS` | ⚠️ **blank** | The free-sample product's WooCommerce ID, which turns on the live counts (per flavor and "X of 50 left"). See **Live inventory** below. |
+| `STOCK.PRODUCT_IDS` | ✅ Duos `[24205]` / Fusion `[24211]` | The free-sample products, which drive the live counts (per flavor and "X of 50 left"). See **Live inventory** below. |
 | `SUPPLY` | ✅ `50` Duos / `60` Fusion | Total samples on this page (10 per flavor): the "of 50" |
 | `RETAIL` | ✅ set | The struck-through retail price |
 | `LEFT` | optional | Manual fallback when there's no live count: e.g. `18` shows "Only 18 free jars left". Update it by hand. |
@@ -67,26 +67,21 @@ Everything lives in the `CONFIG` block near the bottom of each `index.html` (sea
 | `SOLD_OUT` | optional | `true` closes the offer and points every button to the product page |
 | `END` | optional | e.g. `'2026-11-01T23:59:00-04:00'` shows an "Offer ends in" countdown and closes the offer at that time |
 
-### Checkout links
+### Checkout links (set)
 
-Each flavor needs a link that lands the customer on checkout with that flavor at **$0**. Shipping is
-charged and shown at checkout (flat or by state, set in WooCommerce). The links accept tokens:
-`{email}`, `{flavor}` and `{state}`.
+Each flavor's button adds that flavor's **$0 free-sample variation** to the cart and opens checkout, where
+shipping is charged: `https://looperverse.com/checkout/?add-to-cart=<variation id>`. The products are
+*Sold individually*, so it's always 1 per order. Ad tracking tags (`utm_*`, `fbclid`, …) are added on.
 
-The retail WooCommerce variations, for reference when you build the $0 sample links:
+| Duos flavor (product 24205) | variation | | Fusion flavor (product 24211) | variation |
+|---|---|---|---|---|
+| Blue Razz + Grape | 24206 | | Hard Strawberry | 24212 |
+| Watermelon + Punch | 24207 | | Watermelon Burst | 24213 |
+| Green Apple + Strawberry | 24208 | | Berry Blast | 24214 |
+| Lemon + Tropical Blast | 24209 | | Apple Jelly | 24215 |
+| Pineapple + Lemonade | 24210 | | Twisted Lime | 24216 |
+| | | | Tropical Gummy | 24217 |
 
-| Duos flavor | slug | retail variation | | Fusion flavor | slug | retail variation |
-|---|---|---|---|---|---|---|
-| Blue Razz + Grape | `blue-razz-grape` | 23662 | | Hard Strawberry | `hard-strawberry` | 23682 |
-| Green Apple + Strawberry | `green-apple-strawberry` | 23668 | | Watermelon Burst | `watermelon-burst` | 23686 |
-| Lemon + Tropical Blast | `lemon-tropical-blast` | 23672 | | Berry Blast | `berry-blast` | 23690 |
-| Pineapple + Lemonade | `pineapple-lemonade` | 23676 | | Apple Jelly | `apple-jelly` | 23680 |
-| Watermelon + Punch | `watermelon-punch` | 23664 | | Twisted Lime | `twisted-lime` | 23684 |
-| | | | | Tropical Gummy | `tropical-gummy` | 23688 |
-
-A WooCommerce link has this shape: `https://looperverse.com/checkout/?add-to-cart=<variation id>`.
-It needs a **$0 sample variation** (or a coupon applied automatically) plus a shipping rule for the sample.
-Using the retail variations as they are would charge full price.
 
 ## 3. Live inventory ("38 of 50 left", "7 left" per flavor)
 
@@ -197,7 +192,7 @@ Neither pixel is included in the file. Add your snippets to `<head>`.
 
 ## 7. Pre-launch QA checklist
 
-1. Set `STOCK.PRODUCT_IDS` and all `CHECKOUT` links on both pages (the Klaviyo lists are already set) (search each file for `PLACEHOLDER`: none should be left).
+1. Upload the new `free-duos/index.html` and `free-fusion/index.html` over the current ones (Klaviyo lists, checkout links and stock product IDs are all set; no checkout link is a placeholder).
 2. Load both pages on a phone from looperverse.com and confirm the Akira fonts render.
 3. Claim with a test email for one flavor on each page: you should land on checkout with that flavor at
    $0 and the right shipping. Confirm the profile and the *Claimed Free Sample* event in Klaviyo.

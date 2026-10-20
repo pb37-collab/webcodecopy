@@ -717,16 +717,16 @@ const CONFIG = {
   KLAVIYO_EVENT: 'Claimed Free Sample',
   KLAVIYO_SOURCE: 'Looper Free Sample LP: Fusion',
 
-  // Checkout link for each flavor's free sample. PLACEHOLDERS for now: while a link
-  // contains "PLACEHOLDER" the page shows a preview screen instead of redirecting.
-  // Optional tokens: {email} {flavor} {state}, e.g. '...&billing_email={email}'
+  // Checkout link for each flavor: adds that flavor's $0 free-sample variation (1 per order) to the
+  // cart and opens checkout, where shipping is charged. A link containing "PLACEHOLDER" shows a
+  // preview screen instead. Optional tokens: {email} {flavor} {state}.
   CHECKOUT: {
-    'hard-strawberry': 'https://looperverse.com/checkout/?PLACEHOLDER=fusion-hard-strawberry',   // Hard Strawberry (retail variation 23682)
-    'watermelon-burst': 'https://looperverse.com/checkout/?PLACEHOLDER=fusion-watermelon-burst',   // Watermelon Burst (retail variation 23686)
-    'berry-blast': 'https://looperverse.com/checkout/?PLACEHOLDER=fusion-berry-blast',   // Berry Blast (retail variation 23690)
-    'apple-jelly': 'https://looperverse.com/checkout/?PLACEHOLDER=fusion-apple-jelly',   // Apple Jelly (retail variation 23680)
-    'twisted-lime': 'https://looperverse.com/checkout/?PLACEHOLDER=fusion-twisted-lime',   // Twisted Lime (retail variation 23684)
-    'tropical-gummy': 'https://looperverse.com/checkout/?PLACEHOLDER=fusion-tropical-gummy',   // Tropical Gummy (retail variation 23688)
+    'hard-strawberry': 'https://looperverse.com/checkout/?add-to-cart=24212',   // Hard Strawberry (free-sample variation 24212)
+    'watermelon-burst': 'https://looperverse.com/checkout/?add-to-cart=24213',   // Watermelon Burst (free-sample variation 24213)
+    'berry-blast': 'https://looperverse.com/checkout/?add-to-cart=24214',   // Berry Blast (free-sample variation 24214)
+    'apple-jelly': 'https://looperverse.com/checkout/?add-to-cart=24215',   // Apple Jelly (free-sample variation 24215)
+    'twisted-lime': 'https://looperverse.com/checkout/?add-to-cart=24216',   // Twisted Lime (free-sample variation 24216)
+    'tropical-gummy': 'https://looperverse.com/checkout/?add-to-cart=24217',   // Tropical Gummy (free-sample variation 24217)
   },
   PASS_UTM: true,           // copy utm_* / fbclid / gclid from the ad onto the checkout link
 
@@ -738,7 +738,7 @@ const CONFIG = {
   // its tile ("7 left"), a flavor at 0 can't be picked, and the page total is the sum of this page's flavors.
   // Empty = no live count; the page shows "Only 60 free vapes in this drop" instead.
   STOCK: {
-    PRODUCT_IDS: [],                     // e.g. [24051] (the free-sample product; its flavor variations are read automatically)
+    PRODUCT_IDS: [24211],                // the free-sample product; its flavor variations are read automatically
     ORIGIN: 'https://looperverse.com',   // store the IDs belong to
     URL: '',                             // optional instead of PRODUCT_IDS: any JSON endpoint returning {"remaining": 132}
     REFRESH_SECONDS: 30

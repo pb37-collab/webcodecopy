@@ -67,7 +67,12 @@ async function render(p) {
     KLAVIYO_EVENT: p.eventName,
     KLAVIYO_SOURCE: `Looper Free Sample LP: ${p.shortName}`,
     CHECKOUT: Object.fromEntries(
-      p.flavors.map((f) => [f.slug, `https://looperverse.com/checkout/?PLACEHOLDER=${p.id}-${f.slug}`]),
+      p.flavors.map((f) => [
+        f.slug,
+        f.sampleVariationId
+          ? `https://looperverse.com/checkout/?add-to-cart=${f.sampleVariationId}`
+          : `https://looperverse.com/checkout/?PLACEHOLDER=${p.id}-${f.slug}`,
+      ]),
     ),
     RETAIL: p.retail,
     SUPPLY: p.supply,
@@ -79,7 +84,7 @@ async function render(p) {
     CAPTURE_TIMEOUT_MS: 2500,
   };
   const checkoutLines = p.flavors
-    .map((f) => `    '${f.slug}': '${config.CHECKOUT[f.slug]}',   // ${f.name} (retail variation ${f.variationId})`)
+    .map((f) => `    '${f.slug}': '${config.CHECKOUT[f.slug]}',   // ${f.name}${f.sampleVariationId ? ` (free-sample variation ${f.sampleVariationId})` : ""}`)
     .join("\n");
 
   const product = {
@@ -399,9 +404,9 @@ const CONFIG = {
   KLAVIYO_EVENT: '${config.KLAVIYO_EVENT}',
   KLAVIYO_SOURCE: '${config.KLAVIYO_SOURCE}',
 
-  // Checkout link for each flavor's free sample. PLACEHOLDERS for now: while a link
-  // contains "PLACEHOLDER" the page shows a preview screen instead of redirecting.
-  // Optional tokens: {email} {flavor} {state}, e.g. '...&billing_email={email}'
+  // Checkout link for each flavor: adds that flavor's $0 free-sample variation (1 per order) to the
+  // cart and opens checkout, where shipping is charged. A link containing "PLACEHOLDER" shows a
+  // preview screen instead. Optional tokens: {email} {flavor} {state}.
   CHECKOUT: {
 ${checkoutLines}
   },
@@ -415,7 +420,7 @@ ${checkoutLines}
   // its tile ("7 left"), a flavor at 0 can't be picked, and the page total is the sum of this page's flavors.
   // Empty = no live count; the page shows "Only ${config.SUPPLY} free ${p.unit}s in this drop" instead.
   STOCK: {
-    PRODUCT_IDS: [],                     // e.g. [24051] (the free-sample product; its flavor variations are read automatically)
+    PRODUCT_IDS: [${p.sampleProductId || ""}],                // the free-sample product; its flavor variations are read automatically
     ORIGIN: 'https://looperverse.com',   // store the IDs belong to
     URL: '',                             // optional instead of PRODUCT_IDS: any JSON endpoint returning {"remaining": 132}
     REFRESH_SECONDS: 30
