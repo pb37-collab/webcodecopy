@@ -81,6 +81,19 @@ export const content: readonly ContentItem[] = [
   nomStill("NOM_S6_couch", "Round 1", true),
   ugc("NO_UGC_SOFIA_smoke", "Sofia", "Round 1", true),
   ngmStill("NGM_S6_value", "Round 1", true),
+  // @WeedPorns × DaVinci giveaway reel: real 360 turntable footage, speed-ramped,
+  // with a Higgsfield (Kling) smoke-fill shot, color grade and motion graphics.
+  {
+    id: "WP_DAVINCI_EQ_giveaway",
+    src: "/content/video/WP_DAVINCI_EQ_giveaway.mp4",
+    poster: "/content/video/WP_DAVINCI_EQ_giveaway.webp",
+    kind: "video",
+    aspect: "9 / 16",
+    categories: ["social", "video"],
+    brand: "@WeedPorns × DaVinci",
+    format: "Giveaway reel, 9:16, AI smoke shot + motion graphics",
+    aiProduced: true,
+  },
   ugc("NO_UGC_RYAN_skeptic", "Ryan", "Round 1"),
   // Round 4 NanoGrow Max stills.
   ngmStill("NGM_S9_value", "Round 4"),
